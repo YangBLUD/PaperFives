@@ -1,0 +1,28 @@
+# 忽略所有已编译的输出的文件和文件夹
+/dist/
+/build/
+
+# 忽略 Node.js 的临时文件和文件夹
+node_modules/
+npm-debug.log*
+
+# 忽略编辑器配置文件和文件夹
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.bak
+Thumbs.db
+
+# 忽略生成的 map 文件，因为它们通常只用于调试
+*.map
+
+# 忽略压缩包
+*.zip
+*.rar
+
+# 忽略自动生成的文件和文件夹
+.DS_Store
