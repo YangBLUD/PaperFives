@@ -1,78 +1,19 @@
 <template>
   <el-container style="height: 100%">
     <el-header style="font-size: 12px">
-      <span
-        style="
-          float: left;
-          margin-left: 16px;
-          font-size: 20px;
-          font-weight: 700;
-        "
-        >论文检索系统</span>
-      <el-input
-        placeholder="请输入内容"
-        style="width: 800px; text-align: center"
-      ></el-input>
-      <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>查看</el-dropdown-item>
-          <el-dropdown-item>新增</el-dropdown-item>
-          <el-dropdown-item>删除</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <CommonHeader></CommonHeader>
     </el-header>
 
-    <el-container>
-      <el-aside
-        width="200px"
-        style="height: calc(100vh - 60px); background-color: rgb(238, 241, 246)"
-      >
-        <el-row class="tac">
-          <el-col>
-            <el-menu default-active="2" class="el-menu-vertical-demo">
-              <el-submenu index="1">
-                <template slot="title">
-                  <i class="el-icon-medal-1"></i>
-                  <span>热门</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="1-1">热门领域</el-menu-item>
-                  <el-menu-item index="1-2">热门学者</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-menu-item index="2">
-                <i class="el-icon-search"></i>
-                <span slot="title">搜索</span>
-              </el-menu-item>
-              <el-submenu index="2">
-                <template slot="title">
-                  <i class="el-icon-user-solid"></i>
-                  <span slot="title">我的</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="2-1"><i class="el-icon-star-off"></i>收藏</el-menu-item>
-                  <el-menu-item index="2-2"><i class="el-icon-document"></i>信息</el-menu-item>
-                  <el-menu-item index="2-3"><i class="el-icon-chat-dot-round"></i>消息</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-menu-item index="4">
-                <i class="el-icon-s-tools"></i>
-                <span slot="title">设置</span>
-              </el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-row>
+    <el-container style="height: calc(100vh - 60px)">
+      <el-aside width="200px" style="
+          height: calc(100vh - 60px);
+          background-color: rgb(238, 241, 246);
+          overflow-x: hidden;
+        ">
+        <CommonAside></CommonAside>
       </el-aside>
 
       <el-main style="height: calc(100vh - 60px)">
-        <el-table>
-          <el-table-column prop="date" label="日期" width="140">
-          </el-table-column>
-          <el-table-column prop="name" label="姓名" width="120">
-          </el-table-column>
-          <el-table-column prop="address" label="地址"> </el-table-column>
-        </el-table>
       </el-main>
     </el-container>
   </el-container>
@@ -85,8 +26,9 @@ body {
   margin: 0;
 }
 
-.tac{
-  line-height: 70px;
+.el-menu-item,
+.el-submenu__title {
+  line-height: 80px;
 }
 
 .el-dropdown {
@@ -113,7 +55,7 @@ body {
   line-height: 160px;
 }
 
-body > .el-container {
+body>.el-container {
   margin-bottom: 40px;
 }
 
@@ -126,3 +68,18 @@ body > .el-container {
   line-height: 320px;
 }
 </style>
+
+<script>
+import CommonAside from './components/CommonAside.vue'
+import CommonHeader from './components/CommonHeader.vue'
+
+export default {
+  data () {
+    return {}
+  },
+  components: {
+    CommonAside,
+    CommonHeader
+  }
+}
+</script>
