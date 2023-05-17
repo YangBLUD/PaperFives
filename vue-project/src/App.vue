@@ -8,8 +8,7 @@
           font-size: 20px;
           font-weight: 700;
         "
-        >论文检索系统</span
-      >
+        >论文检索系统</span>
       <el-input
         placeholder="请输入内容"
         style="width: 800px; text-align: center"
@@ -34,8 +33,8 @@
             <el-menu default-active="2" class="el-menu-vertical-demo">
               <el-submenu index="1">
                 <template slot="title">
-                  <i class="el-icon-s-home"></i>
-                  <span>首页</span>
+                  <i class="el-icon-medal-1"></i>
+                  <span>热门</span>
                 </template>
                 <el-menu-item-group>
                   <el-menu-item index="1-1">热门领域</el-menu-item>
