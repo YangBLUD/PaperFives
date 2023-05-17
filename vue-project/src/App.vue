@@ -1,7 +1,8 @@
 <template>
   <el-container style="height: 100%">
+
     <el-header style="font-size: 12px">
-      <CommonHeader></CommonHeader>
+      <Header></Header>
     </el-header>
 
     <el-container style="height: calc(100vh - 60px)">
@@ -10,11 +11,12 @@
           background-color: rgb(238, 241, 246);
           overflow-x: hidden;
         ">
-        <CommonAside></CommonAside>
+        <Aside></Aside>
       </el-aside>
 
       <el-main style="height: calc(100vh - 60px)">
       </el-main>
+
     </el-container>
   </el-container>
 </template>
@@ -39,6 +41,7 @@ body {
   background-color: #b3c0d1;
   color: #333;
   line-height: 60px;
+  text-align: center;
 }
 
 .el-aside {
@@ -70,16 +73,16 @@ body>.el-container {
 </style>
 
 <script>
-import CommonAside from './components/CommonAside.vue'
-import CommonHeader from './components/CommonHeader.vue'
+import Aside from './components/AsideDemo.vue'
+import Header from './components/HeaderDemo.vue'
 
 export default {
   data () {
     return {}
   },
   components: {
-    CommonAside,
-    CommonHeader
+    Aside,
+    Header
   }
 }
 </script>
