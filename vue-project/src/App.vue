@@ -15,6 +15,7 @@
       </el-aside>
 
       <el-main style="height: calc(100vh - 60px)">
+        <UserInfo></UserInfo>
       </el-main>
 
     </el-container>
@@ -26,11 +27,6 @@ html,
 body {
   height: 100%;
   margin: 0;
-}
-
-.el-menu-item,
-.el-submenu__title {
-  line-height: 80px;
 }
 
 .el-dropdown {
@@ -75,6 +71,7 @@ body>.el-container {
 <script>
 import Aside from './components/AsideDemo.vue'
 import Header from './components/HeaderDemo.vue'
+import UserInfo from './views/UserInfo.vue'
 
 export default {
   data () {
@@ -82,7 +79,8 @@ export default {
   },
   components: {
     Aside,
-    Header
+    Header,
+    UserInfo
   }
 }
 </script>
