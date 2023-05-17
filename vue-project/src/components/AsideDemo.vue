@@ -41,3 +41,13 @@
     </el-col>
   </el-row>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      menuData: []
+    }
+  }
+}
+</script>
