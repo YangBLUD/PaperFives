@@ -52,9 +52,9 @@
                   <span slot="title">我的</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="2-1">收藏</el-menu-item>
-                  <el-menu-item index="2-2">信息</el-menu-item>
-                  <el-menu-item index="2-3">消息</el-menu-item>
+                  <el-menu-item index="2-1"><i class="el-icon-star-off"></i>收藏</el-menu-item>
+                  <el-menu-item index="2-2"><i class="el-icon-document"></i>信息</el-menu-item>
+                  <el-menu-item index="2-3"><i class="el-icon-chat-dot-round"></i>消息</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-menu-item index="4">
