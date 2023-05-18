@@ -1,6 +1,7 @@
 <template>
     <el-row>
         <el-col :span="8">
+            <h3 class="page-title">我</h3>
             <el-card class="box-card">
                 <div class="user">
                     <img src="../assets/logo.png" />
@@ -32,7 +33,27 @@
             </el-row>
         </el-col>
 
-        <el-col :span="16"></el-col>
+        <el-col :span="16" style="padding-left: 20px">
+            <h3 class="page-title">我的论文</h3>
+            <el-row :gutter="20" class="paper-list">
+                <el-col :span="24" v-for="(item, index) in followList" :key="index">
+                    <el-card shadow="hover" class="papaer-item">
+                        <div class="paper-info">
+                            <div class="name" style="flex: 2;">{{ item.papername }}</div>
+                        </div>
+                        <!-- 查看操作 -->
+                        <div class="papaer-action">
+                            <el-button type="success" size="small" @click="">查看论文</el-button>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <h3 class="page-title">我的统计</h3>
+            <div class="graph">
+                <el-card style="height: 280px;"></el-card>
+                <el-card style="height: 280px;"></el-card>
+            </div>
+        </el-col>
     </el-row>
 </template>
   
@@ -85,7 +106,7 @@ export default {
 }
 
 .page-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
 }
@@ -107,11 +128,6 @@ export default {
         align-items: center;
         flex: 1;
     }
-
-    .el-card__body {
-        padding: 0px;
-        background-color: powderblue;
-    }
 }
 
 .follow-action {
@@ -120,8 +136,38 @@ export default {
     align-items: center;
 }
 
-.el-card ::v-deep .el-card__body {
-    width: 500x;
+.graph {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .el-card {
+        width: 48%;
+    }
+}
+
+.paper-list {
+    height: 400px;
+    overflow-y: auto;
+}
+
+.paper-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 10px;
+
+    .follow-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+}
+
+.follow-action {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 </style>
   
