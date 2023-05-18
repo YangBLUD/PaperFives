@@ -1,0 +1,136 @@
+<template>
+    <div class="regist_con">
+        <div class="regist_box">
+            <!-- 头像区域 -->
+            <div class="avatar_box">
+                <img src="../../assets/logo.png" alt="">
+            </div>
+            <!-- 登陆表单区域 -->
+            <el-form :model="regForm" :rules="regFormRules" ref="regFormRef" class="reg_form" label-width="70px">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="regForm.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="regForm.password"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="regForm.email"></el-input>
+                </el-form-item>
+                <el-form-item label="手机" prop="mobile">
+                    <el-input v-model="regForm.mobile"></el-input>
+                </el-form-item>
+                <el-form-item class="btns">
+                    <el-button type="info" @click="resetRegForm" >重 置</el-button>
+                    <el-button type="primary" @click="regUser">确 定</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        // 验证邮箱手机的规则 （自定义校验规则
+        var checkEmail = (rule, value, callback) => {
+            var regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+            if (regemail.test(value)) {
+                return callback()
+            }
+            callback(new Error('请输入合法邮箱'))
+        }
+        var checkMobile = (rule, value, callback) => {
+            var regmobile = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/
+            if (regmobile.test(value)) {
+                return callback()
+            }
+            callback(new Error('请输入合法手机'))
+        }
+        return {
+            //添加用户的表单
+            regForm: {
+                username: '',
+                password: '',
+                email: '',
+                mobile: ''
+
+            },
+            regFormRules: {
+                username: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { min: 3, max: 10, message: '用户名长度在3-10个字符之间', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 10, message: '密码长度在6-15个字符之间', trigger: 'blur' }
+                ],
+                email: [
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                    { validator: checkEmail, trigger: 'blur' }
+                ],
+                mobile: [
+                    { required: true, message: '请输入手机', trigger: 'blur' },
+                    { validator: checkMobile, trigger: 'blur' }
+                ],
+            }
+        }
+    },
+    methods: {
+        resetRegForm() {
+            this.$refs.regFormRef.resetFields();
+        },
+    }
+}
+</script>
+
+<style lang="less" scoped>
+.regist_con {
+    background-color: #2b4b6b;
+    height: 100%;
+}
+
+.regist_box {
+    width: 450px;
+    height: 450px;
+    background-color: white;
+    border-radius: 3px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.avatar_box {
+    height: 130px;
+    width: 130px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 0 10px #ddd;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #eee;
+    }
+}
+
+.btns {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reg_form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+</style>
+
+
