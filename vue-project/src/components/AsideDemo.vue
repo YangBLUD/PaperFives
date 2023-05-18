@@ -25,8 +25,8 @@
             <el-menu-item index="2-1"
               ><i class="el-icon-star-off"></i>收藏</el-menu-item
             >
-            <el-menu-item index="2-2"
-              ><i class="el-icon-document"></i>信息</el-menu-item
+            <el-menu-item index="2-2" @click="gotoUserInfo">
+              <i class="el-icon-document"></i>信息</el-menu-item
             >
             <el-menu-item index="2-3"
               ><i class="el-icon-chat-dot-round"></i>消息</el-menu-item
@@ -45,8 +45,11 @@
 <script>
 export default {
   data () {
-    return {
-      menuData: []
+    return {}
+  },
+  methods: {
+    gotoUserInfo () {
+      this.$router.push('/userinfo', () => {}, () => {})
     }
   }
 }
