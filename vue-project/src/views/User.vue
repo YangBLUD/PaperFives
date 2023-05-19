@@ -14,40 +14,51 @@
             <h3 class="page-title">我的关注</h3>
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
-                <el-col :span="24" v-for="(item, index) in followList" :key="index">
-                    <el-card shadow="hover" class="follow-item">
-                        <div class="follow-info">
-                            <!-- 用户头像 -->
-                            <div style="flex: 1;">
-                                <el-avatar :src="item.avatar" size="90" :border="false"></el-avatar>
+                <template v-if="followList.length > 0">
+                    <div v-for="(item, index) in followList" :key="index">
+                        <el-card shadow="hover" class="follow-item">
+                            <div class="follow-info">
+                                <!-- 用户头像 -->
+                                <div>
+                                    <el-avatar :src="item.avatar" size="90" :border="false"></el-avatar>
+                                </div>
+                                <!-- 用户名 -->
+                                <div class="card_name">{{ item.username }}</div>
+                                <el-button type="danger" size="small" @click="removeFollow(index)">取消关注</el-button>
                             </div>
-                            <!-- 用户名 -->
-                            <div class="name" style="flex: 2;">{{ item.username }}</div>
-                        </div>
-                        <!-- 关注操作 -->
-                        <div class="follow-action">
-                            <el-button type="danger" size="small" @click="removeFollow(index)">取消关注</el-button>
-                        </div>
-                    </el-card>
-                </el-col>
+                            <!-- 关注操作 -->
+                        </el-card>
+                    </div>
+                </template>
+                <template v-else>
+                    <el-col :span="24">
+                        <br><br>
+                        <el-empty description="无关注用户" :image-size="250"></el-empty>
+                    </el-col>
+                </template>
             </el-row>
         </el-col>
 
-        <el-col :span="16" style="padding-left: 20px">
+        <el-col :span="16" style="padding-left: 30px">
             <h3 class="page-title">我的论文</h3>
             <el-row :gutter="20" class="paper-list">
-                <el-col :span="24" v-for="(item, index) in followList" :key="index">
-                    <el-card shadow="hover" class="papaer-item">
-                        <div class="paper-info">
-                            <div class="name" style="flex: 2;">{{ item.papername }}</div>
-                        </div>
-                        <!-- 查看操作 -->
-                        <div class="papaer-action">
-                            <el-button type="success" size="small" @click="">查看论文</el-button>
-                        </div>
-                    </el-card>
-                </el-col>
+                <template v-if="paperList.length > 0">
+                    <el-col :span="24" v-for="(item, index) in paperList" :key="index">
+                        <el-card shadow="hover" class="papaer-item">
+                            <!-- 查看操作 -->
+                            <div class="paper-action">
+                                <el-button type="primary" size="small" @click="">查看论文</el-button>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </template>
+                <template v-else>
+                    <el-col :span="24">
+                        <el-empty description="无论文数据" :image-size="250"></el-empty>
+                    </el-col>
+                </template>
             </el-row>
+
             <h3 class="page-title">我的统计</h3>
             <div class="graph">
                 <el-card style="height: 280px;"></el-card>
@@ -73,6 +84,18 @@ export default {
                 { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
                 { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
             ],
+            paperList: [
+            { username: "张三四", avatar: "https://picsum.photos/id/1028/1000/1000" },
+                { username: "李四", avatar: "https://picsum.photos/id/1019/1000/1000" },
+                { username: "王五", avatar: "https://picsum.photos/id/1027/1000/1000" },
+                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
+                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
+                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
+                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
+                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
+                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
+                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
+            ]
         };
     },
     methods: {
@@ -98,11 +121,20 @@ export default {
     .name {
         font-size: 32px;
         margin-bottom: 10px;
+        width: 50px;
     }
 
     .access {
         color: gray;
     }
+}
+
+.paper-action .el-button {
+    margin-left: 800px;
+}
+
+.el-button {
+    margin-left: 250px;
 }
 
 .page-title {
@@ -115,12 +147,15 @@ export default {
     margin-top: 20px;
     height: 500px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .follow-item {
     display: flex;
+    display: inline-block;
     align-items: center;
-    padding: 20px;
+    // padding: 20px;
+    width: 100%;
     margin-bottom: 10px;
 
     .follow-info {
@@ -128,6 +163,15 @@ export default {
         align-items: center;
         flex: 1;
     }
+
+    .card_name {
+        margin-left: 20px;
+        width: 50px;
+    }
+}
+
+::v-deep .el-card__body {
+    width: 500px;
 }
 
 .follow-action {
