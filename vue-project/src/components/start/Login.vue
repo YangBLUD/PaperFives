@@ -8,8 +8,8 @@
             <!-- 登陆表单区域 -->
             <el-form :model="loginForm" :rules="loginRules" label-width="80px" class="login_form" ref="loginRef">
                 <!-- 用户名 -->
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="loginForm.email" prefix-icon="iconfont icon-user"></el-input>
                 </el-form-item>
                 <!-- 密码 -->
                 <el-form-item label="密码" prop="password">
@@ -29,17 +29,24 @@
 <script>
 export default {
     data() {
+        var checkEmail = (rule, value, callback) => {
+            var regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+            if (regemail.test(value)) {
+                return callback()
+            }
+            callback(new Error('请输入合法邮箱'))
+        }
         return {
             // 登陆表单的数据对象
             loginForm: {
-                username: '',
+                email: '',
                 password: ''
             },
             // 表单验证规则
             loginRules: {
-                username: [
-                    { required: true, message: '请输入登录名称', trigger: 'blur' },
-                    { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+                email: [
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                    { validator: checkEmail, trigger: 'blur' }
                 ],
                 password: [
                     { required: true, message: '请输入登录密码', trigger: 'blur' },
@@ -49,17 +56,28 @@ export default {
         }
     },
     methods: {
-        //重置用户名密码
+        //重置
         resetLoginForm() {
             this.$refs.loginRef.resetFields();
         },
         // 登录
         login() {
-            this.$router.push("/home");
+            // this.$refs.loginRef.validate(async (valid)=>{
+            //     if(!valid) return ;
+            //     const {data:res} = await this.$http.post('users/login',this.loginForm);
+            //     if(res.meta.status!=0) 
+            //         return this.$message.error(res.meta.msg)
+                
+            //     this.$message.success(res.meta.msg)
+            //     // 将token保存到sessionStorage中
+            //     window.sessionStorage.setItem('token',res.data.token);
+            //     // 页面跳转
+                this.$router.push("/home");
+            // });
         },
         // 注册
-        regist() {
-            this.$router.push("/regist");
+        register() {
+            this.$router.push("/register");
         }
     }
 }

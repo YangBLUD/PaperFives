@@ -11,7 +11,7 @@
 
         <el-container>
             <!-- 主页侧边栏 -->
-            <el-aside :width="isCollapse ? '64px':'200px'">
+            <el-aside :width="isCollapse ? '64px':'160px'">
                 <div class="toggle-button" @click="toggleCollapse">|||
 
                 </div>
@@ -22,14 +22,14 @@
                     <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单模板区域 -->
                         <template slot="title">
-                            <i :class="iconsObj[item.id]"></i>
+                            <i :class="item.icon"></i>
                             <span>{{ item.authName }}</span>
                         </template>
                         <!-- 二级菜单 -->
                         <el-menu-item :index="'/'+subItem.path" v-for="subItem in item.children" :key="subItem.id"
                         @click=saveState(activePath)>
                             <template slot="title">
-                            <i class="el-icon-menu"></i>
+                            <i :class="subItem.icon"></i>
                             <span>{{ subItem.authName }}</span>
                         </template>
                         </el-menu-item>
@@ -44,37 +44,88 @@
                 <!-- 路由占位符 -->
               <router-view></router-view>
             </el-main>
+            
         </el-container>
     </el-container>
 </template>
 
 <script>
+import path from 'path'
+
 export default {
     data(){
         return{
-            menuList:[],
-            iconsObj:{
-                // '125':'iconfont icon-user',
-                // '103':'iconfont icon-tijikongjian',
-                // '101':'iconfont icon-shangpin',
-                // '102':'iconfont icon-danju',
-                // '145':'iconfont icon-baobiao'
-            },
+            menuList:[
+                {
+                    id:1,
+                    authName:'搜索',
+                    icon:'el-icon-zoom-in',
+                    path:''
+                },
+                {   
+                    id:1,
+                    authName:'热门',
+                    icon:'el-icon-s-open',
+                    path:'',
+                    children:[
+                        {
+                            id:1,
+                            authName:'热门领域',
+                            icon:'el-icon-s-open',
+                            path:'',
+                        },
+                        {
+                            id:1,
+                            authName:'热门学者',
+                            icon:'el-icon-s-custom',
+                            path:'',
+                        }
+                    ]
+                },
+                {
+                    id:11,
+                    authName:'我的',
+                    icon:'el-icon-user-solid',
+                    path:'',
+                    children:[
+                        {
+                            id:1,
+                            authName:'收藏',
+                            icon:'el-icon-star-on',
+                            path:""
+                        },
+                        {
+                            id:1,
+                            authName:'信息',
+                            icon:'el-icon-document',
+                            path:""
+                        },
+                        {
+                            id:1,
+                            authName:'消息',
+                            icon:'el-icon-chat-dot-square',
+                            path:""
+                        },
+                    ]
+                },
+                {
+                    id:1,
+                    authName:'设置',
+                    icon:'el-icon-setting',
+                    path:'',
+                }
+            ],
             isCollapse:false,  //是否折叠
             activePath:''
         }
     },
     created(){
-        this.getMenuList(),
         this.activePath=window.sessionStorage.getItem('activePath')
     },
     methods: {
         logout() {
             window.sessionStorage.clear()
             this.$router.push('/login')
-        },
-        getMenuList(){
-           
         },
         // 切换侧边折叠与展开
         toggleCollapse(){

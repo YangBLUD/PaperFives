@@ -12,7 +12,7 @@ import './assets/fonts/iconfont.css'
 
 // 配置请求
 import axios from 'axios'
-// axios.defaults.baseURL=''
+axios.defaults.baseURL='http://81.70.161.76:5000/api/v1/'
 axios.interceptors.request.use(config =>{
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
