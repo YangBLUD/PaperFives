@@ -5,7 +5,7 @@
         <h1 style="font-size: 30px;">个人信息</h1>
       </div>
 
-      <div class="personal-info-content">
+      <div>
         <br><br><br>
         <span style="font-size: 20px; font-weight: 700;">基本信息</span>
         <br><br>
@@ -104,9 +104,6 @@
       position: sticky;
       top: 0;
       z-index: 1;
-    }
-
-    .personal-info-content {
     }
 
     .personal-info-footer {
