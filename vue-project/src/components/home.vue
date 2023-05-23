@@ -90,15 +90,9 @@ export default {
                     children:[
                         {
                             id:1,
-                            authName:'收藏',
-                            icon:'el-icon-star-on',
-                            path:""
-                        },
-                        {
-                            id:1,
-                            authName:'信息',
-                            icon:'el-icon-document',
-                            path:""
+                            authName:'主页',
+                            icon:'el-icon-house',
+                            path:"user"
                         },
                         {
                             id:1,
@@ -113,6 +107,14 @@ export default {
                     authName:'设置',
                     icon:'el-icon-setting',
                     path:'',
+                    children:[
+                        {
+                            id:1,
+                            authName:'信息',
+                            icon:'el-icon-document',
+                            path:"userinfo"
+                        },
+                    ]
                 }
             ],
             isCollapse:false,  //是否折叠
