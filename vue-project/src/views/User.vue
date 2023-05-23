@@ -7,37 +7,44 @@
                 <div class="user">
                     <img src="../assets/logo.png" />
                     <div>
-                        <p class="name">Admin</p>
+                        <p class="name">{{ this.userProfile.username }}</p>
                         <p class="access">管理员</p>
                     </div>
                 </div>
             </el-card>
 
-            <h3 class="page-title">我的关注</h3>
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
-                <template v-if="followList.length > 0">
-                    <div v-for="(item, index) in followList" :key="index">
-                        <el-card shadow="hover" class="follow-item">
-                            <div class="follow-info">
-                                <!-- 用户头像 -->
-                                <div>
-                                    <el-avatar :src="item.avatar" size="90" :border="false"></el-avatar>
-                                </div>
-                                <!-- 用户名 -->
-                                <div class="card_name">{{ item.username }}</div>
-                                <!-- 关注操作 -->
-                                <el-button type="danger" size="small" @click="removeFollow(index)">取消关注</el-button>
+                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: 1000px;">
+                    <el-tab-pane name="first">
+                        <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
+                        <template v-if="followList.length > 0">
+                            <div v-for="(item, index) in followList" :key="index">
+                                <el-card shadow="hover" class="follow-item">
+                                    <div class="follow-info">
+                                        <!-- 用户头像 -->
+                                        <div>
+                                            <el-avatar :src="item.avatar" size="90" :border="false"></el-avatar>
+                                        </div>
+                                        <!-- 用户名 -->
+                                        <div class="card_name">{{ item.username }}</div>
+                                        <!-- 关注操作 -->
+                                        <el-button type="danger" size="small" @click="removeFollow(index)">取消关注</el-button>
+                                    </div>
+                                </el-card>
                             </div>
-                        </el-card>
-                    </div>
-                </template>
-                <template v-else>
-                    <el-col :span="24">
-                        <br><br>
-                        <el-empty description="无关注用户" :image-size="250"></el-empty>
-                    </el-col>
-                </template>
+                        </template>
+                        <template v-else>
+                            <el-col :span="24">
+                                <br><br>
+                                <el-empty description="无关注用户" :image-size="250"></el-empty>
+                            </el-col>
+                        </template>
+                    </el-tab-pane>
+                    <el-tab-pane name="second">
+                        <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
+                    </el-tab-pane>
+                </el-tabs>
             </el-row>
         </el-col>
 
@@ -80,6 +87,9 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
+            userProfile:{
+                username: ''
+            },
             followList: [
                 { username: "张三四", avatar: "https://picsum.photos/id/1028/1000/1000" },
                 { username: "李四", avatar: "https://picsum.photos/id/1019/1000/1000" },
@@ -106,13 +116,32 @@ export default {
             ],
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
-            myChartStyle: { float: "left", width: "90%", height: "280px" } //图表样式
+            myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
+            activeName: 'first'
         };
     },
     mounted() {
         this.initEcharts();
+        this.getUserProfile();
     },
     methods: {
+        async getUserProfile() {
+            await this.$http.get('users/profile/user', {
+                params: {
+                    mode: 'all',
+                    uid: 1
+                }
+            })
+                .then(res => {
+                    console.log(res.data);
+                    this.userProfile.username = res.data.data.username;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        handleClick(tab, event) {
+            console.log(tab, event);
+        },
         removeFollow(index) {
             this.followList.splice(index, 1);
         },
@@ -310,8 +339,9 @@ export default {
 
 .follow-list {
     margin-top: 20px;
-    height: 500px;
-    overflow-y: auto;
+    padding-left: 10px;
+    height: 550px;
+    overflow-y: visible;
     overflow-x: hidden;
 }
 
