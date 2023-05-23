@@ -16,8 +16,8 @@
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="regForm.email"></el-input>
                 </el-form-item>
-                <el-form-item label="手机" prop="mobile">
-                    <el-input v-model="regForm.mobile"></el-input>
+                <el-form-item label="验证码" prop="VC">
+                    <el-input v-model="regForm.code"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="info" @click="resetRegForm" >重 置</el-button>
@@ -38,21 +38,13 @@ export default {
             }
             callback(new Error('请输入合法邮箱'))
         }
-        var checkMobile = (rule, value, callback) => {
-            var regmobile = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/
-            if (regmobile.test(value)) {
-                return callback()
-            }
-            callback(new Error('请输入合法手机'))
-        }
         return {
             //添加用户的表单
             regForm: {
                 username: '',
                 password: '',
                 email: '',
-                mobile: ''
-
+                code:''
             },
             regFormRules: {
                 username: [
@@ -67,17 +59,22 @@ export default {
                     { required: true, message: '请输入邮箱', trigger: 'blur' },
                     { validator: checkEmail, trigger: 'blur' }
                 ],
-                mobile: [
-                    { required: true, message: '请输入手机', trigger: 'blur' },
-                    { validator: checkMobile, trigger: 'blur' }
-                ],
             }
         }
     },
     methods: {
+        // 重置
         resetRegForm() {
             this.$refs.regFormRef.resetFields();
         },
+        // 注册
+        regUser(){
+
+        },
+        //核对验证码
+        checkCode(){
+            
+        }
     }
 }
 </script>
