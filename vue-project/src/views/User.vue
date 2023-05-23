@@ -5,26 +5,27 @@
             <h3 class="page-title">我</h3>
             <el-card class="box-card">
                 <div class="user">
-                    <img src="../assets/logo.png" />
+                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access">管理员</p>
+                        <p class="access">{{this.userProfile.role === 1 ? '用户' : '学者'}}</p>
                     </div>
                 </div>
             </el-card>
 
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
-                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: 1000px;">
+                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: auto; width: 502px;">
                     <el-tab-pane name="first">
                         <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
-                        <template v-if="followList.length > 0">
-                            <div v-for="(item, index) in followList" :key="index">
+                        <template v-if="followerList.length > 0">
+                            <div v-for="(item, index) in followerList" :key="index">
                                 <el-card shadow="hover" class="follow-item">
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
                                         <div>
-                                            <el-avatar :src="item.avatar" size="90" :border="false"></el-avatar>
+                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
+                                                :border="false"></el-avatar>
                                         </div>
                                         <!-- 用户名 -->
                                         <div class="card_name">{{ item.username }}</div>
@@ -43,6 +44,24 @@
                     </el-tab-pane>
                     <el-tab-pane name="second">
                         <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
+                        <template v-if="followeeList.length > 0">
+                            <div v-for="(item, index) in followeeList" :key="index">
+                                <el-card shadow="hover" class="follow-item">
+                                    <div class="follow-info">
+                                        <!-- 用户头像 -->
+                                        <div>
+                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
+                                                :border="false"></el-avatar>
+                                        </div>
+                                        <!-- 用户名 -->
+                                        <div class="card_name">{{ item.username }}</div>
+                                        <!-- 访问页面 -->
+                                        <el-button type="success" size="small"
+                                            @click="gotoProfile(item.uid)">访问主页</el-button>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </template>
                     </el-tab-pane>
                 </el-tabs>
             </el-row>
@@ -87,33 +106,10 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            userProfile:{
-                username: ''
-            },
-            followList: [
-                { username: "张三四", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "李四", avatar: "https://picsum.photos/id/1019/1000/1000" },
-                { username: "王五", avatar: "https://picsum.photos/id/1027/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-            ],
-            paperList: [
-                { username: "张三四", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "李四", avatar: "https://picsum.photos/id/1019/1000/1000" },
-                { username: "王五", avatar: "https://picsum.photos/id/1027/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "赵六", avatar: "https://picsum.photos/id/1026/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-                { username: "张三", avatar: "https://picsum.photos/id/1028/1000/1000" },
-            ],
+            userProfile: {},
+            followerList: [],
+            followeeList: [],
+            paperList: [],
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
             myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
@@ -123,6 +119,8 @@ export default {
     mounted() {
         this.initEcharts();
         this.getUserProfile();
+        this.getFollower();
+        this.getFollowee();
     },
     methods: {
         async getUserProfile() {
@@ -133,8 +131,34 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res.data);
-                    this.userProfile.username = res.data.data.username;
+                    console.log(res);
+                    this.userProfile = res.data.data;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getFollower() {
+            await this.$http.get('users/favorite/followers', {
+                params: {
+                    uid: 5
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.followerList = res.data.data.list;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getFollowee() {
+            await this.$http.get('users/favorite/followees', {
+                params: {
+                    uid: 1
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.followeeList = res.data.data.list;
                 }).catch(err => {
                     console.log(err);
                 })
@@ -144,6 +168,14 @@ export default {
         },
         removeFollow(index) {
             this.followList.splice(index, 1);
+        },
+        gotoProfile(id) {
+            this.$router.push({
+                path: '/visitor',
+                query: {
+                    uid: id
+                }
+            })
         },
         initEcharts() {
             // 基本柱状图
@@ -297,6 +329,7 @@ export default {
         }
     }
 };
+
 </script>
 
   
