@@ -15,13 +15,14 @@
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="regForm.email"></el-input>
+                    <el-button type="primary" @click="regUser" class="btns">发送验证码</el-button>
                 </el-form-item>
                 <el-form-item label="验证码" prop="VC">
                     <el-input v-model="regForm.code"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
-                    <el-button type="info" @click="resetRegForm" >重 置</el-button>
                     <el-button type="primary" @click="regUser">确 定</el-button>
+                    <el-button type="info" @click="resetRegForm" >重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -69,11 +70,25 @@ export default {
         },
         // 注册
         regUser(){
-
+            this.$refs.regFormRef.validate(async (valid)=>{
+                if(!valid) return ;
+                const {data:res} = await this.$http.post('/api/v1/users/register',this.regForm);
+                if(res.meta.status!=0) 
+                    return this.$message.error(res.meta.msg)
+                
+                this.$message.success(res.meta.msg)
+                
+                // // 页面跳转
+                this.$router.push("/login");
+            });
         },
-        //核对验证码
-        checkCode(){
-            
+        //发送验证码
+        async checkCode(){
+            const {data:res} = await this.$http.post('/api/v1/users/verification',this.email);
+            if(rea.meta.status!=0){
+                return this.$message.error(res.meta.msg)
+            }
+            return this.$message.success(res.meta.msg)
         }
     }
 }

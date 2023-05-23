@@ -18,7 +18,7 @@
                 <!-- 按钮区域 -->
                 <el-form-item class="btns">
                     <el-button type="primary" @click="login">登录</el-button>
-                    <el-button type="warning" @click="regist">注册</el-button>
+                    <el-button type="warning" @click="register">注册</el-button>
                     <el-button type="info" @click="resetLoginForm">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -62,22 +62,22 @@ export default {
         },
         // 登录
         login() {
-            // this.$refs.loginRef.validate(async (valid)=>{
-            //     if(!valid) return ;
-            //     const {data:res} = await this.$http.post('users/login',this.loginForm);
-            //     if(res.meta.status!=0) 
-            //         return this.$message.error(res.meta.msg)
+            this.$refs.loginRef.validate(async (valid)=>{
+                if(!valid) return ;
+                const {data:res} = await this.$http.post('/api/v1/users/login',this.loginForm);
+                if(res.meta.status!=0) 
+                    return this.$message.error(res.meta.msg)
                 
-            //     this.$message.success(res.meta.msg)
-            //     // 将token保存到sessionStorage中
-            //     window.sessionStorage.setItem('token',res.data.token);
-            //     // 页面跳转
+                this.$message.success(res.meta.msg)
+                // 将token保存到sessionStorage中
+                window.sessionStorage.setItem('token',res.token);
+                // 页面跳转
                 this.$router.push("/home");
-            // });
+            });
         },
         // 注册
         register() {
-            this.$router.push("/register");
+            this.$router.push({path:"/register"});
         }
     }
 }
