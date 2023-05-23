@@ -5,6 +5,7 @@ import Register from '../components/start/Register.vue'
 import Home from '../components/home.vue'
 import UserInfo from '../views/UserInfo.vue'
 import User from '../views/User.vue'
+import Visitor from '../views/Visitor.vue'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,8 @@ const routes = [
     component:Home,
     children:[
       {path:'/userinfo',component:UserInfo},
-      {path:'/user',component:User}
+      {path:'/user',component:User},
+      {path:'/visitor',component:Visitor}
     ]
   },
   { path: '/login', component: Login },
