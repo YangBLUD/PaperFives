@@ -1,50 +1,46 @@
 <template>
     <el-row>
-        <el-col :span="8">
-            <!-- 个人名片 -->
-            <h3 class="page-title">我</h3>
-            <el-card class="box-card">
-                <div class="user">
-                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar"/>
-                    <div>
-                        <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access">{{this.userProfile.role === 1 ? '用户' : '学者'}}</p>
-                    </div>
+        <!-- 个人名片 -->
+        <h3 class="page-title">我</h3>
+        <el-card class="box-card">
+            <div class="user">
+                <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
+                <div>
+                    <p class="name">{{ this.userProfile.username }}</p>
+                    <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p>
                 </div>
-            </el-card>
-        </el-col>
-
-        <el-col :span="16" style="padding-left: 30px">
-            <h3 class="page-title">我的论文</h3>
-            <!-- 论文列表 -->
-            <el-row :gutter="20" class="paper-list">
-                <template v-if="paperList.length > 0">
-                    <el-col :span="24" v-for="(item, index) in paperList" :key="index">
-                        <el-card shadow="hover" class="papaer-item">
-                            <!-- 查看操作 -->
-                            <div class="paper-action">
-                                <el-button type="primary" size="small" @click="">查看论文</el-button>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </template>
-                <template v-else>
-                    <el-col :span="24">
-                        <el-empty description="无论文数据" :image-size="250"></el-empty>
-                    </el-col>
-                </template>
-            </el-row>
-
-            <h3 class="page-title">我的统计</h3>
-            <div class="graph">
-                <el-card style="height: 330px">
-                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
-                </el-card>
-                <el-card style="height: 330px">
-                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
-                </el-card>
             </div>
-        </el-col>
+        </el-card>
+
+        <h3 class="page-title">我的论文</h3>
+        <!-- 论文列表 -->
+        <el-row :gutter="20" class="paper-list">
+            <template v-if="paperList.length > 0">
+                <el-col :span="24" v-for="(item, index) in paperList" :key="index">
+                    <el-card shadow="hover" class="papaer-item">
+                        <!-- 查看操作 -->
+                        <div class="paper-action">
+                            <el-button type="primary" size="small" @click="">查看论文</el-button>
+                        </div>
+                    </el-card>
+                </el-col>
+            </template>
+            <template v-else>
+                <el-col :span="24">
+                    <el-empty description="无论文数据" :image-size="250"></el-empty>
+                </el-col>
+            </template>
+        </el-row>
+
+        <h3 class="page-title">我的统计</h3>
+        <div class="graph">
+            <el-card style="height: 330px">
+                <div class="echart" id="mychart1" :style="myChartStyle"></div>
+            </el-card>
+            <el-card style="height: 330px">
+                <div class="echart" id="mychart2" :style="myChartStyle"></div>
+            </el-card>
+        </div>
     </el-row>
 </template>
   
@@ -53,7 +49,7 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            userProfile:{},
+            userProfile: {},
             paperList: [],
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
@@ -67,7 +63,7 @@ export default {
     },
     methods: {
         async getUserProfile() {
-            await this.$http.get('users/profile/user', {
+            await this.$http.get('api/v1/users/profile/user', {
                 params: {
                     mode: 'all',
                     uid: this.$route.query.uid
