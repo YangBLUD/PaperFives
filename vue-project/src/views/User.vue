@@ -8,7 +8,7 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access">{{this.userProfile.role === 1 ? '用户' : '学者'}}</p>
+                        <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p>
                     </div>
                 </div>
             </el-card>
@@ -90,12 +90,18 @@
 
             <h3 class="page-title">我的统计</h3>
             <div class="graph">
-                <el-card style="height: 330px">
-                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
-                </el-card>
-                <el-card style="height: 330px">
-                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
-                </el-card>
+                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                    <el-carousel-item style="width: 500px;">
+                        <el-card style="height: 330px; width: 500px;">
+                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                        </el-card>
+                    </el-carousel-item>
+                    <el-carousel-item style="width: 500px;">
+                        <el-card style="height: 330px; width: 500px;">
+                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                        </el-card>
+                    </el-carousel-item>
+                </el-carousel>
             </div>
         </el-col>
     </el-row>
@@ -117,14 +123,16 @@ export default {
         };
     },
     mounted() {
-        this.initEcharts();
+        this.$nextTick(() => {
+            this.initEcharts();
+        });
         this.getUserProfile();
         this.getFollower();
         this.getFollowee();
     },
     methods: {
         async getUserProfile() {
-            await this.$http.get('users/profile/user', {
+            await this.$http.get('api/v1/users/profile/user', {
                 params: {
                     mode: 'all',
                     uid: 1
@@ -138,7 +146,7 @@ export default {
                 })
         },
         async getFollower() {
-            await this.$http.get('users/favorite/followers', {
+            await this.$http.get('api/v1/users/favorite/followers', {
                 params: {
                     uid: 5
                 }
@@ -151,7 +159,7 @@ export default {
                 })
         },
         async getFollowee() {
-            await this.$http.get('users/favorite/followees', {
+            await this.$http.get('api/v1/users/favorite/followees', {
                 params: {
                     uid: 1
                 }
@@ -419,7 +427,7 @@ export default {
 }
 
 .paper-list {
-    height: 350px;
+    height: auto;
     overflow-y: auto;
 }
 
