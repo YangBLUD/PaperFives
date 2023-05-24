@@ -7,4 +7,17 @@ module.exports = defineConfig({
       fallback: { path: require.resolve("path-browserify") },
     },
   },
+  devServer:{
+    proxy:{
+      '/api':{
+        target:'http://81.70.161.76:5000/api', 
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+        pathRewrite: {
+            '^/api': ''
+        }
+      }
+    }
+  }
 })
