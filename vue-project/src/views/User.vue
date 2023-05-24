@@ -33,7 +33,7 @@
                                         <div class="follow-tag">
                                             <el-button type="danger" size="small"
                                                 @click="removeFollower(item.uid, index)">取消关注</el-button>
-                                            <el-button type="success" size="small"
+                                            <el-button class="hidden" type="success" size="small"
                                                 @click="followUser(item.uid, index)">关注</el-button>
                                         </div>
                                     </div>
