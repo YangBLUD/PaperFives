@@ -18,19 +18,24 @@
                 <el-tabs v-model="activeName" @tab-click="handleClick" style="height: auto; width: 502px;">
                     <el-tab-pane name="first">
                         <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
-                        <template v-if="followerList.length > 0">
-                            <div v-for="(item, index) in followerList" :key="index">
+                        <template v-if="followeeList.length > 0">
+                            <div v-for="(item, index) in followeeList" :key="index">
                                 <el-card shadow="hover" class="follow-item">
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
-                                        <div>
+                                        <div @click="gotoProfile(item.uid)">
                                             <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
                                                 :border="false"></el-avatar>
                                         </div>
                                         <!-- 用户名 -->
-                                        <div class="card_name">{{ item.username }}</div>
+                                        <div class="card_name" @click="gotoProfile(item.uid)">{{ item.username }}</div>
                                         <!-- 关注操作 -->
-                                        <el-button type="danger" size="small" @click="removeFollow(index)">取消关注</el-button>
+                                        <div class="follow-tag">
+                                            <el-button type="danger" size="small"
+                                                @click="removeFollower(item.uid, index)">取消关注</el-button>
+                                            <el-button type="success" size="small"
+                                                @click="followUser(item.uid, index)">关注</el-button>
+                                        </div>
                                     </div>
                                 </el-card>
                             </div>
@@ -44,20 +49,17 @@
                     </el-tab-pane>
                     <el-tab-pane name="second">
                         <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
-                        <template v-if="followeeList.length > 0">
-                            <div v-for="(item, index) in followeeList" :key="index">
+                        <template v-if="followerList.length > 0">
+                            <div v-for="(item, index) in followerList" :key="index">
                                 <el-card shadow="hover" class="follow-item">
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
-                                        <div>
+                                        <div @click="gotoProfile(item.uid)">
                                             <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
-                                                :border="false"></el-avatar>
+                                                :border="false" ></el-avatar>
                                         </div>
                                         <!-- 用户名 -->
-                                        <div class="card_name">{{ item.username }}</div>
-                                        <!-- 访问页面 -->
-                                        <el-button type="success" size="small"
-                                            @click="gotoProfile(item.uid)">访问主页</el-button>
+                                        <div class="card_name" @click="gotoProfile(item.uid)">{{ item.username }}</div>
                                     </div>
                                 </el-card>
                             </div>
@@ -125,10 +127,10 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.initEcharts();
+            this.getFollower();
+            this.getFollowee();
         });
         this.getUserProfile();
-        this.getFollower();
-        this.getFollowee();
     },
     methods: {
         async getUserProfile() {
@@ -148,7 +150,7 @@ export default {
         async getFollower() {
             await this.$http.get('api/v1/users/favorite/followers', {
                 params: {
-                    uid: 5
+                    uid: 1
                 }
             })
                 .then(res => {
@@ -165,7 +167,6 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
                     this.followeeList = res.data.data.list;
                 }).catch(err => {
                     console.log(err);
@@ -174,8 +175,31 @@ export default {
         handleClick(tab, event) {
             console.log(tab, event);
         },
-        removeFollow(index) {
-            this.followList.splice(index, 1);
+        async removeFollower(id, index) {
+            // this.followeeList.splice(index, 1)
+            await this.$http.post('api/v1/users/favorite/unfollow', {
+                uid: id
+            })
+                .then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+            console.log("hello")
+            pair = document.getElementById("followee-info").getElementsByClassName("follow-tag")[0].getElementsByTagName("button")
+            pair[0].classList.add("hidden")
+            pair[1].classList.remove("hidden")
+        },
+        async followUser(id, index) {
+            await this.$http.post('api/v1/users/favorite/follow', {
+                    uid: id
+            })
+                .then(res => {
+                    console.log(res);
+                    this.followeeList = res.data.data.list;
+                }).catch(err => {
+                    console.log(err);
+                })
         },
         gotoProfile(id) {
             this.$router.push({
@@ -398,6 +422,10 @@ export default {
         display: flex;
         align-items: center;
         flex: 1;
+
+        .follow-tag .hidden {
+            display: none;
+        }
     }
 
     .card_name {
