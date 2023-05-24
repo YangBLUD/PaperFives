@@ -11,7 +11,7 @@
 
         <el-container>
             <!-- 主页侧边栏 -->
-            <el-aside :width="isCollapse ? '64px':'160px'">
+            <el-aside :width="isCollapse ? '64px' : '160px'">
                 <div class="toggle-button" @click="toggleCollapse">|||
 
                 </div>
@@ -41,7 +41,31 @@
             <!-- 主页主体 -->
             <el-main>
                 <!-- 路由占位符 -->
-              <router-view></router-view>
+                <router-view></router-view>
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-card class="search">
+                    <!-- 搜索与添加区域 -->
+                    <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
+                        @keyup.enter.native="goSearch" style="width: 750px; font-size: 17px">
+                        <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-button type="primary" slot="append" icon="el-icon-search" @click="goSearch"></el-button>
+                    </el-input>
+                </el-card>
+                <div class="topRecommend" id="topRecommend">
+                    <el-tabs v-model="activeNameOut">
+                        <el-tab-pane label="热门文献" name="topArticle" style="text-align: left">
+                            <Articles :articles="top_articles"></Articles>
+                        </el-tab-pane>
+                        <el-tab-pane label="热门学者" name="topAuthor" style="text-align: left">
+                            <Authors :authors="top_authors"></Authors>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
             </el-main>
         </el-container>
     </el-container>
@@ -75,16 +99,22 @@ export default {
                     ]
                 },
                 {
-                    id:11,
-                    authName:'我的',
-                    icon:'el-icon-user-solid',
-                    path:'',
-                    children:[
+                    id: 11,
+                    authName: '我的',
+                    icon: 'el-icon-user-solid',
+                    path: '',
+                    children: [
                         {
-                            id:1,
-                            authName:'主页',
-                            icon:'el-icon-house',
-                            path:"user"
+                            id: 1,
+                            authName: '主页',
+                            icon: 'el-icon-house',
+                            path: "user"
+                        },
+                        {
+                            id: 1,
+                            authName: '信息',
+                            icon: 'el-icon-document',
+                            path: "userinfo"
                         },
                         {
                             id: 1,
