@@ -7,7 +7,14 @@
                     <div class="user">
                         <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                         <div>
-                            <p class="name">{{ this.userProfile.username }}</p>
+                            <p class="name" v-if="this.userAttr.sex === 1">
+                                {{ this.userProfile.username }}
+                                <i class="el-icon-male" style="color: #409EFF; font-weight: 700;"></i>
+                            </p>
+                            <p class="name" v-else>
+                                {{ this.userProfile.username }}
+                                <i class="el-icon-female" style="color:#FF69B4; font-weight: 700;"></i>
+                            </p>
                             <!-- <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p> -->
                             <template v-if="this.userAttr.institute">
                                 <p class="institute">{{ this.userAttr.institute }}</p>
@@ -23,7 +30,7 @@
                     </div>
                 </el-col>
                 <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
-                    <i class="el-icon-star-on" style="font-size:70px;" @click="followUser()"></i>
+                    <i class="el-icon-star-on" style="font-size:70px; color: #FFBE00;" @click="followUser()"></i>
                 </el-col>
             </el-card>
         </div>
