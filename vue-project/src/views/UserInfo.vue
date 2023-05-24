@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     async getUserProfile() {
-      await this.$http.get('users/profile/user', {
+      await this.$http.get('api/v1/users/profile/user', {
         params: {
           mode: 'all',
           uid: 1
