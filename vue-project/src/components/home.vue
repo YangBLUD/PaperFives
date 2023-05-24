@@ -106,15 +106,15 @@ export default {
                     children: [
                         {
                             id: 1,
-                            authName: '收藏',
-                            icon: 'el-icon-star-on',
-                            path: ""
+                            authName: '主页',
+                            icon: 'el-icon-house',
+                            path: "user"
                         },
                         {
                             id: 1,
                             authName: '信息',
                             icon: 'el-icon-document',
-                            path: ""
+                            path: "userinfo"
                         },
                         {
                             id: 1,
