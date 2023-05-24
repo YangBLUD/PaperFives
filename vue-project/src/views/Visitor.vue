@@ -1,22 +1,38 @@
 <template>
     <el-row>
         <!-- 个人名片 -->
-        <h3 class="page-title">我</h3>
-        <el-card class="box-card">
-            <div class="user">
-                <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
-                <div>
-                    <p class="name">{{ this.userProfile.username }}</p>
-                    <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p>
-                </div>
-            </div>
-        </el-card>
+        <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px;">
+            <el-card class="box-card" style="margin: 0 auto;">
+                <el-col :span="22">
+                    <div class="user">
+                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
+                        <div>
+                            <p class="name">{{ this.userProfile.username }}</p>
+                            <!-- <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p> -->
+                            <template v-if="this.userAttr.institute">
+                                <p class="institute">{{ this.userAttr.institute }}</p>
+                                <p v-if="this.userAttr.motto" class="motto">{{ this.userAttr.motto }}</p>
+                                <p v-else class="motto">&nbsp;</p>
+                            </template>
+                            <template v-else>
+                                <p class="institute">&nbsp;</p>
+                                <p v-if="this.userAttr.motto" class="motto">{{ this.userAttr.motto }}</p>
+                                <p v-else class="motto">&nbsp;</p>
+                            </template>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
+                    <i class="el-icon-star-on" style="font-size:70px;" @click="followUser()"></i>
+                </el-col>
+            </el-card>
+        </div>
 
-        <h3 class="page-title">我的论文</h3>
+
         <!-- 论文列表 -->
         <el-row :gutter="20" class="paper-list">
             <template v-if="paperList.length > 0">
-                <el-col :span="24" v-for="(item, index) in paperList" :key="index">
+                <el-col :span="12" v-for="(item, index) in paperList" :key="index">
                     <el-card shadow="hover" class="papaer-item">
                         <!-- 查看操作 -->
                         <div class="paper-action">
@@ -26,13 +42,27 @@
                 </el-col>
             </template>
             <template v-else>
-                <el-col :span="24">
+                <el-col :span="12">
+                    <el-empty description="无论文数据" :image-size="250"></el-empty>
+                </el-col>
+            </template>
+            <template v-if="paperList.length > 0">
+                <el-col :span="12" v-for="(item, index) in paperList" :key="index">
+                    <el-card shadow="hover" class="papaer-item">
+                        <!-- 查看操作 -->
+                        <div class="paper-action">
+                            <el-button type="primary" size="small" @click="">查看论文</el-button>
+                        </div>
+                    </el-card>
+                </el-col>
+            </template>
+            <template v-else>
+                <el-col :span="12">
                     <el-empty description="无论文数据" :image-size="250"></el-empty>
                 </el-col>
             </template>
         </el-row>
 
-        <h3 class="page-title">我的统计</h3>
         <div class="graph">
             <el-card style="height: 330px">
                 <div class="echart" id="mychart1" :style="myChartStyle"></div>
@@ -50,6 +80,7 @@ export default {
     data() {
         return {
             userProfile: {},
+            userAttr: {},
             paperList: [],
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
@@ -72,6 +103,17 @@ export default {
                 .then(res => {
                     console.log(res);
                     this.userProfile = res.data.data;
+                    this.userAttr = res.data.data.attr;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async followUser() {
+            await this.$http.post('api/v1/users/favorite/follow', {
+                    uid: this.$route.query.uid
+            })
+                .then(res => {
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -233,9 +275,20 @@ export default {
 
   
 <style lang="less" scoped>
+.box-card {
+    display: flex;
+    justify-content: center;
+    width: 1200px;
+}
+
+.box-card::v-deep .el-card__body {
+    width: 1050px;
+}
+
 .user {
     display: flex;
     align-items: center;
+    justify-items: left;
 
     img {
         margin-right: 40px;
@@ -247,11 +300,23 @@ export default {
     .name {
         font-size: 32px;
         margin-bottom: 10px;
-        width: 50px;
+        width: 500px;
     }
 
     .access {
         color: gray;
+    }
+
+    .institute {
+        font-size: 15px;
+        margin-bottom: 10px;
+        width: 500px;
+    }
+
+    .motto {
+        font-size: 15px;
+        margin-bottom: 10px;
+        width: 500px;
     }
 }
 
@@ -270,6 +335,9 @@ export default {
 }
 
 .graph {
+    padding-top: 50px;
+    padding-left: 150px;
+    padding-right: 150px;
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -280,7 +348,8 @@ export default {
 }
 
 .paper-list {
-    height: 350px;
+    padding-top: 50px;
+    height: auto;
     overflow-y: auto;
 }
 
