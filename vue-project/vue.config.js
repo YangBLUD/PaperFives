@@ -20,8 +20,4 @@ module.exports = defineConfig({
       }
     }
   }
-<<<<<<< HEAD
 })
-=======
-})
->>>>>>> parent of 0449a93 (Revert "Merge branch 'jrx' into YangBLUD")
