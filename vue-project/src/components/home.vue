@@ -11,40 +11,62 @@
 
         <el-container>
             <!-- 主页侧边栏 -->
-            <el-aside :width="isCollapse ? '64px':'160px'">
+            <el-aside :width="isCollapse ? '64px' : '160px'">
                 <div class="toggle-button" @click="toggleCollapse">|||
 
                 </div>
-                <el-menu background-color='#333744' text-color="#fff" active-text-color="#409EFF" 
-                unique-opened :collapse="isCollapse" :collapse-transition="false" :router="true"
-                :default-active=activePath>
+                <el-menu background-color='#333744' text-color="#fff" active-text-color="#409EFF" unique-opened
+                    :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active=activePath>
                     <!-- 一级菜单 -->
-                    <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
+                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
                         <!-- 一级菜单模板区域 -->
                         <template slot="title">
                             <i :class="item.icon"></i>
                             <span>{{ item.authName }}</span>
                         </template>
                         <!-- 二级菜单 -->
-                        <el-menu-item :index="'/'+subItem.path" v-for="subItem in item.children" :key="subItem.id"
-                        @click=saveState(activePath)>
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
+                            @click=saveState(activePath)>
                             <template slot="title">
-                            <i :class="subItem.icon"></i>
-                            <span>{{ subItem.authName }}</span>
-                        </template>
+                                <i :class="subItem.icon"></i>
+                                <span>{{ subItem.authName }}</span>
+                            </template>
                         </el-menu-item>
-                     
+
                     </el-submenu>
-                 
+
                 </el-menu>
             </el-aside>
 
             <!-- 主页主体 -->
             <el-main>
                 <!-- 路由占位符 -->
-              <router-view></router-view>
+                <router-view></router-view>
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-card class="search">
+                    <!-- 搜索与添加区域 -->
+                    <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
+                        @keyup.enter.native="goSearch" style="width: 750px; font-size: 17px">
+                        <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-button type="primary" slot="append" icon="el-icon-search" @click="goSearch"></el-button>
+                    </el-input>
+                </el-card>
+                <div class="topRecommend" id="topRecommend">
+                    <el-tabs v-model="activeNameOut">
+                        <el-tab-pane label="热门文献" name="topArticle" style="text-align: left">
+                            <Articles :articles="top_articles"></Articles>
+                        </el-tab-pane>
+                        <el-tab-pane label="热门学者" name="topAuthor" style="text-align: left">
+                            <Authors :authors="top_authors"></Authors>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
             </el-main>
-            
         </el-container>
     </el-container>
 </template>
@@ -53,46 +75,46 @@
 import path from 'path'
 
 export default {
-    data(){
-        return{
-            menuList:[
+    data() {
+        return {
+            menuList: [
                 {
-                    id:1,
-                    authName:'搜索',
-                    icon:'el-icon-zoom-in',
-                    path:''
-                },
-                {   
-                    id:1,
-                    authName:'热门',
-                    icon:'el-icon-s-open',
-                    path:'',
-                    children:[
+                    id: 1,
+                    authName: '热门',
+                    icon: 'el-icon-s-open',
+                    path: '',
+                    children: [
                         {
-                            id:1,
-                            authName:'热门领域',
-                            icon:'el-icon-s-open',
-                            path:'',
+                            id: 1,
+                            authName: '热门领域',
+                            icon: 'el-icon-s-open',
+                            path: '',
                         },
                         {
-                            id:1,
-                            authName:'热门学者',
-                            icon:'el-icon-s-custom',
-                            path:'',
+                            id: 1,
+                            authName: '热门学者',
+                            icon: 'el-icon-s-custom',
+                            path: '',
                         }
                     ]
                 },
                 {
-                    id:11,
-                    authName:'我的',
-                    icon:'el-icon-user-solid',
-                    path:'',
-                    children:[
+                    id: 11,
+                    authName: '我的',
+                    icon: 'el-icon-user-solid',
+                    path: '',
+                    children: [
                         {
-                            id:1,
-                            authName:'主页',
-                            icon:'el-icon-house',
-                            path:"user"
+                            id: 1,
+                            authName: '收藏',
+                            icon: 'el-icon-star-on',
+                            path: ""
+                        },
+                        {
+                            id: 1,
+                            authName: '信息',
+                            icon: 'el-icon-document',
+                            path: ""
                         },
                         {
                             id: 1,
@@ -107,14 +129,6 @@ export default {
                     authName: '设置',
                     icon: 'el-icon-setting',
                     path: '',
-                    children: [
-                        {
-                            id:1,
-                            authName:'信息',
-                            icon:'el-icon-document',
-                            path:"userinfo"
-                        },
-                    ]
                 }
             ],
             isCollapse: false,  //是否折叠
@@ -311,12 +325,10 @@ export default {
                     year: "2021"
                 }
             ],
-            isCollapse:false,  //是否折叠
-            activePath:''
         }
     },
-    created(){
-        this.activePath=window.sessionStorage.getItem('activePath')
+    created() {
+        this.activePath = window.sessionStorage.getItem('activePath')
     },
     methods: {
         logout() {
@@ -324,12 +336,15 @@ export default {
             this.$router.push('/login')
         },
         // 切换侧边折叠与展开
-        toggleCollapse(){
-            this.isCollapse=!this.isCollapse
+        toggleCollapse() {
+            this.isCollapse = !this.isCollapse
         },
         //保存链接激活
-        saveState(activePath){
-            window.sessionStorage.setItem('activePath',activePath)
+        saveState(activePath) {
+            window.sessionStorage.setItem('activePath', activePath)
+        },
+        gosearch() {
+
         }
     }
 }
@@ -365,10 +380,12 @@ export default {
 .el-main {
     background-color: #EAEDF1;
 }
-.iconfont{
+
+.iconfont {
     margin-right: 10px;
 }
-.toggle-button{
+
+.toggle-button {
     background-color: #4A5064;
     font-size: 10px;
     line-height: 24px;
@@ -376,5 +393,19 @@ export default {
     text-align: center;
     letter-spacing: 0.2em;
     cursor: pointer;
+}
+
+.topRecommend {
+    min-width: 900px;
+    margin: 50px 12%;
+    padding: 20px 40px 60px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
+}
+
+.search {
+    margin: 50px 12%;
+    background-color: white;
+    min-width: 900px;
 }
 </style>
