@@ -46,19 +46,19 @@
             <el-form-item label="性别">
               <el-select v-model="form.sex" placeholder="请选择" style="width: 106px;">
                 <el-option label="男" value="1"></el-option>
-                <el-option label="女" value="0"></el-option>
+                <el-option label="女" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="所属机构">
-              <el-input v-model="form.institution" placeholder="请输入所属机构" style="width: 300px;"></el-input>
+              <el-input v-model="form.institute" placeholder="请输入所属机构" style="width: 300px;"></el-input>
             </el-form-item>
             <el-form-item label="个性签名">
-              <el-input v-model="form.description" placeholder="请输入个性签名"></el-input>
+              <el-input v-model="form.motto" placeholder="请输入个性签名"></el-input>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible1 = false; changeProfile()">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -66,7 +66,7 @@
           style="font-weight: 700;">
           <el-form ref="form" :model="form" label-width="100px">
             <el-form-item label="原密码">
-              <el-input v-model="form.passwd_test" placeholder="请输入原密码"></el-input>
+              <el-input v-model="form.passwd_old" placeholder="请输入原密码"></el-input>
             </el-form-item>
             <el-form-item label="新密码">
               <el-input v-model="form.passwd_new" placeholder="请输入新密码"></el-input>
@@ -77,7 +77,7 @@
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible2 = false; changePassword()">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -92,11 +92,11 @@
   justify-content: center;
   align-content: center;
   height: 100%;
-  
+
   .personal-info {
     width: 100%;
     max-width: 1000px;
-    
+
     .personal-info-header {
       text-align: center;
       padding: 20px 20px 10px 20px;
@@ -130,11 +130,11 @@ export default {
       form: {
         name: '',
         sex: '',
-        institution: '',
-        description: '',
+        institute: '',
+        motto: '',
         email: '',
         passwd: '',
-        passwd_test: '',
+        passwd_old: '',
         passwd_new: '',
         passwd_new_test: ''
       }
@@ -154,6 +154,30 @@ export default {
         .then(res => {
           console.log(res.data);
           this.userProfile = res.data.data;
+        }).catch(err => {
+          console.log(err);
+        })
+    },
+    async changeProfile() {
+      await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/profile', {
+        username : this.form.name,
+        sex : this.form.sex,
+        institute: this.form.institute,
+        motto: this.form.motto
+      })
+        .then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        })
+    },
+    async changePassword() {
+      await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/password', {
+        old: this.form.passwd_old,
+        new: this.form.passwd_new
+      })
+        .then(res => {
+          console.log(res);
         }).catch(err => {
           console.log(err);
         })
