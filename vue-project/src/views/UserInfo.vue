@@ -57,8 +57,7 @@
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible1 = false; changeProfile()">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible1 = false; openProfile()">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -76,12 +75,10 @@
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible2 = false; changePassword()">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible2 = false; openPassword()">确 定</el-button>
           </span>
         </el-dialog>
       </div>
-
     </div>
   </div>
 </template>
@@ -188,7 +185,41 @@ export default {
           done()
         })
         .catch((_) => { })
-    }
+    },
+    openProfile() {
+        this.$confirm('此操作将修改用户的基本信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });          
+        });
+      },
+      openPassword() {
+        this.$confirm('此操作将修改用户的密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });          
+        });
+      }
   }
 }
 </script>
