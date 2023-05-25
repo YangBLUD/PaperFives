@@ -19,11 +19,11 @@
                     <el-tab-pane name="first">
                         <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
                         <template v-if="followeeList.length > 0">
-                            <div v-for="(item, index) in followeeList" :key="index">
+                            <div v-for="(item, index) in newList" :key="index">
                                 <el-card shadow="hover" class="follow-item">
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
-                                        <div @click="gotoProfile(item.uid)">
+                                        <div @click="gotoProfile(item.uid, item.isFollowed)">
                                             <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
                                                 :border="false"></el-avatar>
                                         </div>
@@ -31,10 +31,14 @@
                                         <div class="card_name" @click="gotoProfile(item.uid)">{{ item.username }}</div>
                                         <!-- 关注操作 -->
                                         <div class="follow-tag">
-                                            <el-button type="danger" size="small"
-                                                @click="removeFollower(item.uid, index)">取消关注</el-button>
-                                            <el-button class="hidden" type="success" size="small"
-                                                @click="followUser(item.uid, index)">关注</el-button>
+                                            <el-button v-if="item.isFollowed" type="danger" size="small"
+                                                @click="removeFollower(item.uid, index)">
+                                                取消关注
+                                            </el-button>
+                                            <el-button v-else type="success" size="small"
+                                                @click="followUser(item.uid, index)" style="width: 79px;">
+                                                关注
+                                            </el-button>
                                         </div>
                                     </div>
                                 </el-card>
@@ -56,7 +60,7 @@
                                         <!-- 用户头像 -->
                                         <div @click="gotoProfile(item.uid)">
                                             <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
-                                                :border="false" ></el-avatar>
+                                                :border="false"></el-avatar>
                                         </div>
                                         <!-- 用户名 -->
                                         <div class="card_name" @click="gotoProfile(item.uid)">{{ item.username }}</div>
@@ -117,6 +121,7 @@ export default {
             userProfile: {},
             followerList: [],
             followeeList: [],
+            newList: [],
             paperList: [],
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
@@ -167,6 +172,12 @@ export default {
             })
                 .then(res => {
                     this.followeeList = res.data.data.list;
+                    this.newList = this.followeeList.map(item => {
+                        return {
+                            ...item,
+                            isFollowed: true
+                        };
+                    });
                 }).catch(err => {
                     console.log(err);
                 })
@@ -176,6 +187,7 @@ export default {
         },
         async removeFollower(id, index) {
             // this.followeeList.splice(index, 1)
+            this.newList[index].isFollowed = !this.newList[index].isFollowed;
             await this.$http.post('api/v1/users/favorite/unfollow', {
                 uid: id
             })
@@ -194,12 +206,12 @@ export default {
             // pair[1].classList.remove("hidden"))
         },
         async followUser(id, index) {
+            this.newList[index].isFollowed = !this.newList[index].isFollowed;
             await this.$http.post('api/v1/users/favorite/follow', {
-                    uid: id
+                uid: id
             })
                 .then(res => {
                     // console.log(res);
-                    this.followeeList = res.data.data.list;
                 }).catch(err => {
                     console.log(err);
                 })
@@ -369,9 +381,10 @@ export default {
 
   
 <style lang="less" scoped>
-.border{
-    max-width:max-content;
+.border {
+    max-width: max-content;
 }
+
 .user {
     display: flex;
     align-items: center;
