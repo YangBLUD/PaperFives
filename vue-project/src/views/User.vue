@@ -185,10 +185,14 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 })
-            console.log("hello")
-            pair = document.getElementById("followee-info").getElementsByClassName("follow-tag")[0].getElementsByTagName("button")
-            pair[0].classList.add("hidden")
-            pair[1].classList.remove("hidden")
+            console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag"));
+            console.log(index)
+            console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag")[index]);
+            pair = document.getElementById("pane-first").getElementsByClassName("follow-tag")[index];
+            console.log(pair)
+            // .getElementsByTagName("button")
+            // pair[0].classList.add("hidden")
+            // pair[1].classList.remove("hidden"))
         },
         async followUser(id, index) {
             await this.$http.post('api/v1/users/favorite/follow', {
