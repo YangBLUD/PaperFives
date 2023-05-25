@@ -30,7 +30,9 @@
                     </div>
                 </el-col>
                 <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
-                    <i class="el-icon-star-on" style="font-size:70px; color: #FFBE00;" @click="followUser()"></i>
+                    <i :class="{ 'el-icon-star-off': isFollowed, 'el-icon-star-on': !isFollowed }"
+                        style="font-size:70px; color: #FFBE00;" @click="followUser()">
+                    </i>
                 </el-col>
             </el-card>
         </div>
@@ -86,6 +88,7 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
+            isFollowed: this.$route.query.status,
             userProfile: {},
             userAttr: {},
             paperList: [],
@@ -116,8 +119,9 @@ export default {
                 })
         },
         async followUser() {
+            this.isFollowed = !this.isFollowed;
             await this.$http.post('api/v1/users/favorite/follow', {
-                    uid: this.$route.query.uid
+                uid: this.$route.query.uid
             })
                 .then(res => {
                     console.log(res);
@@ -282,9 +286,10 @@ export default {
 
   
 <style lang="less" scoped>
-.border{
-    max-width:1500px;
+.border {
+    max-width: 1500px;
 }
+
 .box-card {
     display: flex;
     justify-content: center;
