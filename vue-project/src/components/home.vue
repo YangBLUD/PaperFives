@@ -42,12 +42,12 @@
             <el-main>
                 <!-- 路由占位符 -->
                 <router-view></router-view>
-                <el-breadcrumb separator-class="el-icon-arrow-right">
+                <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
                     <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
                 </el-breadcrumb>
-                <el-card class="search">
+                <el-card class="search"> -->
                     <!-- 搜索与添加区域 -->
-                    <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
+                    <!-- <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
                         @keyup.enter.native="goSearch" style="width: 750px; font-size: 17px">
                         <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -65,7 +65,7 @@
                             <Authors :authors="top_authors"></Authors>
                         </el-tab-pane>
                     </el-tabs>
-                </div>
+                </div> -->
             </el-main>
         </el-container>
     </el-container>
