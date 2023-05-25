@@ -89,6 +89,7 @@
   justify-content: center;
   align-content: center;
   height: 100%;
+  max-width: 100cap;
 
   .personal-info {
     width: 100%;
