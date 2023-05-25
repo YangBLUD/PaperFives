@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="border">
         <el-col :span="8">
             <!-- 个人名片 -->
             <h3 class="page-title">我</h3>
@@ -15,7 +15,7 @@
 
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
-                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: auto; width: 502px;">
+                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: auto; width: auto;">
                     <el-tab-pane name="first">
                         <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
                         <template v-if="followeeList.length > 0">
@@ -154,7 +154,6 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
                     this.followerList = res.data.data.list;
                 }).catch(err => {
                     console.log(err);
@@ -181,15 +180,15 @@ export default {
                 uid: id
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
-            console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag"));
-            console.log(index)
-            console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag")[index]);
-            pair = document.getElementById("pane-first").getElementsByClassName("follow-tag")[index];
-            console.log(pair)
+            // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag"));
+            // console.log(index)
+            // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag")[index]);
+            // pair = document.getElementById("pane-first").getElementsByClassName("follow-tag")[index];
+            // console.log(pair)
             // .getElementsByTagName("button")
             // pair[0].classList.add("hidden")
             // pair[1].classList.remove("hidden"))
@@ -199,7 +198,7 @@ export default {
                     uid: id
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.followeeList = res.data.data.list;
                 }).catch(err => {
                     console.log(err);
@@ -370,9 +369,13 @@ export default {
 
   
 <style lang="less" scoped>
+.border{
+    max-width:max-content;
+}
 .user {
     display: flex;
     align-items: center;
+    width: auto;
 
     img {
         margin-right: 40px;
@@ -384,7 +387,7 @@ export default {
     .name {
         font-size: 32px;
         margin-bottom: 10px;
-        width: 50px;
+        width: auto;
     }
 
     .access {
@@ -425,9 +428,11 @@ export default {
     .follow-info {
         display: flex;
         align-items: center;
-        flex: 1;
+        width: auto;
 
         .follow-tag .hidden {
+            display: flex;
+            justify-content: flex-end;
             display: none;
         }
     }
@@ -439,7 +444,7 @@ export default {
 }
 
 ::v-deep .el-card__body {
-    width: 500px;
+    width: auto;
 }
 
 .follow-action {
