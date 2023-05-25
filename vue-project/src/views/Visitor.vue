@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="border">
         <!-- 个人名片 -->
         <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px;">
             <el-card class="box-card" style="margin: 0 auto;">
@@ -282,6 +282,9 @@ export default {
 
   
 <style lang="less" scoped>
+.border{
+    max-width:1500px;
+}
 .box-card {
     display: flex;
     justify-content: center;
