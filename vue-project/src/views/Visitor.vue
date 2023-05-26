@@ -30,9 +30,12 @@
                     </div>
                 </el-col>
                 <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
-                    <i :class="{ 'el-icon-star-off': isFollowed, 'el-icon-star-on': !isFollowed }"
-                        style="font-size:70px; color: #FFBE00;" @click="followUser()">
-                    </i>
+                    <div v-if="isFollowed">
+                        <i class="el-icon-star-on" style="font-size:70px; color: #FFBE00;" @click="removeFollower()"></i>
+                    </div>
+                    <div v-else>
+                        <i class="el-icon-star-off" style="font-size:70px; color: #FFBE00;" @click="followUser()"></i>
+                    </div>
                 </el-col>
             </el-card>
         </div>
@@ -72,6 +75,7 @@
             </template>
         </el-row>
 
+        <!-- 图表部分 -->
         <div class="graph">
             <el-card style="height: 330px">
                 <div class="echart" id="mychart1" :style="myChartStyle"></div>
@@ -101,6 +105,7 @@ export default {
     mounted() {
         this.initEcharts();
         this.getUserProfile();
+        console.log(this.isFollowed);
     },
     methods: {
         async getUserProfile() {
@@ -111,7 +116,7 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.userProfile = res.data.data;
                     this.userAttr = res.data.data.attr;
                 }).catch(err => {
@@ -124,7 +129,18 @@ export default {
                 uid: this.$route.query.uid
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async removeFollower() {
+            this.isFollowed = !this.isFollowed;
+            await this.$http.post('api/v1/users/favorite/unfollow', {
+                uid: this.$route.query.uid
+            })
+                .then(res => {
+                    // console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
