@@ -112,7 +112,6 @@
             </el-row>
 
             <!-- 我的统计 -->
-            <h3 class="page-title">我的统计</h3>
             <div class="graph">
                 <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
@@ -224,19 +223,6 @@ export default {
             // pair[0].classList.add("hidden")
             // pair[1].classList.remove("hidden"))
         },
-        async isFollowee(id) {
-            await this.$http.get('api/v1/users/favorite/isfollowee', {
-                params: {
-                    uid: id
-                }
-            })
-                .then(res => {
-                    console.log(res);
-                    this.followeeTag = res.data.data.value
-                }).catch(err => {
-                    console.log(err);
-                })
-        },
         async followUser(id, index) {
             this.newList[index].isFollowed = !this.newList[index].isFollowed;
             await this.$http.post('api/v1/users/favorite/follow', {
@@ -249,13 +235,11 @@ export default {
                 })
         },
         async gotoProfile(id) {
-            await this.isFollowee(id)
             console.log(this.followeeTag)
             this.$router.push({
                 path: '/visitor',
                 query: {
                     uid: id,
-                    status: this.followeeTag
                 }
             })
         },
@@ -512,7 +496,7 @@ export default {
 
     .card_name {
         margin-left: 20px;
-        width: 50px;
+        width: auto;
     }
 
     .card_name:hover {
