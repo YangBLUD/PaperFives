@@ -11,9 +11,12 @@
                                 {{ this.userProfile.username }}
                                 <i class="el-icon-male" style="color: #409EFF; font-weight: 700;"></i>
                             </p>
-                            <p class="name" v-else>
+                            <p class="name" v-else-if="this.userAttr.sex === 2">
                                 {{ this.userProfile.username }}
                                 <i class="el-icon-female" style="color:#FF69B4; font-weight: 700;"></i>
+                            </p>
+                            <p class="name" v-else>
+                                {{ this.userProfile.username }}
                             </p>
                             <!-- <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p> -->
                             <template v-if="this.userAttr.institute">
@@ -29,12 +32,12 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
-                    <div v-if="isFollowed">
-                        <i class="el-icon-star-on" style="font-size:70px; color: #FFBE00;" @click="removeFollower()"></i>
-                    </div>
-                    <div v-else>
-                        <i class="el-icon-star-off" style="font-size:70px; color: #FFBE00;" @click="followUser()"></i>
+                <el-col v-show="isFollowed !== null" :span="2" style="display: flex; justify-content: center; align-items: center;">
+                    <div>
+                        <i v-if="this.isFollowed" class="el-icon-star-on" style="font-size:70px; color: #FFBE00;"
+                            @click="removeFollower()"></i>
+                        <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                            @click="followUser()"></i>
                     </div>
                 </el-col>
             </el-card>
@@ -92,7 +95,7 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            isFollowed: this.$route.query.status,
+            isFollowed: null,
             userProfile: {},
             userAttr: {},
             paperList: [],
@@ -103,9 +106,11 @@ export default {
         };
     },
     mounted() {
-        this.initEcharts();
-        this.getUserProfile();
-        console.log(this.isFollowed);
+        this.$nextTick(() => {
+            this.initEcharts();
+            this.getUserProfile();
+            this.isFollowee();
+        });
     },
     methods: {
         async getUserProfile() {
@@ -116,7 +121,7 @@ export default {
                 }
             })
                 .then(res => {
-                    // console.log(res);
+                    console.log(res);
                     this.userProfile = res.data.data;
                     this.userAttr = res.data.data.attr;
                 }).catch(err => {
@@ -129,7 +134,7 @@ export default {
                 uid: this.$route.query.uid
             })
                 .then(res => {
-                    // console.log(res);
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -140,7 +145,20 @@ export default {
                 uid: this.$route.query.uid
             })
                 .then(res => {
-                    // console.log(res);
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async isFollowee() {
+            await this.$http.get('api/v1/users/favorite/isfollowee', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.isFollowed = res.data.data.value
                 }).catch(err => {
                     console.log(err);
                 })
