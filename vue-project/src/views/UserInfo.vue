@@ -1,10 +1,12 @@
 <template>
   <div class="personal-info-wrapper">
     <div class="personal-info">
+      <!-- 标题 -->
       <div class="personal-info-header">
         <h1 style="font-size: 30px;">个人信息</h1>
       </div>
 
+      <!-- 基本信息表单 -->
       <div>
         <br><br><br>
         <span style="font-size: 20px; font-weight: 700;">基本信息</span>
@@ -17,11 +19,13 @@
         </el-descriptions>
       </div>
 
+      <!-- 编辑信息按钮 -->
       <br><br>
       <div class="personal-info-footer">
         <el-button @click="dialogVisible1 = true" type="primary">编辑信息</el-button>
       </div>
 
+      <!-- 账户信息表单 -->
       <div class="personal-info-content">
         <br><br><br>
         <span style="font-size: 20px; font-weight: 700;">账户信息</span>
@@ -31,12 +35,15 @@
         </el-descriptions>
       </div>
 
+      <!-- 修改密码按钮 -->
       <br>
       <div class="personal-info-footer">
         <el-button @click="dialogVisible2 = true" type="primary">修改密码</el-button>
       </div>
 
+    
       <div>
+        <!-- 基本信息修改表单 -->
         <el-dialog title="基本信息" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose" center
           style="font-weight: 700;">
           <el-form ref="form" :model="form" label-width="80px">
@@ -57,11 +64,11 @@
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible1 = false; changeProfile()">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible1 = false; openProfile()">确 定</el-button>
           </span>
         </el-dialog>
 
+        <!-- 修改密码表单 -->
         <el-dialog title="修改密码" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose" center
           style="font-weight: 700;">
           <el-form ref="form" :model="form" label-width="100px">
@@ -76,12 +83,10 @@
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible2 = false; changePassword()">确 定</el-button>
+            <el-button type="primary" @click="dialogVisible2 = false; openPassword()">确 定</el-button>
           </span>
         </el-dialog>
       </div>
-
     </div>
   </div>
 </template>
@@ -92,6 +97,7 @@
   justify-content: center;
   align-content: center;
   height: 100%;
+  max-width: 100cap;
 
   .personal-info {
     width: 100%;
@@ -188,7 +194,41 @@ export default {
           done()
         })
         .catch((_) => { })
-    }
+    },
+    openProfile() {
+        this.$confirm('此操作将修改用户的基本信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });          
+        });
+      },
+      openPassword() {
+        this.$confirm('此操作将修改用户的密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });          
+        });
+      }
   }
 }
 </script>

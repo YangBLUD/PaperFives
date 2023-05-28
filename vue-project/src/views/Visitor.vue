@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="border">
         <!-- 个人名片 -->
         <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px;">
             <el-card class="box-card" style="margin: 0 auto;">
@@ -11,9 +11,12 @@
                                 {{ this.userProfile.username }}
                                 <i class="el-icon-male" style="color: #409EFF; font-weight: 700;"></i>
                             </p>
-                            <p class="name" v-else>
+                            <p class="name" v-else-if="this.userAttr.sex === 2">
                                 {{ this.userProfile.username }}
                                 <i class="el-icon-female" style="color:#FF69B4; font-weight: 700;"></i>
+                            </p>
+                            <p class="name" v-else>
+                                {{ this.userProfile.username }}
                             </p>
                             <!-- <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p> -->
                             <template v-if="this.userAttr.institute">
@@ -29,8 +32,13 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="2" style="display: flex; justify-content: center; align-items: center;">
-                    <i class="el-icon-star-on" style="font-size:70px; color: #FFBE00;" @click="followUser()"></i>
+                <el-col v-show="isFollowed !== null" :span="2" style="display: flex; justify-content: center; align-items: center;">
+                    <div>
+                        <i v-if="this.isFollowed" class="el-icon-star-on" style="font-size:70px; color: #FFBE00;"
+                            @click="removeFollower()"></i>
+                        <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                            @click="followUser()"></i>
+                    </div>
                 </el-col>
             </el-card>
         </div>
@@ -70,6 +78,7 @@
             </template>
         </el-row>
 
+        <!-- 图表部分 -->
         <div class="graph">
             <el-card style="height: 330px">
                 <div class="echart" id="mychart1" :style="myChartStyle"></div>
@@ -86,6 +95,7 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
+            isFollowed: null,
             userProfile: {},
             userAttr: {},
             paperList: [],
@@ -96,8 +106,11 @@ export default {
         };
     },
     mounted() {
-        this.initEcharts();
-        this.getUserProfile();
+        this.$nextTick(() => {
+            this.initEcharts();
+            this.getUserProfile();
+            this.isFollowee();
+        });
     },
     methods: {
         async getUserProfile() {
@@ -116,11 +129,36 @@ export default {
                 })
         },
         async followUser() {
+            this.isFollowed = !this.isFollowed;
             await this.$http.post('api/v1/users/favorite/follow', {
-                    uid: this.$route.query.uid
+                uid: this.$route.query.uid
             })
                 .then(res => {
                     console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async removeFollower() {
+            this.isFollowed = !this.isFollowed;
+            await this.$http.post('api/v1/users/favorite/unfollow', {
+                uid: this.$route.query.uid
+            })
+                .then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async isFollowee() {
+            await this.$http.get('api/v1/users/favorite/isfollowee', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.isFollowed = res.data.data.value
                 }).catch(err => {
                     console.log(err);
                 })
@@ -282,6 +320,10 @@ export default {
 
   
 <style lang="less" scoped>
+.border {
+    max-width: 1500px;
+}
+
 .box-card {
     display: flex;
     justify-content: center;
