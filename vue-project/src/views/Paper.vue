@@ -9,9 +9,9 @@
         <span>作者列表：</span>
         <ul class="author-list-horizontal">
           <li v-for="(author, index) in authors" :key="index">
-            <span @click="gotoProfile(author.email)" class="author-info">
+            <span @click="gotoProfile(author.uid)" class="author-info">
               <span class="author-avatar">
-                <el-avatar :src="'http://81.70.161.76:5000' + getUserProfile(author.email).avatar" size="90" :border="false"></el-avatar>
+                <el-avatar :src="'http://81.70.161.76:5000' + author.avatar" size="medium" :border="false"></el-avatar>
               </span>
               <span>
                 {{ author.name }}
@@ -28,11 +28,11 @@
     <!-- 操作按钮 -->
     <div class="other">
       <div class="info">
-        <i class="el-icon-view icon" @click=""></i>
+        <i class="el-icon-view icon">{{ this.stat.clicks }}</i>
       </div>
       <div class="button">
         <i class="el-icon-bell icon" @click=""></i>
-        <i class="el-icon-download icon" @click=""></i>
+        <i class="el-icon-download icon" @click="downloadPaper()"></i>
       </div>
       <br>
     </div>
@@ -65,6 +65,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.getPaperInfo()
+      this.getAuthorsData()
     })
   },
   methods: {
@@ -76,11 +77,20 @@ export default {
         }
       })
         .then(res => {
+          console.log('user profile')
           console.log(res)
-          this.userProfile = res.data.data
         }).catch(err => {
           console.log(err)
         })
+    },
+    async getAuthorsData () {
+      for (const author of this.authors) {
+        await this.getUserProfile(author.email).then(res => {
+          author.avatar = res.data.data.avatar
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     async getPaperInfo () {
       await this.$http.get('/api/v1/papers/download/info', {
@@ -100,15 +110,34 @@ export default {
         }).catch(err => {
           console.log(err)
         })
+    },
+    gotoProfile (id) {
+      this.$router.push({
+        path: '/visitor',
+        query: {
+          id: id
+        }
+      })
+    },
+    downloadPaper () {
+      const url = '/api/v1/papers/download/file'
+      const params = { pid: this.paperInfo.pid }
+      // 使用axios进行请求
+      this.$http.get(url, { params, responseType: 'blob' }) // 设置responseType为blob用来接收pdf文件
+        .then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', this.paperInfo.attr.title + '.pdf')// 'paper.pdf' 可以替换为你想要的文件名
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        })
+        .catch(error => {
+          // Handle error here
+          console.log(error)
+        })
     }
-  },
-  gotoProfile (email) {
-    this.$router.push({
-      path: '/visitor',
-      query: {
-        email: email
-      }
-    })
   }
 }
 </script>
