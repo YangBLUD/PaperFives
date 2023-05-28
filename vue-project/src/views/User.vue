@@ -26,7 +26,7 @@
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
                                         <div @click="gotoProfile(item.uid)">
-                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
+                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" style="width: 50px; height: 50px; border-radius: 50%"
                                                 :border="false" class="avatar-box"></el-avatar>
                                         </div>
 
@@ -37,12 +37,12 @@
 
                                         <!-- 关注操作 -->
                                         <div class="follow-tag">
-                                            <el-button v-if="item.isFollowed" type="danger" size="small"
+                                            <el-button v-if="item.isFollowed" type="danger" size="normal"
                                                 @click="removeFollower(item.uid, index)">
                                                 取消关注
                                             </el-button>
-                                            <el-button v-else type="success" size="small"
-                                                @click="followUser(item.uid, index)" style="width: 79px;">
+                                            <el-button v-else type="success" size="normal"
+                                                @click="followUser(item.uid, index)" style="width: 97px;">
                                                 关注
                                             </el-button>
                                         </div>
@@ -69,7 +69,7 @@
                                     <div class="follow-info">
                                         <!-- 用户头像 -->
                                         <div @click="gotoProfile(item.uid)">
-                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" size="90"
+                                            <el-avatar :src="'http://81.70.161.76:5000' + item.avatar" style="width: 50px; height: 50px; border-radius: 50%"
                                                 :border="false" class="avatar-box"></el-avatar>
                                         </div>
                                         <!-- 用户名 -->
@@ -526,9 +526,6 @@ body {
     margin-left: 800px;
 }
 
-.el-button {
-    margin-left: 250px;
-}
 
 .page-title {
     font-size: 20px;
@@ -557,6 +554,9 @@ body {
         align-items: center;
         width: auto;
 
+        .follow-tag{
+            margin-left: auto;
+        }
         .follow-tag .hidden {
             display: flex;
             justify-content: flex-end;
@@ -568,6 +568,7 @@ body {
         margin-left: 20px;
         width: auto;
         color: black;
+        font-size: 20px;
         font-weight: normal;
         /* 设置初始状态字体为普通体 */
         transition: color 0.3s ease-in-out,
