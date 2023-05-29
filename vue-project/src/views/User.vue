@@ -117,12 +117,12 @@
                                             <p class="paperItems">点击量：{{ item.stat.clicks }}</p>
                                         </div>
                                     </div>
-                                    <div v-show="!showCard[index]">
+                                    <div v-show="!showCard[index]" >
                                         {{ item.attr.title }}
                                     </div>
                                 </div>
                                 <div v-show="!showCard[index]">
-                                    <div style="font-size: 20px;">
+                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;">
                                         {{ item.attr.title }}
                                     </div>
                                     <div v-show="!showCard[index]" style=" transform: scale(0.65); opacity: 0.5; ">
@@ -512,7 +512,8 @@ body {
     }
 
     .name {
-        font-size: 32px;
+        font-family: Montserrat;
+        font-size: 35px;
         margin-bottom: 10px;
         width: auto;
     }
@@ -565,11 +566,11 @@ body {
     }
 
     .card_name {
+        font-family: Montserrat;
         margin-left: 20px;
-        width: auto;
         color: black;
         font-size: 20px;
-        font-weight: normal;
+        font-weight: 600;
         /* 设置初始状态字体为普通体 */
         transition: color 0.3s ease-in-out,
             transform 0.2s ease-in-out;
@@ -615,11 +616,12 @@ body {
     margin-bottom: 10px;
 
     .paper_name {
+        font-family: 'EB Garamond', serif;
         margin-left: 20px;
         width: auto;
         color: black;
-        font-size: 30px;
-        font-weight: normal;
+        font-size: 35px;
+        font-weight: 800;
         /* 设置初始状态字体为普通体 */
         transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
         /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */

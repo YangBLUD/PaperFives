@@ -1,4 +1,9 @@
 
+@font-face {
+  font-family: 'EB Garamond';
+  src: url(./EBGaramond12-Regular.ttf)
+}
+
 @font-face {font-family: "iconfont";
   src: url('iconfont.eot?t=1523541245904'); /* IE9*/
   src: url('iconfont.eot?t=1523541245904#iefix') format('embedded-opentype'), /* IE6-IE8 */
