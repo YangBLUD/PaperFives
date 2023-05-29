@@ -9,6 +9,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/global.css'
 // 导入字体图标
 import './assets/fonts/iconfont.css'
+import './assets/fonts/Fonts.css'
+
 
 // 配置请求
 import axios from 'axios'

@@ -347,7 +347,8 @@ export default {
     }
 
     .name {
-        font-size: 32px;
+        font-family: Montserrat;
+        font-size: 35px;
         margin-bottom: 10px;
         width: 500px;
     }
@@ -357,13 +358,15 @@ export default {
     }
 
     .institute {
-        font-size: 15px;
+        font-size: 16px;
         margin-bottom: 10px;
         width: 500px;
+        color: #0077c2;
     }
 
     .motto {
-        font-size: 15px;
+        font-size: 16px;
+        font-style: italic;
         margin-bottom: 10px;
         width: 500px;
     }
@@ -378,7 +381,7 @@ export default {
 }
 
 .page-title {
-    font-size: 20px;
+    font-size: 23px;
     font-weight: bold;
     margin-bottom: 20px;
 }
