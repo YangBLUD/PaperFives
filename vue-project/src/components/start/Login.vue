@@ -69,8 +69,9 @@ export default {
                     return this.$message.error(res.meta.msg)
                 
                 this.$message.success(res.meta.msg)
-                // 将token保存到sessionStorage中
+
                 window.sessionStorage.setItem('token',res.token);
+                window.sessionStorage.setItem('uid',res.data.uid)
                 // 页面跳转
                 this.$router.push("/home");
             });

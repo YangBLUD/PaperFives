@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Login from '../components/start/Login.vue'
 import Register from '../components/start/Register.vue'
 import Home from '../components/home.vue'
+import mainPage from '../components/mainPage.vue'
+import advSearch from'../components/search/advSearch.vue'
 
 Vue.use(VueRouter)
 
@@ -11,8 +13,10 @@ const routes = [
   {
     path:'/home',
     component:Home,
+    redirect:'/main',
     children:[
-      // {path:'/users',component:Users}
+      { path:'/main',component:mainPage},
+      { path:'/advsearch',component:advSearch}
     ]
   },
   { path: '/login', component: Login },
