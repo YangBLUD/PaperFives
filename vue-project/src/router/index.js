@@ -5,7 +5,7 @@ import Register from '../components/start/Register.vue'
 import Home from '../components/home.vue'
 import mainPage from '../components/mainPage.vue'
 import advSearch from'../components/search/advSearch.vue'
-
+import searchRes from '../components/search/searchRes.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,7 +16,8 @@ const routes = [
     redirect:'/main',
     children:[
       { path:'/main',component:mainPage},
-      { path:'/advsearch',component:advSearch}
+      { path:'/advsearch',component:advSearch},
+      { path:'/searchres',component:searchRes},
     ]
   },
   { path: '/login', component: Login },
