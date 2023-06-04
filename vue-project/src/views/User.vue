@@ -101,8 +101,11 @@
                         <el-card shadow="hover" class="paper-item">
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
-                                    <el-button icon="el-icon-arrow-left" @click="$set(showCard, index, false)" size="mini"></el-button>
-                                    <p class="paper_name">{{ item.attr.title }}</p>
+                                    <div class="paper-item-title">
+                                        <span class="paper_name">{{ item.attr.title }}</span>
+                                        <el-button class="shrink" icon="el-icon-arrow-left"
+                                            @click="$set(showCard, index, false)" size="mini"></el-button>
+                                    </div>
                                     <div class="content">
                                         <div class="authors">
                                             <span v-for="(author, index) in item.authors" class="author-name">
@@ -129,34 +132,34 @@
                                     </div>
                                 </div>
                                 <div v-show="!showCard[index]">
-                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;">
-                                        {{ item.attr.title }}
-                                        <el-button icon="el-icon-view" size="mini" circle
-                                            @click="$set(showCard, index, true)"></el-button>
-                                        <el-button v-if="item.status === 0" type="success" size="normal"
+                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;"
+                                        class="paper-content">
+                                        <span>{{ item.attr.title }}</span>
+                                        <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 1" type="success" size="normal"
+                                        <el-button v-else-if="item.status === 1" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 2" type="warning" size="normal"
+                                        <el-button v-else-if="item.status === 2" type="warning" size="normal" class="status"
                                             icon="el-icon-s-check">
                                             审核中
                                         </el-button>
-                                        <el-button v-else-if="item.status === 3" type="warning" size="normal"
+                                        <el-button v-else-if="item.status === 3" type="warning" size="normal" class="status"
                                             icon="el-icon-s-check">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 4" type="danger" size="normal"
+                                        <el-button v-else-if="item.status === 4" type="danger" size="normal" class="status"
                                             icon="el-icon-error">
                                             已驳回
                                         </el-button>
-                                        <el-button v-else-if="item.status === 5" type="primary" size="normal"
+                                        <el-button v-else-if="item.status === 5" type="primary" size="normal" class="status"
                                             icon="el-icon-success">
                                             已发表
                                         </el-button>
+                                        <el-button icon="el-icon-view" size="mini" circle @click="$set(showCard, index, true)"></el-button>
                                     </div>
                                 </div>
                             </div>
@@ -641,33 +644,55 @@ export default {
     text-align: left !important;
 
     .paper-item {
-        display: flex;
+        // display: flex;
         align-items: center;
         margin-bottom: 10px;
 
-        // .wrapper{
-        //     height: 75px;
-        // }
+        .wrapper {
+            width: 100%;
+            transition: 1s;
+
+            .paper-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .status {
+                    margin-left: auto;
+                    width: 8em;
+                }
+            }
+
+            .paper-item-title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .paper_name {
+                    font-family: 'EB Garamond', serif;
+                    margin-left: 20px;
+                    color: black;
+                    font-size: 35px;
+                    font-weight: 800;
+                    /* 设置初始状态字体为普通体 */
+                    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+                    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                }
+
+                .paper_name:hover {
+                    cursor: pointer;
+                    transform: scale(1.1);
+                    color: #0077ff !important;
+                }
+
+                .shrink {
+                    margin-left: auto;
+                }
+            }
+        }
 
         .content {
             padding-left: 20px;
-        }
-
-        .paper_name {
-            font-family: 'EB Garamond', serif;
-            margin-left: 20px;
-            color: black;
-            font-size: 35px;
-            font-weight: 800;
-            /* 设置初始状态字体为普通体 */
-            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-            /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-        }
-
-        .paper_name:hover {
-            cursor: pointer;
-            transform: scale(1.1);
-            color: #0077ff !important;
         }
     }
 }
