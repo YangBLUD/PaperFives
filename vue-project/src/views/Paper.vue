@@ -95,7 +95,7 @@ export default {
     async getPaperInfo () {
       await this.$http.get('/api/v1/papers/download/info', {
         params: {
-          pid: '1',
+          pid: '1682',
           click: '0'
         }
       })
