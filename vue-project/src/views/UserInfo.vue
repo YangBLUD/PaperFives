@@ -62,7 +62,7 @@
 
   .personal-info {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 
     .personal-info-header {
       text-align: center;
@@ -109,7 +109,7 @@ export default {
       await this.$http.get('api/v1/users/profile/user', {
         params: {
           mode: 'all',
-          uid: 1
+          uid: window.sessionStorage.getItem('uid')
         }
       })
         .then(res => {
