@@ -91,7 +91,7 @@ export default {
                             id: 1,
                             authName: '信息',
                             icon: 'el-icon-document',
-                            path: "userinfo"
+                            path: "info"
                         },
                         {
                             id: 1,
