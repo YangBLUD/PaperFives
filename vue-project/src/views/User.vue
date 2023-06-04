@@ -137,7 +137,7 @@
                                 <div v-show="!showCard[index]">
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
-                                        }}&nbsp;&nbsp;&nbsp;</span>
+                                        }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                         <i class="el-icon-medal-1" style="font-size: 2em; color: #FFB90F;"></i>
                                         <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
@@ -276,9 +276,6 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 })
-        },
-        handleClick(tab, event) {
-            console.log(tab, event);
         },
         async removeFollower(id, index) {
             // this.followeeList.splice(index, 1)
@@ -681,15 +678,22 @@ export default {
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
+                    max-width: 600px;
                     font-weight: 600;
                     /* 设置初始状态字体为普通体 */
                     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
                     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                    white-space: nowrap;
+                    /* 设置不换行 */
+                    overflow: hidden;
+                    /* 超出部分隐藏 */
+                    text-overflow: ellipsis;
+                    /* 超出部分显示省略号 */
                 }
 
                 .paper_name_init:hover {
                     cursor: pointer;
-                    transform: scale(1.1);
+                    transform: scale(1.05);
                     color: #0077ff !important;
                 }
             }
@@ -709,11 +713,17 @@ export default {
                     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
                     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
                     line-height: 2;
+                    white-space: nowrap;
+                    /* 设置不换行 */
+                    overflow: hidden;
+                    /* 超出部分隐藏 */
+                    text-overflow: ellipsis;
+                    /* 超出部分显示省略号 */
                 }
 
                 .paper_name:hover {
                     cursor: pointer;
-                    transform: scale(1.1);
+                    transform: scale(1.05);
                     color: #0077ff !important;
                 }
 
