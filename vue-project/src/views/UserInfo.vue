@@ -3,7 +3,7 @@
     <div class="personal-info">
       <div class="personal-info-content">
         <div class="personal-info-header">
-          <h2 class="personal-info-title">个人信息</h2>
+          <h2 class="personal-info-title" style="font-size: large;">个人信息</h2>
         </div>
         <br>
         <el-descriptions title="基本信息" :border="true" :column="3" :size="size">
