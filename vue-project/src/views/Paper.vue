@@ -39,6 +39,7 @@
     <el-divider></el-divider>
     <!-- 论文摘要 -->
     <div class="abstract">
+      
     </div>
     <el-divider></el-divider>
     <!-- 论文引用 -->
@@ -95,7 +96,7 @@ export default {
     async getPaperInfo () {
       await this.$http.get('/api/v1/papers/download/info', {
         params: {
-          pid: '1',
+          pid: '1682',
           click: '0'
         }
       })
