@@ -1,0 +1,57 @@
+<template>
+  <div class="articles">
+    <div class="articles-body">
+      <div v-for="(article, index) in articles" v-bind:key="index">
+        <div style="text-align: left">
+          <div style="margin-bottom: 10px">
+            <span class="paper-title" @click="gotoPaper(article.paper_id)">{{ article.paper.attr.title }}</span>
+          </div>
+          <span v-for="(j, index) in article.paper.authors" :key="j" class="author-name">
+            <span @click="gotoSch(j.author_id)">{{ j.name }}</span>
+            <span v-if="index < article.paper.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> / </span>
+          </span>
+          <span class="publish-year"> · {{ article.paper.attr.publish_date }}</span>
+        </div>
+
+        <div style="text-align:left;margin-top:10px;">
+          <span class="abstract">{{ article.paper.attr.abstract | ellipsis }}</span>
+        </div>
+
+        <div class="citation-count">
+          <span>{{ article.paper.stat.cites }}&nbsp;被引用</span>
+          <span>&nbsp;·&nbsp;{{ article.paper.stat.downloads }}&nbsp;被收藏</span>
+          <span>&nbsp;·&nbsp;{{ article.paper.stat.favorites }}&nbsp;下载量</span>
+          <span>&nbsp;·&nbsp;{{ article.paper.stat.clicks }}&nbsp;点击量</span>
+        </div>
+
+        <el-divider v-if="index < articles.length - 1"></el-divider>
+      </div>
+    </div>
+  </div>
+</template>
+  
+<script>
+export default {
+  name: "Articles",
+  props: ["articles"],
+  methods: {
+    gotoSch(author_id) {
+    },
+    gotoPaper(paper_id) {
+    }
+  },
+  filters: {
+    ellipsis: function (value) {
+      if (!value) return "";
+      if (value.length > 300) {
+        return value.slice(0, 300) + "...";
+      }
+      return value;
+    },
+  }
+}
+</script>
+  
+<style scoped>
+@import "../../../src/assets/css/article.css";
+</style>

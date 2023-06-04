@@ -3,9 +3,12 @@ import VueRouter from 'vue-router'
 import Login from '../components/start/Login.vue'
 import Register from '../components/start/Register.vue'
 import Home from '../components/home.vue'
-import UserInfo from '../views/UserInfo.vue'
+import mainPage from '../components/mainPage.vue'
+import advSearch from'../components/search/advSearch.vue'
 import User from '../views/User.vue'
+import Info from '../views/UserInfo.vue'
 import Visitor from '../views/Visitor.vue'
+import Paper from '../views/Paper.vue'
 
 Vue.use(VueRouter)
 
@@ -14,10 +17,14 @@ const routes = [
   {
     path:'/home',
     component:Home,
+    redirect:'/main',
     children:[
-      {path:'/userinfo',component:UserInfo},
-      {path:'/user',component:User},
-      {path:'/visitor',component:Visitor}
+      { path:'/main',component:mainPage},
+      { path:'/advsearch',component:advSearch},
+      { path:'/user',component:User},
+      { path:'/info',component:Info},
+      { path:'/visitor',component:Visitor},
+      { path:'/paper',component:Paper}
     ]
   },
   { path: '/login', component: Login },
