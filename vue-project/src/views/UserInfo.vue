@@ -46,11 +46,10 @@
       </el-dialog>
 
       <br>
-        <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
-          <el-descriptions-item label="用户名" :span="8">{{ form.name }}</el-descriptions-item>
-          <el-descriptions-item label="账户" :span="8">{{ form.age }}</el-descriptions-item>
-        </el-descriptions>
-      </div>
+      <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
+        <el-descriptions-item label="用户名" :span="8">{{ form.name }}</el-descriptions-item>
+        <el-descriptions-item label="账户" :span="8">{{ form.age }}</el-descriptions-item>
+      </el-descriptions>
     </div>
   </div>
 </template>
@@ -65,14 +64,15 @@
     width: 100%;
     max-width: 800px;
 
-  .personal-info-header {
-    text-align: center;
-    padding: 20px 20px 10px 20px;
-    background-color: #f0f2f5;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
+    .personal-info-header {
+      text-align: center;
+      padding: 20px 20px 10px 20px;
+      background-color: #f0f2f5;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
     .personal-info-footer {
       display: flex;
       justify-content: center;
@@ -149,6 +149,40 @@ export default {
           done()
         })
         .catch((_) => { })
+    },
+    openProfile() {
+      this.$confirm('此操作将修改用户的基本信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
+    openPassword() {
+      this.$confirm('此操作将修改用户的密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
     }
   }
 }

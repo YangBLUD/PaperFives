@@ -50,11 +50,60 @@
         </el-menu>
       </el-aside>
 
-      <!-- 主页主体 -->
-      <el-main>
-        <!-- 路由占位符 -->
-        <router-view></router-view>
-      </el-main>
+                </div>
+                <el-menu background-color='#333744' text-color="#fff" active-text-color="#409EFF" unique-opened
+                    :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active=activePath>
+                    <!-- 一级菜单 -->
+                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
+                        <!-- 一级菜单模板区域 -->
+                        <template slot="title">
+                            <i :class="item.icon"></i>
+                            <span>{{ item.authName }}</span>
+                        </template>
+                        <!-- 二级菜单 -->
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
+                            @click=saveState(activePath)>
+                            <template slot="title">
+                                <i :class="subItem.icon"></i>
+                                <span>{{ subItem.authName }}</span>
+                            </template>
+                        </el-menu-item>
+
+                    </el-submenu>
+
+                </el-menu>
+            </el-aside>
+
+            <!-- 主页主体 -->
+            <el-main>
+                <!-- 路由占位符 -->
+                <router-view></router-view>
+                <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-card class="search"> -->
+                    <!-- 搜索与添加区域 -->
+                    <!-- <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
+                        @keyup.enter.native="goSearch" style="width: 750px; font-size: 17px">
+                        <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-button type="primary" slot="append" icon="el-icon-search" @click="goSearch"></el-button>
+                    </el-input>
+                </el-card>
+                <div class="topRecommend" id="topRecommend">
+                    <el-tabs v-model="activeNameOut">
+                        <el-tab-pane label="热门文献" name="topArticle" style="text-align: left">
+                            <Articles :articles="top_articles"></Articles>
+                        </el-tab-pane>
+                        <el-tab-pane label="热门学者" name="topAuthor" style="text-align: left">
+                            <Authors :authors="top_authors"></Authors>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div> -->
+            </el-main>
+        </el-container>
     </el-container>
   </el-container>
 </template>
