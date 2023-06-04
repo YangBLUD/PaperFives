@@ -116,9 +116,12 @@
                                             <span class="publish-year"> · {{ item.attr.publish_date }}</span>
                                         </div>
                                         <div>
-                                            <span v-for="(keyword) in item.attr.keywords">
+                                            <span v-for="(keyword) in item.attr.keywords" class="abstract">
                                                 ●{{ keyword }}&nbsp;&nbsp;&nbsp;
                                             </span>
+                                        </div>
+                                        <div style="text-align:left;margin-top:10px;">
+                                            <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
                                         </div>
                                         <div class="citation-count">
                                             <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -132,9 +135,10 @@
                                     </div>
                                 </div>
                                 <div v-show="!showCard[index]">
-                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;"
-                                        class="paper-content">
-                                        <span>{{ item.attr.title }}</span>
+                                    <div class="paper-content">
+                                        <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
+                                        }}&nbsp;&nbsp;&nbsp;</span>
+                                        <i class="el-icon-medal-1" style="font-size: 2em; color: #FFB90F;"></i>
                                         <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
@@ -159,7 +163,8 @@
                                             icon="el-icon-success">
                                             已发表
                                         </el-button>
-                                        <el-button icon="el-icon-view" size="mini" circle @click="$set(showCard, index, true)"></el-button>
+                                        <el-button icon="el-icon-view" size="mini" circle
+                                            @click="$set(showCard, index, true)"></el-button>
                                     </div>
                                 </div>
                             </div>
@@ -670,6 +675,23 @@ export default {
                     margin-left: auto;
                     width: 8em;
                 }
+
+                .paper_name_init {
+                    font-family: 'EB Garamond', serif;
+                    margin-left: 20px;
+                    color: black;
+                    font-size: 25px;
+                    font-weight: 600;
+                    /* 设置初始状态字体为普通体 */
+                    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+                    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                }
+
+                .paper_name_init:hover {
+                    cursor: pointer;
+                    transform: scale(1.1);
+                    color: #0077ff !important;
+                }
             }
 
             .paper-item-title {
@@ -686,6 +708,7 @@ export default {
                     /* 设置初始状态字体为普通体 */
                     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
                     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                    line-height: 2;
                 }
 
                 .paper_name:hover {
