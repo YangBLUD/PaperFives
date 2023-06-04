@@ -1,0 +1,187 @@
+<template>
+    <el-container class="home-container">
+        <!-- 主页头部 -->
+        <el-header>
+            <div>
+                <img src="../assets/logo.png" alt="">
+                <span>论文检索系统</span>
+            </div>
+            <el-button type="info" @click="logout">退出登录</el-button>
+        </el-header>
+
+        <el-container>
+            <!-- 主页侧边栏 -->
+            <el-aside :width="isCollapse ? '64px' : '160px'">
+                <div class="toggle-button" @click="toggleCollapse">|||
+
+                </div>
+                <el-menu background-color='#333744' text-color="#fff" active-text-color="#409EFF" unique-opened
+                    :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active=activePath>
+                    <!-- 一级菜单 -->
+                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
+                        <!-- 一级菜单模板区域 -->
+                        <template slot="title">
+                            <i :class="item.icon"></i>
+                            <span>{{ item.authName }}</span>
+                        </template>
+                        <!-- 二级菜单 -->
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
+                            @click=saveState(activePath)>
+                            <template slot="title">
+                                <i :class="subItem.icon"></i>
+                                <span>{{ subItem.authName }}</span>
+                            </template>
+                        </el-menu-item>
+
+                    </el-submenu>
+
+                </el-menu>
+            </el-aside>
+
+            <!-- 主页主体 -->
+            <el-main>
+                <!-- 路由占位符 -->
+                <router-view></router-view>
+                
+            </el-main>
+        </el-container>
+    </el-container>
+</template>
+
+<script>
+import path from 'path'
+
+export default {
+    data() {
+        return {
+            menuList: [
+                {
+                    id: 1,
+                    authName: '热门',
+                    icon: 'el-icon-s-open',
+                    path: '',
+                    children: [
+                        {
+                            id: 1,
+                            authName: '热门领域',
+                            icon: 'el-icon-s-open',
+                            path: '',
+                        },
+                        {
+                            id: 1,
+                            authName: '热门学者',
+                            icon: 'el-icon-s-custom',
+                            path: '',
+                        }
+                    ]
+                },
+                {
+                    id: 11,
+                    authName: '我的',
+                    icon: 'el-icon-user-solid',
+                    path: '',
+                    children: [
+                        {
+                            id: 1,
+                            authName: '主页',
+                            icon: 'el-icon-house',
+                            path: "user"
+                        },
+                        {
+                            id: 1,
+                            authName: '信息',
+                            icon: 'el-icon-document',
+                            path: "info"
+                        },
+                        {
+                            id: 1,
+                            authName: '消息',
+                            icon: 'el-icon-chat-dot-square',
+                            path: ""
+                        },
+                    ]
+                },
+                {
+                    id: 1,
+                    authName: '设置',
+                    icon: 'el-icon-setting',
+                    path: '',
+                }
+            ],
+            isCollapse: false,  //是否折叠
+            activePath: '',
+            
+        }
+    },
+    created() {
+        this.activePath = window.sessionStorage.getItem('activePath')
+    },
+    methods: {
+        logout() {
+            window.sessionStorage.clear()
+            this.$router.push('/login')
+        },
+        // 切换侧边折叠与展开
+        toggleCollapse() {
+            this.isCollapse = !this.isCollapse
+        },
+        //保存链接激活
+        saveState(activePath) {
+            window.sessionStorage.setItem('activePath', activePath)
+        },
+    
+    }
+}
+</script>
+<style lang="less" scoped>
+.home-container {
+    height: 100%;
+}
+
+.el-header {
+    background-color: #373D41;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 0;
+    align-items: center;
+    color: #fff;
+    font-size: 20px;
+
+    >div {
+        display: flex;
+        align-items: center;
+
+        span {
+            margin-left: 16px;
+        }
+    }
+}
+
+.el-aside {
+    background-color: #333744;
+}
+
+.el-main {
+    background-color: #EAEDF1;
+}
+
+.iconfont {
+    margin-right: 10px;
+}
+
+.toggle-button {
+    background-color: #4A5064;
+    font-size: 10px;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+}
+
+.search {
+    margin: 50px 12%;
+    background-color: white;
+    min-width: 900px;
+}
+</style>

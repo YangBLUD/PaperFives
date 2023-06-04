@@ -46,12 +46,12 @@
       </el-dialog>
 
       <br>
-        <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
-          <el-descriptions-item label="用户名" :span="8">{{ form.name }}</el-descriptions-item>
-          <el-descriptions-item label="账户" :span="8">{{ form.age }}</el-descriptions-item>
-        </el-descriptions>
-      </div>
+      <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
+        <el-descriptions-item label="用户名" :span="8">{{ form.name }}</el-descriptions-item>
+        <el-descriptions-item label="账户" :span="8">{{ form.age }}</el-descriptions-item>
+      </el-descriptions>
     </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -62,16 +62,17 @@
 
   .personal-info {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 
-  .personal-info-header {
-    text-align: center;
-    padding: 20px 20px 10px 20px;
-    background-color: #f0f2f5;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
+    .personal-info-header {
+      text-align: center;
+      padding: 20px 20px 10px 20px;
+      background-color: #f0f2f5;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
     .personal-info-footer {
       display: flex;
       justify-content: center;
@@ -88,7 +89,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       dialogVisible: false,
       form: {
@@ -100,13 +101,88 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getUserProfile();
+  },
   methods: {
-    handleClose (done) {
+    async getUserProfile() {
+      await this.$http.get('api/v1/users/profile/user', {
+        params: {
+          mode: 'all',
+          uid: window.sessionStorage.getItem('uid')
+        }
+      })
+        .then(res => {
+          console.log(res.data);
+          this.userProfile = res.data.data;
+        }).catch(err => {
+          console.log(err);
+        })
+    },
+    async changeProfile() {
+      await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/profile', {
+        username: this.form.name,
+        sex: this.form.sex,
+        institute: this.form.institute,
+        motto: this.form.motto
+      })
+        .then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        })
+    },
+    async changePassword() {
+      await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/password', {
+        old: this.form.passwd_old,
+        new: this.form.passwd_new
+      })
+        .then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        })
+    },
+    handleClose(done) {
       this.$confirm('确认关闭？')
         .then((_) => {
           done()
         })
         .catch((_) => { })
+    },
+    openProfile() {
+      this.$confirm('此操作将修改用户的基本信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
+    openPassword() {
+      this.$confirm('此操作将修改用户的密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
     }
   }
 }
