@@ -1,26 +1,9 @@
 <template>
-  <el-container style="height: 100%">
-
-    <el-header style="font-size: 12px">
-      <Header></Header>
-    </el-header>
-
-    <el-container style="height: calc(100vh - 60px)">
-      <el-aside width="200px" style="
-          height: calc(100vh - 60px);
-          background-color: rgb(238, 241, 246);
-          overflow-x: hidden;
-        ">
-        <Aside></Aside>
-      </el-aside>
-
-      <el-main style="height: calc(100vh - 60px)">
-        <UserInfo></UserInfo>
-      </el-main>
-
-    </el-container>
-  </el-container>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
+
 
 <style>
 html,
@@ -70,9 +53,10 @@ body>.el-container {
 
 <script>
 
+
 export default {
   data () {
     return {}
-  }
+  },
 }
 </script>

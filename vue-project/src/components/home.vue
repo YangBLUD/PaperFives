@@ -50,37 +50,11 @@
         </el-menu>
       </el-aside>
 
-                </div>
-                <el-menu background-color='#333744' text-color="#fff" active-text-color="#409EFF" unique-opened
-                    :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active=activePath>
-                    <!-- 一级菜单 -->
-                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
-                        <!-- 一级菜单模板区域 -->
-                        <template slot="title">
-                            <i :class="item.icon"></i>
-                            <span>{{ item.authName }}</span>
-                        </template>
-                        <!-- 二级菜单 -->
-                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
-                            @click=saveState(activePath)>
-                            <template slot="title">
-                                <i :class="subItem.icon"></i>
-                                <span>{{ subItem.authName }}</span>
-                            </template>
-                        </el-menu-item>
-
-                    </el-submenu>
-
-                </el-menu>
-            </el-aside>
-
-            <!-- 主页主体 -->
-            <el-main>
-                <!-- 路由占位符 -->
-                <router-view></router-view>
-                
-            </el-main>
-        </el-container>
+      <!-- 主页主体 -->
+      <el-main>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -89,65 +63,60 @@
 import path from 'path'
 
 export default {
-    data() {
-        return {
-            menuList: [
-                {
-                    id: 1,
-                    authName: '热门',
-                    icon: 'el-icon-s-open',
-                    path: '',
-                    children: [
-                        {
-                            id: 1,
-                            authName: '热门领域',
-                            icon: 'el-icon-s-open',
-                            path: '',
-                        },
-                        {
-                            id: 1,
-                            authName: '热门学者',
-                            icon: 'el-icon-s-custom',
-                            path: '',
-                        }
-                    ]
-                },
-                {
-                    id: 11,
-                    authName: '我的',
-                    icon: 'el-icon-user-solid',
-                    path: '',
-                    children: [
-                        {
-                            id: 1,
-                            authName: '主页',
-                            icon: 'el-icon-house',
-                            path: "user"
-                        },
-                        {
-                            id: 1,
-                            authName: '信息',
-                            icon: 'el-icon-document',
-                            path: "info"
-                        },
-                        {
-                            id: 1,
-                            authName: '消息',
-                            icon: 'el-icon-chat-dot-square',
-                            path: ""
-                        },
-                    ]
-                },
-                {
-                    id: 1,
-                    authName: '设置',
-                    icon: 'el-icon-setting',
-                    path: '',
-                }
-            ],
-            isCollapse: false,  //是否折叠
-            activePath: '',
-            
+  data () {
+    return {
+      menuList: [
+        {
+          id: 1,
+          authName: '热门',
+          icon: 'el-icon-s-open',
+          path: '',
+          children: [
+            {
+              id: 1,
+              authName: '热门领域',
+              icon: 'el-icon-s-open',
+              path: ''
+            },
+            {
+              id: 1,
+              authName: '热门学者',
+              icon: 'el-icon-s-custom',
+              path: ''
+            }
+          ]
+        },
+        {
+          id: 11,
+          authName: '我的',
+          icon: 'el-icon-user-solid',
+          path: '',
+          children: [
+            {
+              id: 1,
+              authName: '收藏',
+              icon: 'el-icon-star-on',
+              path: ''
+            },
+            {
+              id: 1,
+              authName: '信息',
+              icon: 'el-icon-document',
+              path: ''
+            },
+            {
+              id: 1,
+              authName: '消息',
+              icon: 'el-icon-chat-dot-square',
+              path: ''
+            }
+          ]
+        },
+        {
+          id: 1,
+          authName: '设置',
+          icon: 'el-icon-setting',
+          path: ''
         }
       ],
       isCollapse: false, // 是否折叠

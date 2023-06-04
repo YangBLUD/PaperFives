@@ -30,34 +30,34 @@
                                                 class="avatar-box"></el-avatar>
                                         </div>
 
-                                      <!-- 用户名 -->
-                                      <div class="card_name" @click="gotoProfile(item.uid)">
-                                          {{ item.username }}
-                                      </div>
+                                        <!-- 用户名 -->
+                                        <div class="card_name" @click="gotoProfile(item.uid)">
+                                            {{ item.username }}
+                                        </div>
 
-                                      <!-- 关注操作 -->
-                                      <div class="follow-tag">
-                                          <el-button v-if="item.isFollowed" type="danger" size="normal"
-                                              @click="removeFollower(item.uid, index)">
-                                              取消关注
-                                          </el-button>
-                                          <el-button v-else type="success" size="normal"
-                                              @click="followUser(item.uid, index)" style="width: 97px;">
-                                              关注
-                                          </el-button>
-                                      </div>
-                                  </div>
-                              </el-card>
-                          </div>
-                      </template>
-                      <!-- 无关注 -->
-                      <template v-else>
-                          <el-col :span="24">
-                              <br><br>
-                              <el-empty description="无关注用户" :image-size="250"></el-empty>
-                          </el-col>
-                      </template>
-                  </el-tab-pane>
+                                        <!-- 关注操作 -->
+                                        <div class="follow-tag">
+                                            <el-button v-if="item.isFollowed" type="danger" size="normal"
+                                                @click="removeFollower(item.uid, index)">
+                                                取消关注
+                                            </el-button>
+                                            <el-button v-else type="success" size="normal"
+                                                @click="followUser(item.uid, index)" style="width: 97px;">
+                                                关注
+                                            </el-button>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </template>
+                        <!-- 无关注 -->
+                        <template v-else>
+                            <el-col :span="24">
+                                <br><br>
+                                <el-empty description="无关注用户" :image-size="250"></el-empty>
+                            </el-col>
+                        </template>
+                    </el-tab-pane>
 
                     <!-- 粉丝列表 -->
                     <el-tab-pane name="second">
@@ -101,8 +101,11 @@
                         <el-card shadow="hover" class="paper-item">
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
-                                    <el-button icon="el-icon-arrow-left" @click="$set(showCard, index, false)" size="mini"></el-button>
-                                    <p class="paper_name">{{ item.attr.title }}</p>
+                                    <div class="paper-item-title">
+                                        <span class="paper_name">{{ item.attr.title }}</span>
+                                        <el-button class="shrink" icon="el-icon-arrow-left"
+                                            @click="$set(showCard, index, false)" size="mini"></el-button>
+                                    </div>
                                     <div class="content">
                                         <div class="authors">
                                             <span v-for="(author, index) in item.authors" class="author-name">
@@ -129,34 +132,34 @@
                                     </div>
                                 </div>
                                 <div v-show="!showCard[index]">
-                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;">
-                                        {{ item.attr.title }}
-                                        <el-button icon="el-icon-view" size="mini" circle
-                                            @click="$set(showCard, index, true)"></el-button>
-                                        <el-button v-if="item.status === 0" type="success" size="normal"
+                                    <div style="font-size: 25px; font-family: 'EB Garamond', serif; font-weight: 600;"
+                                        class="paper-content">
+                                        <span>{{ item.attr.title }}</span>
+                                        <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 1" type="success" size="normal"
+                                        <el-button v-else-if="item.status === 1" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 2" type="warning" size="normal"
+                                        <el-button v-else-if="item.status === 2" type="warning" size="normal" class="status"
                                             icon="el-icon-s-check">
                                             审核中
                                         </el-button>
-                                        <el-button v-else-if="item.status === 3" type="warning" size="normal"
+                                        <el-button v-else-if="item.status === 3" type="warning" size="normal" class="status"
                                             icon="el-icon-s-check">
                                             草稿
                                         </el-button>
-                                        <el-button v-else-if="item.status === 4" type="danger" size="normal"
+                                        <el-button v-else-if="item.status === 4" type="danger" size="normal" class="status"
                                             icon="el-icon-error">
                                             已驳回
                                         </el-button>
-                                        <el-button v-else-if="item.status === 5" type="primary" size="normal"
+                                        <el-button v-else-if="item.status === 5" type="primary" size="normal" class="status"
                                             icon="el-icon-success">
                                             已发表
                                         </el-button>
+                                        <el-button icon="el-icon-view" size="mini" circle @click="$set(showCard, index, true)"></el-button>
                                     </div>
                                 </div>
                             </div>
@@ -170,23 +173,23 @@
                 </template>
             </el-row>
 
-          <!-- 我的统计 -->
-          <div class="graph">
-              <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
-                  <el-carousel-item style="width: 500px;">
-                      <el-card style="height: 330px; width: 500px;">
-                          <div class="echart" id="mychart1" :style="myChartStyle"></div>
-                      </el-card>
-                  </el-carousel-item>
-                  <el-carousel-item style="width: 500px;">
-                      <el-card style="height: 330px; width: 500px;">
-                          <div class="echart" id="mychart2" :style="myChartStyle"></div>
-                      </el-card>
-                  </el-carousel-item>
-              </el-carousel>
-          </div>
-      </el-col>
-  </el-row>
+            <!-- 我的统计 -->
+            <div class="graph">
+                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                    <el-carousel-item style="width: 500px;">
+                        <el-card style="height: 330px; width: 500px;">
+                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                        </el-card>
+                    </el-carousel-item>
+                    <el-carousel-item style="width: 500px;">
+                        <el-card style="height: 330px; width: 500px;">
+                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                        </el-card>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </el-col>
+    </el-row>
 </template>
 
 <script>
@@ -493,320 +496,40 @@ export default {
             this.mouseY = event.clientY
         },
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.initEcharts()
-      this.getFollower()
-      this.getFollowee()
-      this.getPaperlist()
-      this.paperList.forEach(() => {
-        this.$set(this.showCard, this.showCard.length, false)
-      })
-    })
-    this.getUserProfile()
-  },
-  methods: {
-    async getUserProfile () {
-      await this.$http.get('api/v1/users/profile/user', {
-        params: {
-          mode: 'all',
-          uid: 1
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.userProfile = res.data.data
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async getFollower () {
-      await this.$http.get('api/v1/users/favorite/followers', {
-        params: {
-          uid: 1
-        }
-      })
-        .then(res => {
-          this.followerList = res.data.data.list
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async getFollowee () {
-      await this.$http.get('api/v1/users/favorite/followees', {
-        params: {
-          uid: 1
-        }
-      })
-        .then(res => {
-          this.followeeList = res.data.data.list
-          this.newList = this.followeeList.map(item => {
-            return {
-              ...item,
-              isFollowed: true
-            }
-          })
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
-    async removeFollower (id, index) {
-      // this.followeeList.splice(index, 1)
-      this.newList[index].isFollowed = !this.newList[index].isFollowed
-      await this.$http.post('api/v1/users/favorite/unfollow', {
-        uid: id
-      })
-        .then(res => {
-          // console.log(res);
-        }).catch(err => {
-          console.log(err)
-        })
-      // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag"));
-      // console.log(index)
-      // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag")[index]);
-      // pair = document.getElementById("pane-first").getElementsByClassName("follow-tag")[index];
-      // console.log(pair)
-      // .getElementsByTagName("button")
-      // pair[0].classList.add("hidden")
-      // pair[1].classList.remove("hidden"))
-    },
-    async followUser (id, index) {
-      this.newList[index].isFollowed = !this.newList[index].isFollowed
-      await this.$http.post('api/v1/users/favorite/follow', {
-        uid: id
-      })
-        .then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async gotoProfile (id) {
-      console.log(this.followeeTag)
-      this.$router.push({
-        path: '/visitor',
-        query: {
-          uid: id
-        }
-      })
-    },
-    async uploadFile () {
-      const file = this.$refs.fileInput.files[0]
-      const formData = new FormData()
-      formData.append('file', file)
-      try {
-        const response = await axios.post('/api/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        console.log(response.data)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    async getPaperlist () {
-      await this.$http.get('api/v1/papers/get/papers', {
-        params: {
-          uid: 1
-        }
-      })
-        .then(res => {
-          this.paperList = res.data.data.papers
-          this.paperNum = res.data.data.total
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    initEcharts () {
-      // 基本柱状图
-      const option1 = {
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '论文发表记录',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        grid: {
-          top: 80,
-          left: 80,
-          right: 50
-        },
-        xAxis: {
-          data: this.xData,
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          axisTick: {
-            show: false
-          }
-        },
-        yAxis: {
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              type: 'dashed'
-            }
-          }
-        },
-        color: ['#2ec7c9'],
-        series: [
-          {
-            type: 'bar', // 形状为柱状图
-            data: this.yData,
-            barWidth: 30,
-            itemStyle: {
-              color: '#2ec7c9'
-            }
-          }
-        ]
-      }
-
-      const option2 = {
-        legend: {
-          // 图例
-          data: ['OS', 'OO', 'DB', 'SE', 'AI'],
-          right: '10%',
-          top: '50%',
-          orient: 'vertical',
-          textStyle: {
-            color: '#666',
-            fontSize: 14
-          },
-          itemWidth: 16,
-          itemHeight: 16,
-          itemGap: 20
-        },
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '研究领域分布',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: ['50%', '70%'],
-            center: ['50%', '55%'],
-            label: {
-              show: true,
-              fontSize: 16,
-              formatter: '{b} {d}%'
-            },
-            labelLine: {
-              length: 5,
-              length2: 10,
-              lineStyle: {
-                width: 1
-              }
-            },
-            data: [
-              {
-                value: 463,
-                name: 'OS'
-              },
-              {
-                value: 395,
-                name: 'OO'
-              },
-              {
-                value: 157,
-                name: 'DB'
-              },
-              {
-                value: 149,
-                name: 'SE'
-              },
-              {
-                value: 147,
-                name: 'AI'
-              }
-            ],
-            itemStyle: {
-              borderWidth: 10,
-              borderColor: '#fff'
-            }
-          }
-        ]
-      }
-      const myChart1 = echarts.init(document.getElementById('mychart1'))
-      myChart1.setOption(option1)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart1.resize()
-      })
-
-      const myChart2 = echarts.init(document.getElementById('mychart2'))
-      myChart2.setOption(option2)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart2.resize()
-      })
-    },
-    handleMouseMove (event) {
-      this.mouseX = event.clientX
-      this.mouseY = event.clientY
-    }
-  }
-}
+};
 
 </script>
 
+  
 <style lang="less" scoped>
 @import "../../src/assets/css/article.css";
 
 .border {
-  max-width: max-content;
+    max-width: max-content;
 }
 
 .follow-item:hover {
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
 }
 
+
 .avatar-box {
-  position: relative;
-  transition: all 0.3s ease-in-out;
-  /* 添加过渡效果 */
-  transform: scale(1);
-  /* 设置默认的缩放比例 */
-  opacity: 0.8;
-  /* 设置默认的透明度 */
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    /* 添加过渡效果 */
+    transform: scale(1);
+    /* 设置默认的缩放比例 */
+    opacity: 0.8;
+    /* 设置默认的透明度 */
 }
 
 .avatar-box:hover {
-  cursor: pointer;
-  position: relative;
-  transform: scale(1.2);
-  /* 鼠标移动到头像上时，放大 20% */
-  opacity: 1;
-  /* 鼠标移动到头像上时，使透明度设置为 1 */
+    cursor: pointer;
+    position: relative;
+    transform: scale(1.2);
+    /* 鼠标移动到头像上时，放大 20% */
+    opacity: 1;
+    /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
 .left-col {
@@ -826,12 +549,12 @@ export default {
     width: auto;
     padding-left: 20px;
 
-  img {
-      margin-right: 40px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-  }
+    img {
+        margin-right: 40px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
 
     .name {
         font-family: Montserrat-Black;
@@ -840,19 +563,20 @@ export default {
         width: auto;
     }
 
-  .access {
-      color: gray;
-  }
+    .access {
+        color: gray;
+    }
 }
 
 .paper-action .el-button {
-  margin-left: 800px;
+    margin-left: 800px;
 }
 
+
 .page-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .follow-list {
@@ -864,17 +588,17 @@ export default {
 }
 
 .follow-item {
-  display: flex;
-  display: inline-block;
-  align-items: center;
-  // padding: 20px;
-  width: 100%;
-  margin-bottom: 10px;
+    display: flex;
+    display: inline-block;
+    align-items: center;
+    // padding: 20px;
+    width: 100%;
+    margin-bottom: 10px;
 
-  .follow-info {
-      display: flex;
-      align-items: center;
-      width: auto;
+    .follow-info {
+        display: flex;
+        align-items: center;
+        width: auto;
 
         .follow-tag {
             margin-left: auto;
@@ -893,25 +617,25 @@ export default {
         /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
     }
 
-  .card_name:hover {
-      cursor: pointer;
-      transform: scale(1.1);
-      color: #0077ff !important;
-  }
+    .card_name:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        color: #0077ff !important;
+    }
 }
 
 ::v-deep .el-card__body {
-  width: auto;
+    width: auto;
 }
 
 .graph {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
 
-  .el-card {
-      width: 48%;
-  }
+    .el-card {
+        width: 48%;
+    }
 }
 
 .paper-list {
@@ -920,40 +644,64 @@ export default {
     text-align: left !important;
 
     .paper-item {
-        display: flex;
+        // display: flex;
         align-items: center;
         margin-bottom: 10px;
 
-        // .wrapper{
-        //     height: 75px;
-        // }
+        .wrapper {
+            width: 100%;
+            transition: 1s;
+
+            .paper-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .status {
+                    margin-left: auto;
+                    width: 8em;
+                }
+            }
+
+            .paper-item-title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .paper_name {
+                    font-family: 'EB Garamond', serif;
+                    margin-left: 20px;
+                    color: black;
+                    font-size: 35px;
+                    font-weight: 800;
+                    /* 设置初始状态字体为普通体 */
+                    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+                    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                }
+
+                .paper_name:hover {
+                    cursor: pointer;
+                    transform: scale(1.1);
+                    color: #0077ff !important;
+                }
+
+                .shrink {
+                    margin-left: auto;
+                }
+            }
+        }
 
         .content {
             padding-left: 20px;
         }
-
-        .paper_name {
-            font-family: 'EB Garamond', serif;
-            margin-left: 20px;
-            color: black;
-            font-size: 35px;
-            font-weight: 800;
-            /* 设置初始状态字体为普通体 */
-            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-            /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-        }
-
-        .paper_name:hover {
-            cursor: pointer;
-            transform: scale(1.1);
-            color: #0077ff !important;
-        }
     }
 }
 
+
 .follow-action {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 </style>
+  
