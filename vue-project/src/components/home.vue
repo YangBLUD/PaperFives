@@ -42,7 +42,7 @@
             <el-main>
                 <!-- 路由占位符 -->
                 <router-view></router-view>
-                
+
             </el-main>
         </el-container>
     </el-container>
@@ -52,85 +52,85 @@
 import path from 'path'
 
 export default {
-    data() {
-        return {
-            menuList: [
-                {
-                    id: 1,
-                    authName: '热门',
-                    icon: 'el-icon-s-open',
-                    path: '',
-                    children: [
-                        {
-                            id: 1,
-                            authName: '热门领域',
-                            icon: 'el-icon-s-open',
-                            path: '',
-                        },
-                        {
-                            id: 1,
-                            authName: '热门学者',
-                            icon: 'el-icon-s-custom',
-                            path: '',
-                        }
-                    ]
-                },
-                {
-                    id: 11,
-                    authName: '我的',
-                    icon: 'el-icon-user-solid',
-                    path: '',
-                    children: [
-                        {
-                            id: 1,
-                            authName: '主页',
-                            icon: 'el-icon-house',
-                            path: "user"
-                        },
-                        {
-                            id: 1,
-                            authName: '信息',
-                            icon: 'el-icon-document',
-                            path: "info"
-                        },
-                        {
-                            id: 1,
-                            authName: '消息',
-                            icon: 'el-icon-chat-dot-square',
-                            path: ""
-                        },
-                    ]
-                },
-                {
-                    id: 1,
-                    authName: '设置',
-                    icon: 'el-icon-setting',
-                    path: '',
-                }
-            ],
-            isCollapse: false,  //是否折叠
-            activePath: '',
-            
+  data () {
+    return {
+      menuList: [
+        {
+          id: 1,
+          authName: '热门',
+          icon: 'el-icon-s-open',
+          path: '',
+          children: [
+            {
+              id: 1,
+              authName: '热门领域',
+              icon: 'el-icon-s-open',
+              path: ''
+            },
+            {
+              id: 1,
+              authName: '热门学者',
+              icon: 'el-icon-s-custom',
+              path: ''
+            }
+          ]
+        },
+        {
+          id: 11,
+          authName: '我的',
+          icon: 'el-icon-user-solid',
+          path: '',
+          children: [
+            {
+              id: 1,
+              authName: '主页',
+              icon: 'el-icon-house',
+              path: 'user'
+            },
+            {
+              id: 1,
+              authName: '信息',
+              icon: 'el-icon-document',
+              path: 'info'
+            },
+            {
+              id: 1,
+              authName: '消息',
+              icon: 'el-icon-chat-dot-square',
+              path: ''
+            }
+          ]
+        },
+        {
+          id: 1,
+          authName: '设置',
+          icon: 'el-icon-setting',
+          path: ''
         }
-    },
-    created() {
-        this.activePath = window.sessionStorage.getItem('activePath')
-    },
-    methods: {
-        logout() {
-            window.sessionStorage.clear()
-            this.$router.push('/login')
-        },
-        // 切换侧边折叠与展开
-        toggleCollapse() {
-            this.isCollapse = !this.isCollapse
-        },
-        //保存链接激活
-        saveState(activePath) {
-            window.sessionStorage.setItem('activePath', activePath)
-        },
-    
+      ],
+      isCollapse: false, // 是否折叠
+      activePath: ''
+
     }
+  },
+  created () {
+    this.activePath = window.sessionStorage.getItem('activePath')
+  },
+  methods: {
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    },
+    // 切换侧边折叠与展开
+    toggleCollapse () {
+      this.isCollapse = !this.isCollapse
+    },
+    // 保存链接激活
+    saveState (activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+    }
+
+  }
 }
 </script>
 <style lang="less" scoped>

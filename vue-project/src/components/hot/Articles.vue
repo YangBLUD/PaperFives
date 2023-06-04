@@ -29,31 +29,31 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
-  name: "Articles",
-  props: ["articles"],
+  name: 'Articles',
+  props: ['articles'],
   methods: {
-    gotoSch(author_id) {
+    gotoSch (author_id) {
 
     },
-    gotoPaper(paper_id) {
+    gotoPaper (paper_id) {
 
     }
   },
   filters: {
     ellipsis: function (value) {
-      if (!value) return "";
+      if (!value) return ''
       if (value.length > 300) {
-        return value.slice(0, 300) + "...";
+        return value.slice(0, 300) + '...'
       }
-      return value;
-    },
+      return value
+    }
   }
 }
 </script>
-  
+
 <style scoped>
 @import "../../../src/assets/css/article.css";
 </style>

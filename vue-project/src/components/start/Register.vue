@@ -34,66 +34,65 @@
 </template>
 <script>
 export default {
-    data() {
-        // 验证邮箱手机的规则 （自定义校验规则
-        var checkEmail = (rule, value, callback) => {
-            var regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-            if (regemail.test(value)) {
-                return callback()
-            }
-            callback(new Error('请输入合法邮箱'))
-        }
-        return {
-            //添加用户的表单
-            regForm: {
-                username: '',
-                password: '',
-                email: '',
-                code:''
-            },
-            regFormRules: {
-                username: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 3, max: 10, message: '用户名长度在3-10个字符之间', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 6, max: 10, message: '密码长度在6-15个字符之间', trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入邮箱', trigger: 'blur' },
-                    { validator: checkEmail, trigger: 'blur' }
-                ],
-            }
-        }
-    },
-    methods: {
-        // 重置
-        resetRegForm() {
-            this.$refs.regFormRef.resetFields();
-        },
-        // 注册
-        regUser(){
-            this.$refs.regFormRef.validate(async (valid)=>{
-                if(!valid) return ;
-                const {data:res} = await this.$http.post('/api/v1/users/register',this.regForm);
-                if(res.meta.status!=0) 
-                    return this.$message.error(res.meta.msg)
-                this.$message.success(res.meta.msg)
-                // // 页面跳转
-                this.$router.push("/login");
-            });
-        },
-        //发送验证码
-        async checkCode(){
-            const {data:res} = await this.$http.post('/api/v1/users/verification',{email:this.regForm.email});
-            if(res.meta.status!=0){
-                return this.$message.error(res.meta.msg)
-            }
-            this.$message.success(res.meta.msg)
-        },
-        
+  data () {
+    // 验证邮箱手机的规则 （自定义校验规则
+    const checkEmail = (rule, value, callback) => {
+      const regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      if (regemail.test(value)) {
+        return callback()
+      }
+      callback(new Error('请输入合法邮箱'))
     }
+    return {
+      // 添加用户的表单
+      regForm: {
+        username: '',
+        password: '',
+        email: '',
+        code: ''
+      },
+      regFormRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '用户名长度在3-10个字符之间', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 10, message: '密码长度在6-15个字符之间', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 重置
+    resetRegForm () {
+      this.$refs.regFormRef.resetFields()
+    },
+    // 注册
+    regUser () {
+      this.$refs.regFormRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('/api/v1/users/register', this.regForm)
+        if (res.meta.status != 0) { return this.$message.error(res.meta.msg) }
+        this.$message.success(res.meta.msg)
+        // // 页面跳转
+        this.$router.push('/login')
+      })
+    },
+    // 发送验证码
+    async checkCode () {
+      const { data: res } = await this.$http.post('/api/v1/users/verification', { email: this.regForm.email })
+      if (res.meta.status != 0) {
+        return this.$message.error(res.meta.msg)
+      }
+      this.$message.success(res.meta.msg)
+    }
+
+  }
 }
 </script>
 
@@ -147,4 +146,3 @@ export default {
     box-sizing: border-box;
 }
 </style>
-

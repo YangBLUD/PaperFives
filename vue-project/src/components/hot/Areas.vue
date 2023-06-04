@@ -15,20 +15,20 @@
                         <span class="author-email author-grade">等级: {{ item.rank.toFixed(2) }}</span>
                     </div>
                 </div>
-               
+
             </div>
         </div>
     </div>
 </template>
 <script>
-export default{
-    name:'Areas',
-    props:{
-        Areas:{
-            type:Array,
-            default:[]
-        }
+export default {
+  name: 'Areas',
+  props: {
+    Areas: {
+      type: Array,
+      default: []
     }
+  }
 }
 </script>
 <style lang="scss">

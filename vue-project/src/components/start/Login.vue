@@ -28,59 +28,58 @@
 
 <script>
 export default {
-    data() {
-        var checkEmail = (rule, value, callback) => {
-            var regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-            if (regemail.test(value)) {
-                return callback()
-            }
-            callback(new Error('请输入合法邮箱'))
-        }
-        return {
-            // 登陆表单的数据对象
-            loginForm: {
-                email: '',
-                password: ''
-            },
-            // 表单验证规则
-            loginRules: {
-                email: [
-                    { required: true, message: '请输入邮箱', trigger: 'blur' },
-                    { validator: checkEmail, trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入登录密码', trigger: 'blur' },
-                    { min: 2, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
-                ]
-            }
-        }
-    },
-    methods: {
-        //重置
-        resetLoginForm() {
-            this.$refs.loginRef.resetFields();
-        },
-        // 登录
-        login() {
-            this.$refs.loginRef.validate(async (valid)=>{
-                if(!valid) return ;
-                const {data:res} = await this.$http.post('/api/v1/users/login',this.loginForm);
-                if(res.meta.status!=0) 
-                    return this.$message.error(res.meta.msg)
-                
-                this.$message.success(res.meta.msg)
-
-                window.sessionStorage.setItem('token',res.token);
-                window.sessionStorage.setItem('uid',res.data.uid)
-                // 页面跳转
-                this.$router.push("/home");
-            });
-        },
-        // 注册
-        register() {
-            this.$router.push({path:"/register"});
-        }
+  data () {
+    const checkEmail = (rule, value, callback) => {
+      const regemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      if (regemail.test(value)) {
+        return callback()
+      }
+      callback(new Error('请输入合法邮箱'))
     }
+    return {
+      // 登陆表单的数据对象
+      loginForm: {
+        email: '',
+        password: ''
+      },
+      // 表单验证规则
+      loginRules: {
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 重置
+    resetLoginForm () {
+      this.$refs.loginRef.resetFields()
+    },
+    // 登录
+    login () {
+      this.$refs.loginRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('/api/v1/users/login', this.loginForm)
+        if (res.meta.status != 0) { return this.$message.error(res.meta.msg) }
+
+        this.$message.success(res.meta.msg)
+
+        window.sessionStorage.setItem('token', res.token)
+        window.sessionStorage.setItem('uid', res.data.uid)
+        // 页面跳转
+        this.$router.push('/home')
+      })
+    },
+    // 注册
+    register () {
+      this.$router.push({ path: '/register' })
+    }
+  }
 }
 </script>
 

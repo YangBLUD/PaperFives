@@ -43,7 +43,6 @@
             </el-card>
         </div>
 
-
         <!-- 论文列表 -->
         <el-row :gutter="20" class="paper-list">
             <template v-if="paperList.length > 0">
@@ -89,236 +88,235 @@
         </div>
     </el-row>
 </template>
-  
+
 <script>
 import * as echarts from 'echarts'
 export default {
-    data() {
-        return {
-            isFollowed: null,
-            userProfile: {},
-            userAttr: {},
-            paperList: [],
-            xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
-            yData: [23, 24, 18, 25], //数据
-            myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
-            activeName: 'first'
-        };
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.initEcharts();
-            this.getUserProfile();
-            this.isFollowee();
-        });
-    },
-    methods: {
-        async getUserProfile() {
-            await this.$http.get('api/v1/users/profile/user', {
-                params: {
-                    mode: 'all',
-                    uid: this.$route.query.uid
-                }
-            })
-                .then(res => {
-                    console.log(res);
-                    this.userProfile = res.data.data;
-                    this.userAttr = res.data.data.attr;
-                }).catch(err => {
-                    console.log(err);
-                })
-        },
-        async followUser() {
-            this.isFollowed = !this.isFollowed;
-            await this.$http.post('api/v1/users/favorite/follow', {
-                uid: this.$route.query.uid
-            })
-                .then(res => {
-                    console.log(res);
-                }).catch(err => {
-                    console.log(err);
-                })
-        },
-        async removeFollower() {
-            this.isFollowed = !this.isFollowed;
-            await this.$http.post('api/v1/users/favorite/unfollow', {
-                uid: this.$route.query.uid
-            })
-                .then(res => {
-                    console.log(res);
-                }).catch(err => {
-                    console.log(err);
-                })
-        },
-        async isFollowee() {
-            await this.$http.get('api/v1/users/favorite/isfollowee', {
-                params: {
-                    uid: this.$route.query.uid
-                }
-            })
-                .then(res => {
-                    console.log(res);
-                    this.isFollowed = res.data.data.value
-                }).catch(err => {
-                    console.log(err);
-                })
-        },
-        initEcharts() {
-            // 基本柱状图
-            const option1 = {
-                title: {
-                    // 设置饼图标题，位置设为顶部居中
-                    text: "论文发表记录",
-                    top: "0%",
-                    left: "center",
-                    textStyle: {
-                        color: "#333",
-                        fontWeight: "bold",
-                        fontFamily: "Microsoft YaHei"
-                    }
-                },
-                grid: {
-                    top: 80,
-                    left: 80,
-                    right: 50
-                },
-                xAxis: {
-                    data: this.xData,
-                    axisLine: {
-                        lineStyle: {
-                            color: "#999"
-                        }
-                    },
-                    axisLabel: {
-                        color: "#666",
-                        margin: 10
-                    },
-                    axisTick: {
-                        show: false
-                    }
-                },
-                yAxis: {
-                    axisLine: {
-                        lineStyle: {
-                            color: "#999"
-                        }
-                    },
-                    axisLabel: {
-                        color: "#666",
-                        margin: 10
-                    },
-                    splitLine: {
-                        show: true,
-                        lineStyle: {
-                            type: "dashed"
-                        }
-                    }
-                },
-                color: ["#2ec7c9"],
-                series: [
-                    {
-                        type: "bar", //形状为柱状图
-                        data: this.yData,
-                        barWidth: 30,
-                        itemStyle: {
-                            color: "#2ec7c9"
-                        }
-                    }
-                ]
-            };
-
-            const option2 = {
-                legend: {
-                    // 图例
-                    data: ["OS", "OO", "DB", "SE", "AI"],
-                    right: "10%",
-                    top: "50%",
-                    orient: "vertical",
-                    textStyle: {
-                        color: "#666",
-                        fontSize: 14
-                    },
-                    itemWidth: 16,
-                    itemHeight: 16,
-                    itemGap: 20
-                },
-                title: {
-                    // 设置饼图标题，位置设为顶部居中
-                    text: "研究领域分布",
-                    top: "0%",
-                    left: "center",
-                    textStyle: {
-                        color: "#333",
-                        fontWeight: "bold",
-                        fontFamily: "Microsoft YaHei"
-                    }
-                },
-                series: [
-                    {
-                        type: "pie",
-                        radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
-                        label: {
-                            show: true,
-                            fontSize: 16,
-                            formatter: "{b} {d}%"
-                        },
-                        labelLine: {
-                            length: 5,
-                            length2: 10,
-                            lineStyle: {
-                                width: 1
-                            }
-                        },
-                        data: [
-                            {
-                                value: 463,
-                                name: "OS"
-                            },
-                            {
-                                value: 395,
-                                name: "OO"
-                            },
-                            {
-                                value: 157,
-                                name: "DB"
-                            },
-                            {
-                                value: 149,
-                                name: "SE"
-                            },
-                            {
-                                value: 147,
-                                name: "AI"
-                            }
-                        ],
-                        itemStyle: {
-                            borderWidth: 10,
-                            borderColor: "#fff"
-                        }
-                    }
-                ]
-            };
-            const myChart1 = echarts.init(document.getElementById("mychart1"));
-            myChart1.setOption(option1);
-            //随着屏幕大小调节图表
-            window.addEventListener("resize", () => {
-                myChart1.resize();
-            });
-
-            const myChart2 = echarts.init(document.getElementById("mychart2"));
-            myChart2.setOption(option2);
-            //随着屏幕大小调节图表
-            window.addEventListener("resize", () => {
-                myChart2.resize();
-            });
-        }
+  data () {
+    return {
+      isFollowed: null,
+      userProfile: {},
+      userAttr: {},
+      paperList: [],
+      xData: ['1990s', '2000s', '2010s', '2020s'], // 横坐标
+      yData: [23, 24, 18, 25], // 数据
+      myChartStyle: { float: 'left', width: '90%', height: '280px' }, // 图表样式
+      activeName: 'first'
     }
-};
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.initEcharts()
+      this.getUserProfile()
+      this.isFollowee()
+    })
+  },
+  methods: {
+    async getUserProfile () {
+      await this.$http.get('api/v1/users/profile/user', {
+        params: {
+          mode: 'all',
+          uid: this.$route.query.uid
+        }
+      })
+        .then(res => {
+          console.log(res)
+          this.userProfile = res.data.data
+          this.userAttr = res.data.data.attr
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    async followUser () {
+      this.isFollowed = !this.isFollowed
+      await this.$http.post('api/v1/users/favorite/follow', {
+        uid: this.$route.query.uid
+      })
+        .then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    async removeFollower () {
+      this.isFollowed = !this.isFollowed
+      await this.$http.post('api/v1/users/favorite/unfollow', {
+        uid: this.$route.query.uid
+      })
+        .then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    async isFollowee () {
+      await this.$http.get('api/v1/users/favorite/isfollowee', {
+        params: {
+          uid: this.$route.query.uid
+        }
+      })
+        .then(res => {
+          console.log(res)
+          this.isFollowed = res.data.data.value
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    initEcharts () {
+      // 基本柱状图
+      const option1 = {
+        title: {
+          // 设置饼图标题，位置设为顶部居中
+          text: '论文发表记录',
+          top: '0%',
+          left: 'center',
+          textStyle: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontFamily: 'Microsoft YaHei'
+          }
+        },
+        grid: {
+          top: 80,
+          left: 80,
+          right: 50
+        },
+        xAxis: {
+          data: this.xData,
+          axisLine: {
+            lineStyle: {
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            color: '#666',
+            margin: 10
+          },
+          axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
+          axisLine: {
+            lineStyle: {
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            color: '#666',
+            margin: 10
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed'
+            }
+          }
+        },
+        color: ['#2ec7c9'],
+        series: [
+          {
+            type: 'bar', // 形状为柱状图
+            data: this.yData,
+            barWidth: 30,
+            itemStyle: {
+              color: '#2ec7c9'
+            }
+          }
+        ]
+      }
+
+      const option2 = {
+        legend: {
+          // 图例
+          data: ['OS', 'OO', 'DB', 'SE', 'AI'],
+          right: '10%',
+          top: '50%',
+          orient: 'vertical',
+          textStyle: {
+            color: '#666',
+            fontSize: 14
+          },
+          itemWidth: 16,
+          itemHeight: 16,
+          itemGap: 20
+        },
+        title: {
+          // 设置饼图标题，位置设为顶部居中
+          text: '研究领域分布',
+          top: '0%',
+          left: 'center',
+          textStyle: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontFamily: 'Microsoft YaHei'
+          }
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: ['50%', '70%'],
+            center: ['50%', '55%'],
+            label: {
+              show: true,
+              fontSize: 16,
+              formatter: '{b} {d}%'
+            },
+            labelLine: {
+              length: 5,
+              length2: 10,
+              lineStyle: {
+                width: 1
+              }
+            },
+            data: [
+              {
+                value: 463,
+                name: 'OS'
+              },
+              {
+                value: 395,
+                name: 'OO'
+              },
+              {
+                value: 157,
+                name: 'DB'
+              },
+              {
+                value: 149,
+                name: 'SE'
+              },
+              {
+                value: 147,
+                name: 'AI'
+              }
+            ],
+            itemStyle: {
+              borderWidth: 10,
+              borderColor: '#fff'
+            }
+          }
+        ]
+      }
+      const myChart1 = echarts.init(document.getElementById('mychart1'))
+      myChart1.setOption(option1)
+      // 随着屏幕大小调节图表
+      window.addEventListener('resize', () => {
+        myChart1.resize()
+      })
+
+      const myChart2 = echarts.init(document.getElementById('mychart2'))
+      myChart2.setOption(option2)
+      // 随着屏幕大小调节图表
+      window.addEventListener('resize', () => {
+        myChart2.resize()
+      })
+    }
+  }
+}
 
 </script>
 
-  
 <style lang="less" scoped>
 .border {
     max-width: 1500px;
@@ -418,4 +416,3 @@ export default {
     }
 }
 </style>
-  
