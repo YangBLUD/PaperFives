@@ -8,6 +8,7 @@ import advSearch from'../components/search/advSearch.vue'
 import User from '../views/User.vue'
 import Info from '../views/UserInfo.vue'
 import Visitor from '../views/Visitor.vue'
+import Paper from '../views/Paper.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,8 @@ const routes = [
       { path:'/advsearch',component:advSearch},
       { path:'/user',component:User},
       { path:'/info',component:Info},
-      { path:'/visitor',component:Visitor}
+      { path:'/visitor',component:Visitor},
+      { path:'/paper',component:Paper}
     ]
   },
   { path: '/login', component: Login },
