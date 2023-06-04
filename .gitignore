@@ -26,3 +26,5 @@ Thumbs.db
 
 # 忽略自动生成的文件和文件夹
 .DS_Store
+
+.vs/

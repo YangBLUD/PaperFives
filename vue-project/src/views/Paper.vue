@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="paper-box">
     <!-- 题目栏 -->
-    <div class="title" style="font-size:50px; font-weight: 700; text-align: center;">论文题目：{{ this.paperInfo.attr.title }}</div>
+    <h1 class="title" style="font-size:50px; font-weight: 700; text-align: center;">{{ this.paperInfo.attr.title }}</h1>
     <el-divider></el-divider>
     <!-- 作者栏 -->
     <div class="author-list-container">
@@ -23,7 +23,7 @@
     </div>
     <el-divider></el-divider>
     <!-- 发布时间等信息 -->
-    <div class="date" style="font-size: 20px;">发表日期：{{ this.paperInfo.attr.publish_date }}</div>
+    <h2 class="date">发表日期：{{ this.paperInfo.attr.publish_date }}</h2>
     <el-divider></el-divider>
     <!-- 操作按钮 -->
     <div class="other">
@@ -31,7 +31,18 @@
         <i class="el-icon-view icon">{{ this.stat.clicks }}</i>
       </div>
       <div class="button">
-        <i class="el-icon-bell icon" @click=""></i>
+        <i class="el-icon-paperclip icon" @click="getCiteInfo()"></i>
+        <el-dialog
+          title="论文引用"
+          :visible.sync="dialogVisible"
+          width="30%"
+          :before-close="handleClose">
+          <span>{{ this.citeInfo.cite }}</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          </span>
+        </el-dialog>
         <i class="el-icon-download icon" @click="downloadPaper()"></i>
       </div>
       <br>
@@ -39,13 +50,16 @@
     <el-divider></el-divider>
     <!-- 论文摘要 -->
     <div class="abstract">
+      <h2>论文摘要</h2>
+      <div>
+        {{ this.paperInfo.attr.abstract }}
+      </div>
     </div>
     <el-divider></el-divider>
     <!-- 论文引用 -->
     <div class="reference">
-      <div class="text-box">
-
-      </div>
+      <h2>论文引用</h2>
+      {{ this.refs }}
     </div>
     <el-divider></el-divider>
   </div>
@@ -59,7 +73,9 @@ export default {
       authors: [],
       refs: [],
       areas: '',
-      stat: {}
+      stat: {},
+      citeInfo: {},
+      dialogVisible: false
     }
   },
   mounted () {
@@ -69,6 +85,13 @@ export default {
     })
   },
   methods: {
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
     async getUserProfile (email) {
       await this.$http.get('api/v1/users/profile/user', {
         params: {
@@ -83,19 +106,19 @@ export default {
           console.log(err)
         })
     },
-    async getAuthorsData () {
-      for (const author of this.authors) {
-        await this.getUserProfile(author.email).then(res => {
-          author.avatar = res.data.data.avatar
-        }).catch(err => {
-          console.log(err)
-        })
-      }
-    },
+    // async getAuthorsData () {
+    //   for (const author of this.authors) {
+    //     await this.getUserProfile(author.email).then(res => {
+    //       author.avatar = res.data.data.avatar
+    //     }).catch(err => {
+    //       console.log(err)
+    //     })
+    //   }
+    // },
     async getPaperInfo () {
       await this.$http.get('/api/v1/papers/download/info', {
         params: {
-          pid: this.$route.query.pid,
+          pid: '1631',
           click: '0'
         }
       })
@@ -137,11 +160,32 @@ export default {
           // Handle error here
           console.log(error)
         })
+    },
+    async getCiteInfo () {
+      await this.$http.get('/api/v1/papers/action/cite', {
+        params: {
+          pid: this.paperInfo.pid
+        }
+      })
+        .then(res => {
+          console.log(res)
+          this.dialogVisible = true
+          this.citeInfo = res.data.data
+        }).catch(err => {
+          console.log(err)
+        })
     }
   }
 }
 </script>
 <style lang="css">
+  .paper-box {
+    width: 90%;
+    padding: 40px;
+    margin-top: 2%;
+    margin-left: 2%;
+    background-color: #fffffff0;
+  }
   .info {
     /* 靠左 */
     float: left;
@@ -154,6 +198,7 @@ export default {
   }
   .icon {
     font-size: 20px;
+    margin-right: 20px;
   }
   .author-list-container {
     width: 100%; /* 设置固定宽度和高度 */
@@ -161,6 +206,7 @@ export default {
     overflow-x: auto;/* 设置溢出内容显示和滚动条样式 */
     white-space: nowrap; /* 防止文本换行 */
   }
+  /*作者列表*/
   .author-list-horizontal {
     display: inline-block;
     list-style: none;
@@ -181,5 +227,17 @@ export default {
   }
   .author-avatar {
     margin-right: 10px;
+  }
+  .date {
+    text-align: left;
+    font-size: 20px;
+  }
+  .abstract {
+    text-align: left;
+    font-size: 16px;
+  }
+  .reference {
+    text-align: left;
+    font-size: 16px;
   }
 </style>

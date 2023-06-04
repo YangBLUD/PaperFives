@@ -561,7 +561,7 @@ export default {
     padding-left: 20px;
 
     img {
-        margin-right: 40px;
+        // margin-right: 40px;
         width: 150px;
         height: 150px;
         border-radius: 50%;
@@ -576,6 +576,14 @@ export default {
 
     .access {
         color: gray;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    .user {
+        flex-direction: column;
+        justify-content: center;
+        margin: auto;
     }
 }
 

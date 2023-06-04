@@ -42,7 +42,7 @@
             <el-main>
                 <!-- 路由占位符 -->
                 <router-view></router-view>
-                
+
             </el-main>
         </el-container>
     </el-container>
@@ -97,7 +97,7 @@ export default {
                             id: 1,
                             authName: '消息',
                             icon: 'el-icon-chat-dot-square',
-                            path: ""
+                            path: "message"
                         },
                     ]
                 },
@@ -110,7 +110,7 @@ export default {
             ],
             isCollapse: false,  //是否折叠
             activePath: '',
-            
+
         }
     },
     created() {
@@ -129,7 +129,7 @@ export default {
         saveState(activePath) {
             window.sessionStorage.setItem('activePath', activePath)
         },
-    
+
     }
 }
 </script>
