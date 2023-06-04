@@ -102,7 +102,7 @@
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
                                     <div class="paper-item-title">
-                                        <span class="paper_name">{{ item.attr.title }}</span>
+                                        <span class="paper_name" @click="gotoPaper(item.pid)">{{ item.attr.title }}</span>
                                         <el-button class="shrink" icon="el-icon-arrow-left"
                                             @click="$set(showCard, index, false)" size="mini"></el-button>
                                     </div>
@@ -312,6 +312,15 @@ export default {
                 path: '/visitor',
                 query: {
                     uid: id,
+                }
+            })
+        },
+        async gotoPaper(id) {
+            console.log(this.followeeTag)
+            this.$router.push({
+                path: '/paper',
+                query: {
+                    pid: id,
                 }
             })
         },
