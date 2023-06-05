@@ -1,6 +1,7 @@
 <template>
     <!-- 页面框架 -->
     <el-row class="border">
+        <!-- 左栏 -->
         <el-col :span="8" class="left-col">
             <!-- 个人名片 -->
             <el-card class="box-card">
@@ -8,7 +9,7 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p>
+                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}</p>
                     </div>
                 </div>
             </el-card>
@@ -92,7 +93,7 @@
             </el-row>
         </el-col>
 
-        <!-- 论文列表 -->
+        <!-- 右栏 -->
         <el-col :span="16" class="right-col">
             <!-- 论文列表 -->
             <el-row :gutter="20" class="paper-list">
@@ -183,12 +184,12 @@
             <div class="graph">
                 <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
-                        <el-card style="height: 330px; width: 500px;">
+                        <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart1" :style="myChartStyle"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
-                        <el-card style="height: 330px; width: 500px;">
+                        <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart2" :style="myChartStyle"></div>
                         </el-card>
                     </el-carousel-item>
@@ -219,7 +220,7 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
+            myChartStyle: { float: "left", width: "100%", height: "300px" }, //图表样式
             activeName: 'first',
             showCard: [],
         };
@@ -424,6 +425,7 @@ export default {
                     }
                 },
                 yAxis: {
+                    minInterval: 1, // 设置y轴坐标的最小值为1
                     axisLine: {
                         lineStyle: {
                             color: "#999"
@@ -464,19 +466,6 @@ export default {
             };
 
             const option2 = {
-                // legend: {
-                //     data: this.legend,
-                //     right: "10%",
-                //     top: "50%",
-                //     orient: "vertical",
-                //     textStyle: {
-                //         color: "#666",
-                //         fontSize: 14
-                //     },
-                //     itemWidth: 16,
-                //     itemHeight: 16,
-                //     itemGap: 20
-                // },
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "研究领域分布",
@@ -496,9 +485,26 @@ export default {
                         center: ["50%", "55%"],
                         label: {
                             show: true,
-                            fontSize: 16,
-                            formatter: "{b} {d}%"
+                            fontSize: 14,
+                            formatter: function (params) {
+                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
+                            },
+                            rich: {
+                                a: {
+                                    width: 100,
+                                    fontSize: 8,
+                                    fontWeight: "900",
+                                    lineHeight: 20,
+                                },
+                                b: {
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: 'red'
+                                }
+                            }
+
                         },
+
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -547,6 +553,24 @@ export default {
 
 .follow-item:hover {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.fa-pen-to-square{
+    transition: all 0.3s ease-in-out;
+    /* 添加过渡效果 */
+    transform: scale(1);
+    /* 设置默认的缩放比例 */
+    opacity: 0.8;
+    /* 设置默认的透明度 */
+}
+.fa-pen-to-square:hover {
+    cursor: pointer;
+    cursor: pointer;
+    position: relative;
+    transform: scale(1.2);
+    /* 鼠标移动到头像上时，放大 20% */
+    opacity: 1;
+    /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
 

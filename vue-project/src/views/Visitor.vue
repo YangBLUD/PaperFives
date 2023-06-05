@@ -160,12 +160,12 @@
         <!-- 图表部分 -->
         <el-col :span="24">
             <el-col :span="12" class="left-col">
-                <el-card style="height: 330px">
+                <el-card style="height: 350px;">
                     <div class="echart" id="mychart1" :style="myChartStyle"></div>
                 </el-card>
             </el-col>
             <el-col :span="12" class="right-col">
-                <el-card style="height: 330px">
+                <el-card style="height: 350px;">
                     <div class="echart" id="mychart2" :style="myChartStyle"></div>
                 </el-card>
             </el-col>
@@ -187,9 +187,12 @@ export default {
             showCard: [],
             hot: 0,
             rank: 0,
-            xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
-            yData: [23, 24, 18, 25], //数据
-            myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
+            xData: [], //横坐标
+            yData_1: [], //数据
+            yData_2: [], //数据
+            Data: [],
+            legend: [],
+            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
             activeName: 'first'
         };
     },
@@ -356,6 +359,7 @@ export default {
                         }
                     },
                     axisLabel: {
+                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -364,12 +368,14 @@ export default {
                     }
                 },
                 yAxis: {
+                    minInterval: 1, // 设置y轴坐标的最小值为1
                     axisLine: {
                         lineStyle: {
                             color: "#999"
                         }
                     },
                     axisLabel: {
+                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -404,19 +410,6 @@ export default {
             };
 
             const option2 = {
-                // legend: {
-                //     data: this.legend,
-                //     right: "10%",
-                //     top: "50%",
-                //     orient: "vertical",
-                //     textStyle: {
-                //         color: "#666",
-                //         fontSize: 14
-                //     },
-                //     itemWidth: 16,
-                //     itemHeight: 16,
-                //     itemGap: 20
-                // },
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "研究领域分布",
@@ -436,9 +429,26 @@ export default {
                         center: ["50%", "55%"],
                         label: {
                             show: true,
-                            fontSize: 16,
-                            formatter: "{b} {d}%"
+                            fontSize: 14,
+                            formatter: function (params) {
+                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
+                            },
+                            rich: {
+                                a: {
+                                    width: 100,
+                                    fontSize: 10,
+                                    fontWeight: "900",
+                                    lineHeight: 20,
+                                },
+                                b: {
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: 'red'
+                                }
+                            }
+
                         },
+
                         labelLine: {
                             length: 5,
                             length2: 10,
