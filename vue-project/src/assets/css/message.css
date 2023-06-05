@@ -141,7 +141,7 @@
     z-index: 20;
     font-size: 1.0em;
     border-radius: 0.75em;
-    background-image:radial-gradient(#ff0844 60%, #ffb199 100%);
+    background-image: radial-gradient(#ff0844 60%, #ffb199 100%);
     color: white;
 }
 
@@ -224,6 +224,23 @@
 .message-wrapper span i:hover {
     opacity: 50%;
     cursor: pointer;
+}
+
+/* message loader */
+.message-wrapper .load {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: 0.2s;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+}
+
+.message-wrapper .hide {
+    opacity: 0;
 }
 
 /* real message :( */
@@ -337,10 +354,22 @@
     flex-direction: row;
 }
 
+.message-wrapper .message-input {
+    width: 100%;
+    transition: 0.5s;
+}
+
+.message-wrapper .show-input {
+    height: 55px;
+}
+
+.message-wrapper .hide-input {
+    height: 0;
+}
+
 .message-wrapper .message-input textarea {
     width: 100%;
     height: 55px;
-    min-height: 55px;
     resize: none;
     font-size: 1.2em;
     line-height: 1.3em;
