@@ -44,13 +44,19 @@
             </el-card>
         </div>
 
-        <!-- 论文列表 -->
+        <!-- 最火论文 -->
         <el-col :span="12" class="left-col">
             <template v-if="this.truePaperList.length > 0">
                 <el-col v-for="(item, index) in paperList" :key="index">
                     <el-card v-if="item.pid === hot" shadow="hover" style="height: 500px;">
-                        <span class="paper_name" @click="gotoPaper(item.pid)">{{ item.attr.title
-                        }}</span>
+                        <div style="padding-top: 20px;">
+                            <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
+                            <span class="hot">&nbsp;&nbsp;RANK：{{ rank }}&nbsp;&nbsp;</span>
+                            <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
+                        </div>
+                        <span class="paper_name" @click="gotoPaper(item.pid)">
+                            {{ item.attr.title }}
+                        </span>
                         <div class="content">
                             <div class="authors">
                                 <span v-for="(author, index) in item.authors" class="author-name">
@@ -75,6 +81,10 @@
                                 <span>&nbsp;·&nbsp;{{ item.stat.clicks }}&nbsp;点击量</span>
                             </div>
                         </div>
+                        <br>
+                        <span>
+                            <i class="fa-solid fa-fire-flame-curved fa-bounce" style="color: red; font-size: 40px;"></i>
+                        </span>
                     </el-card>
                 </el-col>
             </template>
@@ -129,7 +139,7 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i class="el-icon-medal-1" style="font-size: 2em; color: #FFB90F;"></i>
+                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade" style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button icon="el-icon-view" size="mini" circle
                                             @click="$set(showCard, index, true)"></el-button>
                                     </div>
@@ -173,6 +183,7 @@ export default {
             paperNum: 0,
             showCard: [],
             hot: 0,
+            rank: 0,
             xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
             yData: [23, 24, 18, 25], //数据
             myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
@@ -253,6 +264,7 @@ export default {
                     this.paperNum = res.data.data.total;
                     this.truePaperList = this.paperList.filter(item => item.status === 5);
                     this.hot = res.data.data.hot;
+                    this.rank = res.data.data.rank;
                 }).catch(err => {
                     console.log(err);
                 })
@@ -530,6 +542,12 @@ export default {
     width: 600px;
 }
 
+.hot {
+    font-family: Montserrat-Black;
+    color: red;
+    font-size: 35px;
+}
+
 .paper_name {
     font-family: 'EB Garamond', serif;
     margin-left: 20px;
@@ -550,7 +568,7 @@ export default {
 
 .paper_name:hover {
     cursor: pointer;
-    transform: scale(1.05);
+    transform: scale(1.1);
     color: #0077ff !important;
 }
 
