@@ -1,0 +1,145 @@
+/* global default styles. */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.msg-border {
+    width: 100%;
+}
+
+.msg-border ul {
+    margin: 0;
+    padding: 0;
+}
+
+.msg-border ul li {
+    list-style: none;
+}
+
+/* decoration styles */
+.round-border {
+    border-radius: 8px;
+}
+
+/* main wrapper */
+.msg-wrapper {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    background-color: aqua;
+    display: flex;
+    flex-direction: row;
+}
+
+/*
+@media screen and (max-width: 500px) {
+    .wrapper {
+        flex-direction: column;
+        overflow: scroll;
+    }
+}
+*/
+
+/* contact styles */
+.msg-wrapper .contact-wrapper {
+    height: 100%;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    max-width: 250px;
+    background-color: lightblue;
+}
+
+.msg-wrapper .contact-wrapper .contact-nav {
+    height: 50px;
+    line-height: 50px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.msg-wrapper .contact-wrapper .contact-nav h3 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.msg-wrapper .contact-wrapper .contact-scroller {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.msg-wrapper .contact-wrapper .contact-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* contact item */
+.msg-wrapper .contact-wrapper .contact-scroller .contact-content .contact-item {
+    display: flex;
+    flex-direction: row;
+    height: 80px;
+    line-height: 80px;
+    padding: 5px;
+    background-image: linear-gradient(135deg, #FFF720 5%, #3CD500 95%);
+}
+
+
+.contact-item .avatar {
+    flex: 1;
+    align-self: center;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: red;
+}
+
+.contact-item .avatar img {
+    width: 100%;
+}
+
+.contact-item .nickname {
+    flex: 3;
+    align-self: center;
+    font-size: 1.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 3px 0 5px;
+}
+
+/* contact indicator */
+.msg-wrapper .contact-wrapper .contact-scroller .contact-indicator {
+    width: 20px;
+    height: 80px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-image: linear-gradient(90deg, rgba(255, 215, 0, 0) 0%, gold 100%);
+    z-index: 20;
+    transition: 1s;
+}
+
+
+/* message styles */
+.msg-wrapper .message-wrapper {
+    background-color: red;
+    height: 100%;
+    flex: 5;
+    overflow: hidden;
+}
+
+.msg-wrapper .message-wrapper .title {
+    position: relative;
+    height: 50px;
+    line-height: 50px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    background-color: #3CD500;
+}

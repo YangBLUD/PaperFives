@@ -55,7 +55,7 @@ body>.el-container {
 
 
 export default {
-  data () {
+  data() {
     return {}
   },
 }

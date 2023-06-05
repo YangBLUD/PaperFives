@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import path from 'path'
+require('../assets/js/fontawesome')
 
 export default {
     data() {
@@ -68,7 +68,7 @@ export default {
                             path: '',
                         },
                         {
-                            id: 1,
+                            id: 2,
                             authName: '热门学者',
                             icon: 'el-icon-s-custom',
                             path: '',
@@ -88,13 +88,13 @@ export default {
                             path: "user"
                         },
                         {
-                            id: 1,
+                            id: 2,
                             authName: '信息',
                             icon: 'el-icon-document',
                             path: "info"
                         },
                         {
-                            id: 1,
+                            id: 3,
                             authName: '消息',
                             icon: 'el-icon-chat-dot-square',
                             path: "message"
@@ -102,7 +102,7 @@ export default {
                     ]
                 },
                 {
-                    id: 1,
+                    id: 2,
                     authName: '设置',
                     icon: 'el-icon-setting',
                     path: '',
@@ -184,4 +184,9 @@ export default {
     background-color: white;
     min-width: 900px;
 }
+
+.el-aside {
+    overflow: hidden;
+}
+
 </style>
