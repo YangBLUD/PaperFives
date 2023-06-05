@@ -7,6 +7,7 @@
 
 .msg-border {
     width: 100%;
+    min-width: 800px;
 }
 
 .msg-border ul {
@@ -42,23 +43,31 @@
 }
 */
 
-/* contact styles */
-.msg-wrapper .contact-wrapper {
+/* common styles */
+.msg-box {
     height: 100%;
-    flex: 2;
     display: flex;
     flex-direction: column;
-    margin-right: 20px;
-    max-width: 250px;
-    background-color: lightblue;
+    overflow: hidden;
 }
 
-.msg-wrapper .contact-wrapper .contact-nav {
+.msg-box .msg-box-nav {
     height: 50px;
     line-height: 50px;
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
+
+/* contact styles */
+.msg-wrapper .contact-wrapper {
+    flex: 2;
+    margin-right: 20px;
+    max-width: 250px;
+    background-color: lightblue;
+    cursor: default;
+}
+
+/* .msg-wrapper .contact-wrapper .contact-nav {} */
 
 .msg-wrapper .contact-wrapper .contact-nav h3 {
     margin: 0;
@@ -85,8 +94,18 @@
     line-height: 80px;
     padding: 5px;
     background-image: linear-gradient(135deg, #FFF720 5%, #3CD500 95%);
+    transition: 0.3s;
 }
 
+.msg-wrapper .contact-wrapper .contact-scroller .contact-content .contact-padding {
+    height: 80px;
+}
+
+.contact-item:hover {
+    cursor: pointer;
+    opacity: 80%;
+    box-shadow: 0 0 20px gold inset;
+}
 
 .contact-item .avatar {
     flex: 1;
@@ -129,17 +148,179 @@
 
 /* message styles */
 .msg-wrapper .message-wrapper {
-    background-color: red;
-    height: 100%;
+    position: relative;
     flex: 5;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: hidden;
+    background-color: red;
+    cursor: default;
 }
 
 .msg-wrapper .message-wrapper .title {
     position: relative;
+    background-color: #3CD500;
+}
+
+.msg-wrapper .message-wrapper .title h2 {
+    cursor: pointer;
+}
+
+.msg-wrapper .message-wrapper .title h2:hover {
+    text-decoration: underline;
+}
+
+.message-wrapper .title span {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+.message-wrapper .title span i {
     height: 50px;
     line-height: 50px;
-    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    background-color: #3CD500;
+    font-size: 2.5em;
+    transition: 0.2s;
+}
+
+.message-wrapper span i:hover {
+    opacity: 50%;
+    cursor: pointer;
+}
+
+/* real message :( */
+.message-wrapper .message-scroller {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+}
+
+/*
+.message-wrapper .message-scroller::-webkit-scrollbar {
+    display: none;
+}
+*/
+
+.message-scroller .message-content {
+    margin: 10px;
+}
+
+.message-scroller .message-content .message {
+    display: flex;
+    margin-top: 20px;
+}
+
+.message-scroller .message-content .income {
+    flex-flow: row nowrap;
+}
+
+.message-scroller .message-content .outcome {
+    flex-flow: row-reverse nowrap;
+}
+
+.message-scroller .message-content .message .avatar {
+    flex: 1;
+    align-self: flex-start;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: cyan;
+}
+
+.message-scroller .message-content .message .avatar img {
+    height: 100%;
+}
+
+.message-scroller .message-content .message .payload {
+    align-self: flex-start;
+    display: flex;
+    width: 100%;
+}
+
+.message-scroller .message-content .income .payload {
+    margin-left: 10px;
+    flex-flow: column wrap;
+}
+
+.message-scroller .message-content .outcome .payload {
+    margin-right: 10px;
+    flex-flow: column wrap-reverse;
+}
+
+.message-scroller .message-content .message .payload .text {
+    max-width: 70%;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: aqua;
+    align-self: flex-start;
+}
+
+.message-scroller .message-content .message .payload .text p {
+    font-size: 1.2em;
+    line-height: 1.4em;
+    text-align: justify;
+}
+
+
+.message-scroller .message-content .message .payload .time {
+    align-self: flex-start;
+    margin-top: 5px;
+}
+
+.message-scroller .message-content .message .payload .time p {
+    height: 1em;
+    line-height: 1em;
+    font-size: 1em;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.message-scroller .message-content .income .payload .time {
+    margin-left: 5px;
+}
+
+.message-scroller .message-content .outcome .payload .time {
+    margin-right: 5px;
+}
+
+/* input */
+.message-wrapper .message-input {
+    display: flex;
+    flex-direction: row;
+}
+
+.message-wrapper .message-input textarea {
+    width: 100%;
+    height: 55px;
+    min-height: 55px;
+    resize: none;
+    font-size: 1.2em;
+    line-height: 1.3em;
+    outline: none;
+    overflow: auto;
+    transition: 0.1s;
+}
+
+.message-wrapper .message-input .but {
+    align-self: flex-start;
+    margin: 0 5px;
+}
+
+.message-wrapper .message-input .but i {
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-size: 2.5em;
+    transition: 0.2s;
+}
+
+.message-wrapper .message-input .but i:hover {
+    opacity: 50%;
+    cursor: pointer;
 }
