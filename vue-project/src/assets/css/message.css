@@ -91,7 +91,7 @@
     display: flex;
     flex-direction: row;
     height: 80px;
-    line-height: 80px;
+    /* line-height: 80px; */
     padding: 5px;
     background-image: linear-gradient(135deg, #FFF720 5%, #3CD500 95%);
     transition: 0.3s;
@@ -107,30 +107,66 @@
     box-shadow: 0 0 20px gold inset;
 }
 
-.contact-item .avatar {
+.contact-item .frame {
     flex: 1;
     align-self: center;
     width: 60px;
     height: 60px;
     min-width: 60px;
     min-height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: red;
+    position: relative;
 }
 
-.contact-item .avatar img {
+.contact-item .frame .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: purple;
+}
+
+.contact-item .frame .avatar img {
     width: 100%;
 }
 
-.contact-item .nickname {
+.contact-item .frame i {
+    position: absolute;
+    right: -0.5em;
+    top: -0.5em;
+    min-width: 1.5em;
+    padding: 0 5px;
+    height: 1.5em;
+    line-height: 1.5em;
+    z-index: 20;
+    font-size: 1.0em;
+    border-radius: 0.75em;
+    background-image:radial-gradient(#ff0844 60%, #ffb199 100%);
+    color: white;
+}
+
+.contact-item .info {
     flex: 3;
-    align-self: center;
-    font-size: 1.3em;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-left: 5px;
+}
+
+.contact-item .info .nickname {
+    flex: 3;
+    margin-top: 3px;
+    align-self: flex-start;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 1.3em;
     text-overflow: ellipsis;
-    margin: 0 3px 0 5px;
+}
+
+.contact-item .info .timestamp {
+    flex: 2;
+    align-self: flex-start;
+    font-size: 1em;
+    line-height: 1.2em;
 }
 
 /* contact indicator */
@@ -142,7 +178,7 @@
     top: 0;
     background-image: linear-gradient(90deg, rgba(255, 215, 0, 0) 0%, gold 100%);
     z-index: 20;
-    transition: 1s;
+    transition: 0.2s;
 }
 
 
@@ -205,6 +241,11 @@
 
 .message-scroller .message-content {
     margin: 10px;
+    display: none;
+}
+
+.message-scroller .active {
+    display: block;
 }
 
 .message-scroller .message-content .message {
@@ -303,8 +344,13 @@
     font-size: 1.2em;
     line-height: 1.3em;
     outline: none;
-    overflow: auto;
+    border: none;
+    overflow: hidden;
     transition: 0.1s;
+}
+
+.message-wrapper .message-input .full {
+    overflow: auto;
 }
 
 .message-wrapper .message-input .but {
