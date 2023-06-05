@@ -139,7 +139,8 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade" style="color: #FFB90F; font-size: 30px;"></i>
+                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                            style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button icon="el-icon-view" size="mini" circle
                                             @click="$set(showCard, index, true)"></el-button>
                                     </div>
@@ -158,14 +159,16 @@
 
         <!-- 图表部分 -->
         <el-col :span="24">
-            <div class="graph">
+            <el-col :span="12" class="left-col">
                 <el-card style="height: 330px">
                     <div class="echart" id="mychart1" :style="myChartStyle"></div>
                 </el-card>
+            </el-col>
+            <el-col :span="12" class="right-col">
                 <el-card style="height: 330px">
                     <div class="echart" id="mychart2" :style="myChartStyle"></div>
                 </el-card>
-            </div>
+            </el-col>
         </el-col>
     </el-row>
 </template>
@@ -291,9 +294,44 @@ export default {
                 location.reload()
             }
         },
-        initEcharts() {
+        async getStatisticsBar() {
+            await this.$http.get('api/v1/users/query/stat/bar', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    this.xData = res.data.data.stats.years;
+                    this.yData_1 = res.data.data.stats.lead_cnt;
+                    this.yData_2 = res.data.data.stats.co_cnt;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getStatisticsPie() {
+            await this.$http.get('api/v1/users/query/stat/pie', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    this.Data = res.data.data.stats;
+                    this.legend = res.data.data.legend;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async initEcharts() {
+            await this.getStatisticsBar();
+            await this.getStatisticsPie();
             // 基本柱状图
             const option1 = {
+                legend: {
+                    data: ['一作', '合作'],
+                    top: "10%",
+                    left: "80%",
+                },
+
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "论文发表记录",
@@ -345,37 +383,47 @@ export default {
                 color: ["#2ec7c9"],
                 series: [
                     {
+                        name: "一作",
                         type: "bar", //形状为柱状图
-                        data: this.yData,
+                        data: this.yData_1,
                         barWidth: 30,
                         itemStyle: {
                             color: "#2ec7c9"
+                        }
+                    },
+                    {
+                        name: "合作",
+                        type: "bar", //形状为柱状图
+                        data: this.yData_2,
+                        barWidth: 30,
+                        itemStyle: {
+                            color: "#DCDCDC"
                         }
                     }
                 ]
             };
 
             const option2 = {
-                legend: {
-                    // 图例
-                    data: ["OS", "OO", "DB", "SE", "AI"],
-                    right: "10%",
-                    top: "50%",
-                    orient: "vertical",
-                    textStyle: {
-                        color: "#666",
-                        fontSize: 14
-                    },
-                    itemWidth: 16,
-                    itemHeight: 16,
-                    itemGap: 20
-                },
+                // legend: {
+                //     data: this.legend,
+                //     right: "10%",
+                //     top: "50%",
+                //     orient: "vertical",
+                //     textStyle: {
+                //         color: "#666",
+                //         fontSize: 14
+                //     },
+                //     itemWidth: 16,
+                //     itemHeight: 16,
+                //     itemGap: 20
+                // },
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "研究领域分布",
                     top: "0%",
                     left: "center",
                     textStyle: {
+
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -398,28 +446,7 @@ export default {
                                 width: 1
                             }
                         },
-                        data: [
-                            {
-                                value: 463,
-                                name: "OS"
-                            },
-                            {
-                                value: 395,
-                                name: "OO"
-                            },
-                            {
-                                value: 157,
-                                name: "DB"
-                            },
-                            {
-                                value: 149,
-                                name: "SE"
-                            },
-                            {
-                                value: 147,
-                                name: "AI"
-                            }
-                        ],
+                        data: this.Data,
                         itemStyle: {
                             borderWidth: 10,
                             borderColor: "#fff"
@@ -440,7 +467,7 @@ export default {
             window.addEventListener("resize", () => {
                 myChart2.resize();
             });
-        }
+        },
     }
 };
 
@@ -517,9 +544,9 @@ export default {
 
 .graph {
     padding-top: 50px;
-    padding-left: 150px;
-    padding-right: 150px;
-    margin-top: 20px;
+    margin-left: 145px;
+    height: 500px;
+    padding-right: 40px;
     display: flex;
     justify-content: space-between;
 

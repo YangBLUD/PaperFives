@@ -138,7 +138,8 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade" style="color: #FFB90F; font-size: 30px;"></i>
+                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                            style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
@@ -213,8 +214,11 @@ export default {
             paperList: [],
             paparNum: 0,
             followeeTag: false,
-            xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
-            yData: [23, 24, 18, 25], //数据
+            xData: [], //横坐标
+            yData_1: [], //数据
+            yData_2: [], //数据
+            Data: [],
+            legend: [],
             myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
             activeName: 'first',
             showCard: [],
@@ -228,7 +232,7 @@ export default {
             this.getPaperlist();
             this.paperList.forEach(() => {
                 this.$set(this.showCard, this.showCard.length, false);
-            });
+            })
         });
         this.getUserProfile();
     },
@@ -241,7 +245,7 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.userProfile = res.data.data;
                 }).catch(err => {
                     console.log(err);
@@ -309,7 +313,6 @@ export default {
                 })
         },
         async gotoProfile(id) {
-            console.log(this.followeeTag)
             this.$router.push({
                 path: '/visitor',
                 query: {
@@ -318,7 +321,6 @@ export default {
             })
         },
         async gotoPaper(id) {
-            console.log(this.followeeTag)
             this.$router.push({
                 path: '/paper',
                 query: {
@@ -352,9 +354,44 @@ export default {
                     console.log(err);
                 })
         },
-        initEcharts() {
+        async getStatisticsBar() {
+            await this.$http.get('api/v1/users/query/stat/bar', {
+                params: {
+                    uid: window.sessionStorage.getItem('uid')
+                }
+            })
+                .then(res => {
+                    this.xData = res.data.data.stats.years;
+                    this.yData_1 = res.data.data.stats.lead_cnt;
+                    this.yData_2 = res.data.data.stats.co_cnt;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getStatisticsPie() {
+            await this.$http.get('api/v1/users/query/stat/pie', {
+                params: {
+                    uid: window.sessionStorage.getItem('uid')
+                }
+            })
+                .then(res => {
+                    this.Data = res.data.data.stats;
+                    this.legend = res.data.data.legend;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async initEcharts() {
+            await this.getStatisticsBar();
+            await this.getStatisticsPie();
             // 基本柱状图
             const option1 = {
+                legend: {
+                    data: ['一作', '合作'],
+                    top: "10%",
+                    left: "80%",
+                },
+
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "论文发表记录",
@@ -406,37 +443,47 @@ export default {
                 color: ["#2ec7c9"],
                 series: [
                     {
+                        name: "一作",
                         type: "bar", //形状为柱状图
-                        data: this.yData,
+                        data: this.yData_1,
                         barWidth: 30,
                         itemStyle: {
                             color: "#2ec7c9"
+                        }
+                    },
+                    {
+                        name: "合作",
+                        type: "bar", //形状为柱状图
+                        data: this.yData_2,
+                        barWidth: 30,
+                        itemStyle: {
+                            color: "#DCDCDC"
                         }
                     }
                 ]
             };
 
             const option2 = {
-                legend: {
-                    // 图例
-                    data: ["OS", "OO", "DB", "SE", "AI"],
-                    right: "10%",
-                    top: "50%",
-                    orient: "vertical",
-                    textStyle: {
-                        color: "#666",
-                        fontSize: 14
-                    },
-                    itemWidth: 16,
-                    itemHeight: 16,
-                    itemGap: 20
-                },
+                // legend: {
+                //     data: this.legend,
+                //     right: "10%",
+                //     top: "50%",
+                //     orient: "vertical",
+                //     textStyle: {
+                //         color: "#666",
+                //         fontSize: 14
+                //     },
+                //     itemWidth: 16,
+                //     itemHeight: 16,
+                //     itemGap: 20
+                // },
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "研究领域分布",
                     top: "0%",
                     left: "center",
                     textStyle: {
+
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -459,28 +506,7 @@ export default {
                                 width: 1
                             }
                         },
-                        data: [
-                            {
-                                value: 463,
-                                name: "OS"
-                            },
-                            {
-                                value: 395,
-                                name: "OO"
-                            },
-                            {
-                                value: 157,
-                                name: "DB"
-                            },
-                            {
-                                value: 149,
-                                name: "SE"
-                            },
-                            {
-                                value: 147,
-                                name: "AI"
-                            }
-                        ],
+                        data: this.Data,
                         itemStyle: {
                             borderWidth: 10,
                             borderColor: "#fff"
