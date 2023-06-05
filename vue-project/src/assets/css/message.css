@@ -53,6 +53,7 @@
 
 .msg-box .msg-box-nav {
     height: 50px;
+    min-height: 50px;
     line-height: 50px;
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
     z-index: 10;

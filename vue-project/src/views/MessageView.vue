@@ -26,7 +26,7 @@
             </div>
             <div class="message-wrapper msg-box round-border">
                 <div class="title msg-box-nav">
-                    <h2>{{ choice.title }}</h2>
+                    <h2 @click="onClickUsername()">{{ choice.title }}</h2>
                     <span @click="onClickDeleteConversation()"><i class="fa-solid fa-user-xmark"
                             title="Delete conversation"></i></span>
                 </div>
@@ -73,7 +73,7 @@ export default {
     data() {
         return {
             choice: {
-                title: 'Clone No. 1',
+                title: '',
                 activeId: 0
             },
             styles: {
@@ -190,15 +190,16 @@ export default {
                 this.history[this.choice.activeId] = this.$refs.input.value;
                 this.$refs.input.value = '';
             }
+            
+            var contact = this.contacts.contactList[id];
+            contact.unread = 0;
 
             this.choice.activeId = id;
-            this.choice.title = 'Clone No. ' + id;
+            this.choice.title = contact.username;
             this.styles.indicatorClass.transform = 'translateY(' + (id - 1) * 80 + 'px)';
 
             this.$refs.input.value = this.history[this.choice.activeId];
             this.autoGrowTextArea();
-
-            this.contacts.contactList[id].unread = 0;
         },
 
         // Clear text area
@@ -210,6 +211,20 @@ export default {
         // Delete conversation click
         onClickDeleteConversation() {
             this.onClickContactItem(0);
+        },
+
+        // Jump to user space.
+        onClickUsername() {
+            if (this.choice.activeId == 0) {
+                return;
+            }
+            const id = this.choice.activeId;
+            this.$router.push({
+                path: '/visitor',
+                query: {
+                    uid: this.contacts.contactList[id].uid
+                }
+            });
         }
     }
 }
