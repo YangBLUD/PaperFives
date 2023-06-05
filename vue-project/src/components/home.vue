@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import path from 'path'
+require('../assets/js/fontawesome')
 
 export default {
     data() {
