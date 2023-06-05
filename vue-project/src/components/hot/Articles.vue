@@ -36,10 +36,8 @@ export default {
   props: ["articles"],
   methods: {
     gotoSch(author_id) {
-
     },
     gotoPaper(paper_id) {
-
     }
   },
   filters: {

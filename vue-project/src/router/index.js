@@ -9,6 +9,7 @@ import User from '../views/User.vue'
 import Info from '../views/UserInfo.vue'
 import Visitor from '../views/Visitor.vue'
 import Paper from '../views/Paper.vue'
+import PaperReview from '../views/PaperReview.vue'
 
 Vue.use(VueRouter)
 
@@ -24,7 +25,8 @@ const routes = [
       { path:'/user',component:User},
       { path:'/info',component:Info},
       { path:'/visitor',component:Visitor},
-      { path:'/paper',component:Paper}
+      { path:'/paper',component:Paper},
+      { path:'/paperreview',component:PaperReview}
     ]
   },
   { path: '/login', component: Login },
