@@ -190,7 +190,7 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                <el-carousel type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart1" :style="myChartStyle1"></div>
@@ -242,7 +242,6 @@ export default {
             this.initEcharts();
             this.getFollower();
             this.getFollowee();
-            this.getPaperlist();
             this.paperList.forEach(() => {
                 this.$set(this.showCard, this.showCard.length, false);
             })
@@ -406,6 +405,7 @@ export default {
                 })
         },
         async initEcharts() {
+            await this.getPaperlist();
             await this.getStatisticsBar();
             await this.getStatisticsPie();
             if (!(this.paperList.length > 0))

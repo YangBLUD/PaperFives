@@ -55,13 +55,13 @@
         <el-col :span="12" class="left-col">
             <template v-if="this.truePaperList.length > 0">
                 <el-col v-for="(item, index) in paperList" :key="index">
-                    <el-card v-if="item.pid === hot" shadow="hover" style="height: 500px;">
-                        <div style="padding-top: 20px;">
+                    <el-card v-if="item.pid === hot" shadow="hover">
+                        <div style="padding-top: 20px; max-width: 600px;">
                             <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
                             <span class="hot">&nbsp;&nbsp;RANK：{{ rank }}&nbsp;&nbsp;</span>
                             <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
                         </div>
-                        <span class="paper_name" @click="gotoPaper(item.pid)">
+                        <span class="paper_name" @click="gotoPaper(item.pid)" style="max-width: 600px;">
                             {{ item.attr.title }}
                         </span>
                         <div class="content">
@@ -106,7 +106,7 @@
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
                                     <div class="paper-item-title">
-                                        <span class="paper_name" @click="gotoPaper(item.pid)">{{ item.attr.title
+                                        <span class="paper_name" @click="gotoPaper(item.pid)" style="white-space: nowrap;">{{ item.attr.title
                                         }}</span>
                                         <el-button class="shrink" icon="el-icon-arrow-left"
                                             @click="$set(showCard, index, false)" size="mini"></el-button>
@@ -199,7 +199,6 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.initEcharts();
-            this.getPaperlist();
             this.getUserProfile();
             this.isFollowee();
             this.paperList.forEach(() => {
@@ -333,6 +332,7 @@ export default {
                 })
         },
         async initEcharts() {
+            await this.getPaperlist();
             await this.getStatisticsBar();
             await this.getStatisticsPie();
             if(!(this.paperList.length > 0))
@@ -574,7 +574,7 @@ export default {
     padding-top: 50px;
     margin-left: 145px;
     width: 600px;
-    height: 500px;
+    height: auto;
     padding-right: 40px;
 }
 
@@ -599,8 +599,6 @@ export default {
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
     line-height: 2;
-    white-space: nowrap;
-    /* 设置不换行 */
     overflow: hidden;
     /* 超出部分隐藏 */
     text-overflow: ellipsis;
