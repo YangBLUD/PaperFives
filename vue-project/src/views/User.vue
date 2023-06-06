@@ -15,7 +15,7 @@
                 </div>
             </el-card>
             <el-dialog title="修改签名" :visible.sync="dialogVisible">
-                <el-input v-model="newMotto" placeholder="请输入新签名"></el-input>
+                <el-input v-model="newMotto" placeholder="请输入新签名" maxlength="100" show-word-limit></el-input>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="saveMotto">确 定</el-button>
@@ -763,7 +763,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'EB Garamond', serif;
+                    font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
@@ -793,7 +793,7 @@ export default {
                 align-items: center;
 
                 .paper_name {
-                    font-family: 'EB Garamond', serif;
+                    font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 35px;
@@ -828,6 +828,18 @@ export default {
     }
 }
 
+::v-deep .el-dialog__title {
+    font-size: 25px;
+    font-weight: 800;
+}
+
+::v-deep .el-input__inner {
+    font-size: 20px;
+}
+
+::v-deep .el-input .el-input__count {
+    font-size: 20px;
+}
 
 .follow-action {
     display: flex;
