@@ -9,8 +9,9 @@
                 <!-- Contact Scroller -->
                 <div class="contact-scroller">
                     <div class="contact-content">
-                        <div v-for="(contact, index) in contacts.contactList" class="contact-item"
-                            @click="onClickContactItem(index)">
+                        <div v-for="(contact, index) in contacts.contactList"
+                            class="contact-item animate__animated animate__slideInLeft"
+                            :style="getContactAnimDuration(index)" @click="onClickContactItem(index)">
                             <div class="frame">
                                 <div class="avatar">
                                     <img :src="getAvatarUrl(contact.avatar)" />
@@ -34,8 +35,8 @@
                     <span class="link">
                         <h2 @click="onClickUsername()">{{ choice.title }}</h2>
                     </span>
-                    <span class="but r0" @click="onClickRefreshConversation()"><i class="fa-solid fa-arrows-rotate"
-                            v-bind:class="{ 'fa-spin': isLoading }" title="Refresh conversation"></i></span>
+                    <span class="but r0" @click="onClickRefresh()"><i class="fa-solid fa-arrows-rotate"
+                            v-bind:class="{ 'fa-spin': isLoading || isRefreshing }" title="Refresh conversation"></i></span>
                     <span class="but r1" @click="onClickDeleteConversation()"><i class="fa-solid fa-user-xmark"
                             title="Close conversation"></i></span>
                 </div>
@@ -98,12 +99,16 @@ export default {
                 contactsCnt: 0,
                 contactList: []
             },
+            tempContacts: {
+                contactsCnt: 0,
+                contactList: []
+            },
             inputHistory: [],
             // Barnacle Vue2 array & objects! >:(
-            chatHistory: [],
             activeHistory: [],
             key: 0,
             isLoading: false,
+            isRefreshing: false,
             timeFormat: {
                 year: "numeric",
                 month: "2-digit",
@@ -127,6 +132,7 @@ export default {
         this.resizeEventHandler();
 
         this.requestContacts();
+        this.contacts = this.tempContacts;
         this.onResetContactItem();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
@@ -194,7 +200,23 @@ export default {
         getMessageClass(income) {
             return income ? 'income animate__fadeInLeft' : 'outcome animate__fadeInRight';
         },
+        getContactAnimDuration(id) {
+            return 'animation-delay: ' + id * 50 + 'ms';
+        },
 
+        // Mapping relation
+        getUid(id) {
+            if (id < 0) {
+                return 0;
+            }
+            return this.contacts.contactList[id].uid;
+        },
+        getContactHistory(id) {
+            if (id < 0) {
+                return [];
+            }
+            return this.contacts.contactList[id].history;
+        },
         // Scroll message area.
         updateMessageAreaAnim() {
             // You're not expected to understand this... Me too. :(
@@ -219,8 +241,8 @@ export default {
             var start = this.$refs.scroller.scrollTop;
             var end = this.$refs.scroller.scrollHeight;
 
-            console.log(start);
-            console.log(end);
+            // console.log(start);
+            // console.log(end);
 
             // Immediate call may result improper update.
             (function (_obj) {
@@ -233,9 +255,14 @@ export default {
         // Only mark invalid message, and it will be lost after refresh.
         markInvalidMessage(id, mid) {
             // console.log("removing " + id + "-" + mid);
-            var msg = this.chatHistory[id][mid];
+            var history = this.getContactHistory(id);
+            var msg = history[mid];
             msg.invalid = true;
-            this.chatHistory[id].splice(mid, 1, msg);
+            history.splice(mid, 1, msg);
+        },
+
+        updateContactTime(id, timestamp) {
+            this.contacts.contactList[id].timestamp = timestamp;
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -247,16 +274,21 @@ export default {
                 console.log(data);
                 if (data.meta.status != 0) {
                     // alert(data.meta.msg);
-                    this.$message.error(data.meta.msg)
-                    this.$router.push({ path: '/login' })
+                    this.$message.error(data.meta.msg);
+                    this.$router.push({ path: '/login' });
                 }
-                this.contacts.contactsCnt = data.data.total;
-                this.contacts.contactList = data.data.contacts;
+                this.tempContacts.contactsCnt = data.data.total;
+                this.tempContacts.contactList = []
+                for (var i = 0; i < data.data.total; i++) {
+                    var contact = data.data.contacts[i];
+                    contact['upToDate'] = false;
+                    contact['history'] = [];
+                    this.tempContacts.contactList.push(contact);
+                }
 
                 // prepare user history
-                for (var i = 0; i < this.contacts.contactList.length; i++) {
+                for (var i = 0; i < this.tempContacts.contactList.length; i++) {
                     this.inputHistory.push('');
-                    this.chatHistory.push([])
                 }
             }).catch(err => {
                 console.log(err);
@@ -277,7 +309,7 @@ export default {
                     for (var i = 0; i < data.data.total; i++) {
                         var message = data.data.msgs[i];
                         message['invalid'] = false;
-                        this.chatHistory[id].push(message);
+                        this.contacts.contactList[id].history.push(message);
                     }
                 }
             }).catch(err => {
@@ -368,10 +400,11 @@ export default {
             var contact = this.contacts.contactList[id];
 
             // request for history
-            if (this.chatHistory[id].length == 0) {
+            if (!contact.upToDate) {
                 await this.requestChatHistory(id, contact.uid);
+                contact.upToDate = true;
             }
-            this.activeHistory = this.chatHistory[id];
+            this.activeHistory = this.getContactHistory(id);
             this.updateMessageAreaForce();
 
             // reset layout
@@ -402,20 +435,65 @@ export default {
         },
 
         // Refresh converstaion click
-        async onClickRefreshConversation() {
-            const id = this.choice.activeId;
-            if (id < 0) {
-                return;
-            }
-
-            this.isLoading = true;
-
+        async refreshChatHistory(id) {
             // clear chat history
-            this.chatHistory[id] = [];
+            this.contacts.contactList[id].history = [];
 
             var contact = this.contacts.contactList[id];
             await this.requestChatHistory(id, contact.uid);
-            this.activeHistory = this.chatHistory[id];
+            var history = this.getContactHistory(id);
+            this.updateContactTime(id, history[history.length - 1].timestamp);
+        },
+
+        reorderContacts() {
+            var id = this.choice.activeId;
+            var uid = (id < 0) ? 0 : this.contacts.contactList[id].uid;
+
+            this.tempContacts.contactList = this.contacts.contactList;
+            this.tempContacts.contactList.sort(function (x, y) {
+                var xDate = Date.parse(x.timestamp);
+                var yDate = Date.parse(y.timestamp);
+                if (xDate < yDate) {
+                    return 1;
+                }
+                if (xDate > yDate) {
+                    return -1;
+                }
+                return 0;
+            });
+            this.contacts.contactList = this.tempContacts.contactList;
+            this.relocateContact(uid);
+        },
+
+        relocateContact(uid) {
+            var id = -1;
+            for (var i = 0; i < this.contacts.contactList.length; i++) {
+                if (this.contacts.contactList[i].uid == uid) {
+                    id = i;
+                    break;
+                }
+            }
+            this.onClickContactItem(id);
+        },
+
+        async refreshContacts() {
+            var id = this.choice.activeId;
+            var uid = (id < 0) ? 0 : this.contacts.contactList[id].uid;
+
+            await this.requestContacts();
+            this.contacts = this.tempContacts;
+
+            this.relocateContact(uid);
+        },
+
+        async onClickRefresh() {
+            this.isLoading = true;
+
+            const id = this.choice.activeId;
+            if (id >= 0) {
+                await this.refreshChatHistory(id);
+            }
+            await this.refreshContacts();
 
             this.isLoading = false;
         },
@@ -452,13 +530,23 @@ export default {
                 return;
             }
 
+            this.isRefreshing = true;
+
             // clear input
             this.$refs.input.value = '';
             this.autoGrowTextArea();
 
             // send message, aync function
             await this.sendMessage(this.contacts.contactList[id].uid, text, id, this.activeHistory.length);
+
+            var history = this.getContactHistory(id);
+            this.updateContactTime(id, history[history.length - 1].timestamp);
+            this.reorderContacts();
+
+            this.isRefreshing = false;
         }
+
+        
     }
 }
 </script>
