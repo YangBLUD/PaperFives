@@ -6,7 +6,8 @@
             <!-- 个人名片 -->
             <el-card class="box-card">
                 <div class="user">
-                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
+                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" @click="uploadAvatar"
+                        class="avatar-box" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
                         <p class="access"><i class="fa-regular fa-pen-to-square" @click="editMotto"></i>&nbsp;{{ motto }}
@@ -249,6 +250,27 @@ export default {
         this.getUserProfile();
     },
     methods: {
+        uploadAvatar() {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'image/*'
+            input.addEventListener('change', (event) => {
+                const file = event.target.files[0]
+                if (!file) return
+                const formData = new FormData()
+                formData.append('file', file, file.name)
+                // 发送 POST 请求上传头像
+                this.$http.post('api/v1/users/profile/avatar', formData)
+                    .then(res => {
+                        this.userProfile.avatar = res.data.data.avatar;
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                        // 上传失败
+                    })
+            })
+            input.click();
+        },
         async getUserProfile() {
             await this.$http.get('api/v1/users/profile/user', {
                 params: {

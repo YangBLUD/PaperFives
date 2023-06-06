@@ -41,13 +41,16 @@
       <el-dialog title="修改密码" :visible.sync="dialogVisiblePasswd" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="旧密码">
-            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;" clearable></el-input>
+            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;"
+              clearable></el-input>
           </el-form-item>
           <el-form-item label="新密码">
-            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;" clearable></el-input>
+            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;"
+              clearable></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;" clearable></el-input>
+            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;"
+              clearable></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -101,6 +104,7 @@
     }
   }
 }
+
 ::v-deep .el-dialog__title {
   font-size: 25px;
   font-weight: 800;
@@ -171,7 +175,7 @@ export default {
       this.dialogVisiblePasswd = true;
     },
     handleSavePasswd() {
-      if(!this.passwdNew || !this.passwdNew || !this.passwdNewCheck){
+      if (!this.passwdNew || !this.passwdNew || !this.passwdNewCheck) {
         this.$message({
           type: 'info',
           message: '请完成输入后在点击确认！'
