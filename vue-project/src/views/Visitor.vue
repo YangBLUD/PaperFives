@@ -143,7 +143,7 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                        <i v-if="item.lead" class="fa-solid fa-medal"
                                             style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button icon="el-icon-view" size="mini" circle
                                             @click="$set(showCard, index, true)"></el-button>
