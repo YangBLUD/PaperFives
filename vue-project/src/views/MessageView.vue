@@ -117,7 +117,8 @@ export default {
                 minute: "2-digit",
                 second: "2-digit",
                 hour12: false
-            }
+            },
+            refreshRate: 30 * 1000  // refresh every half minute
         }
     },
     beforeCreate() {
@@ -132,6 +133,8 @@ export default {
         this.resizeEventHandler();
 
         this.onFirstLoad();
+
+        this.addUpdateHook();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
     },
@@ -517,16 +520,24 @@ export default {
             this.relocateContact(uid);
         },
 
-        async onClickRefresh() {
-            this.isLoading = true;
-
+        async refreshPage(subtle) {
+            if (!subtle) {
+                this.isRefreshing = true;
+            }
+            
             const id = this.choice.activeId;
             if (id >= 0) {
                 await this.refreshChatHistory(id);
             }
             await this.refreshContacts();
 
-            this.isLoading = false;
+            if (!subtle) {
+                this.isRefreshing = false;
+            }
+        },
+
+        async onClickRefresh() {
+            await this.refreshPage(false);
         },
 
         // Jump to user space.
@@ -575,6 +586,17 @@ export default {
             this.reorderContacts();
 
             this.isRefreshing = false;
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Routine update event handlers
+        ////////////////////////////////////////////////////////////////////////
+        addUpdateHook() {
+            setTimeout(this.updatePage, this.refreshRate);
+        },
+        updatePage() {
+            this.refreshPage(true);
+            setTimeout(this.updatePage, this.refreshRate);
         }
     }
 }
