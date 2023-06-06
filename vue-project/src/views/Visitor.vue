@@ -567,7 +567,7 @@ export default {
 
 
 .left-col {
-    padding-top: 50px;
+    padding-top: 30px;
     margin-left: 145px;
     width: 600px;
     height: 500px;
@@ -575,7 +575,7 @@ export default {
 }
 
 .right-col {
-    padding-top: 50px;
+    padding-top: 30px;
     width: 600px;
 }
 

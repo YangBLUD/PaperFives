@@ -9,7 +9,8 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}</p>
+                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}
+                        </p>
                     </div>
                 </div>
             </el-card>
@@ -182,7 +183,7 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                <el-carousel :interval="false" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart1" :style="myChartStyle"></div>
@@ -484,27 +485,19 @@ export default {
                         radius: ["50%", "70%"],
                         center: ["50%", "55%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 8,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -555,7 +548,7 @@ export default {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.fa-pen-to-square{
+.fa-pen-to-square {
     transition: all 0.3s ease-in-out;
     /* 添加过渡效果 */
     transform: scale(1);
@@ -563,6 +556,7 @@ export default {
     opacity: 0.8;
     /* 设置默认的透明度 */
 }
+
 .fa-pen-to-square:hover {
     cursor: pointer;
     cursor: pointer;
