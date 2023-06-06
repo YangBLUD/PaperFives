@@ -527,7 +527,7 @@ export default {
     }
 
     .institute {
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         font-size: 16px;
         margin-bottom: 10px;
         width: 500px;
@@ -536,7 +536,7 @@ export default {
 
     .motto {
         font-size: 16px;
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         margin-bottom: 10px;
         width: 500px;
     }
@@ -590,7 +590,7 @@ export default {
 }
 
 .paper_name {
-    font-family: 'EB Garamond', serif;
+    font-family: 'OpenSans-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 35px;
@@ -641,7 +641,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'EB Garamond', serif;
+                    font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
