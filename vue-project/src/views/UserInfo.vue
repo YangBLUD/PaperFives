@@ -2,14 +2,11 @@
   <div class="personal-info-wrapper">
     <div class="personal-info">
       <div class="personal-info-content">
-        <div class="personal-info-header">
-          <div class="personal-info-title" style="font-size: 35px; font-weight: 900;">个人信息</div>
-        </div>
         <br><br>
         <div style="text-align: left;">
           <span style="font-size: 25px; font-weight: 800;">基本信息</span>
         </div>
-        <el-descriptions :border="true" :column="1" style="font-size: 20px;">
+        <el-descriptions :border="true" :column="1" style="font-size: 20px; padding-top: 10px;">
           <el-descriptions-item label="姓名" :span="2">{{ form.name }}</el-descriptions-item>
           <el-descriptions-item label="性别" :span="2">{{ getSex() }}</el-descriptions-item>
           <el-descriptions-item label="机构" :span="2">{{ form.institute }}</el-descriptions-item>
@@ -19,10 +16,10 @@
         <el-button @click="showEditDialog()" type="primary">编辑信息</el-button>
       </div>
 
-      <el-dialog title="基本信息" :visible.sync="dialogVisibleProfile" width="50%" :before-close="handleClose" center style="font-size: 16px">
+      <el-dialog title="基本信息" :visible.sync="dialogVisibleProfile" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="80px" style="font-size: 20px;">
           <el-form-item label="姓名">
-            <el-input v-model="tempName" placeholder="请输入姓名" style="font-size: 20px;"></el-input>
+            <el-input v-model="tempName" placeholder="请输入姓名" style="font-size: 20px;" clearable></el-input>
           </el-form-item>
           <el-form-item label="性别">
             <el-select v-model="tempSex" placeholder="请选择" style="font-size: 20px;">
@@ -31,30 +28,30 @@
               <el-option label="未知" value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="地址">
-            <el-input v-model="tempInstitute" placeholder="请输入机构" style="font-size: 20px;"></el-input>
+          <el-form-item label="机构">
+            <el-input v-model="tempInstitute" placeholder="请输入机构" style="font-size: 20px;" clearable></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button @click="dialogVisibleProfile = false">取 消</el-button>
           <el-button type="primary" @click="handleSaveData">确 定</el-button>
         </span>
       </el-dialog>
 
       <el-dialog title="修改密码" :visible.sync="dialogVisiblePasswd" width="50%" :before-close="handleClose" center>
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="旧密码">
-            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;"></el-input>
+            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;" clearable></el-input>
           </el-form-item>
           <el-form-item label="新密码">
-            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;"></el-input>
+            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;" clearable></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;"></el-input>
+            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;" clearable></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button @click="dialogVisiblePasswd = false">取 消</el-button>
           <el-button type="primary" @click="handleSavePasswd">确 定</el-button>
         </span>
       </el-dialog>
@@ -63,7 +60,7 @@
       <div style="text-align: left;">
         <span style="font-size: 25px; font-weight: 800;">账户信息</span>
       </div>
-      <el-descriptions :border="true" :column="1" style="font-size: 20px;">
+      <el-descriptions :border="true" :column="1" style="font-size: 20px; padding-top: 10px;">
         <el-descriptions-item label="账户" :span="8">{{ form.email }}</el-descriptions-item>
       </el-descriptions>
       <div class="personal-info-footer">
@@ -106,13 +103,17 @@
 }
 ::v-deep .el-dialog__title {
   font-size: 25px;
+  font-weight: 800;
 }
 
 ::v-deep .el-form-item__label {
   font-size: 20px;
+  font-weight: 600;
 }
 
-
+::v-deep .el-input__inner {
+  font-size: 20px;
+}
 </style>
 
 <script>
@@ -164,9 +165,19 @@ export default {
       this.openProfile();
     },
     showEditPassword() {
+      this.passwdOld = '';
+      this.passwdNew = '';
+      this.passwdNewCheck = '';
       this.dialogVisiblePasswd = true;
     },
     handleSavePasswd() {
+      if(!this.passwdNew || !this.passwdNew || !this.passwdNewCheck){
+        this.$message({
+          type: 'info',
+          message: '请完成输入后在点击确认！'
+        });
+        return;
+      }
       const reg = new RegExp('^[a-zA-Z0-9_]{6,16}$')
       if (!reg.test(this.passwdNew)) {
         this.$message({
@@ -232,10 +243,7 @@ export default {
           var data = res.data;
           console.log(data);
           if (data.meta.status != 0) {
-            this.$message({
-              type: 'info',
-              message: '旧密码输入错误！'
-            });
+            this.$message.error('旧密码输入错误！');
           }
           else {
             this.$message({
