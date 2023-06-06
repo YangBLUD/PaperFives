@@ -7,9 +7,9 @@
         </div>
         <br>
         <el-descriptions title="基本信息" :border="true" :column="1" :size="size">
-          <el-descriptions-item label="姓名" :span="2">{{ userProfile.username }}</el-descriptions-item>
+          <el-descriptions-item label="姓名" :span="2">{{ form.name }}</el-descriptions-item>
           <el-descriptions-item label="性别" :span="2">{{ getSex() }}</el-descriptions-item>
-          <el-descriptions-item label="机构" :span="2">{{ userProfile.attr.institute }}</el-descriptions-item>
+          <el-descriptions-item label="机构" :span="2">{{ form.institute }}</el-descriptions-item>
         </el-descriptions>
       </div>
       <div class="personal-info-footer">
@@ -104,9 +104,9 @@ export default {
   },
   methods: {
     getSex(){
-      if(this.form.sex === 0 || this.form.sex === '未知')
+      if(this.form.sex == 0 || this.form.sex == '未知')
         return '未知'
-      else if(this.form.sex === 1 || this.form.sex === '男')
+      else if(this.form.sex == 1 || this.form.sex == '男')
         return '男'
       else
         return '女'
@@ -122,6 +122,7 @@ export default {
       this.form.sex = this.tempSex;
       this.form.institute = this.tempInstitute;
       this.dialogVisible = false;
+      this.changeProfile();
     },
     async getUserProfile() {
       await this.$http.get('api/v1/users/profile/user', {
@@ -151,7 +152,6 @@ export default {
         username: this.form.name,
         sex: this.form.sex,
         institute: this.form.institute,
-        motto: this.form.motto
       })
         .then(res => {
           console.log(res);
