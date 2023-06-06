@@ -131,9 +131,7 @@ export default {
         window.addEventListener("resize", this.resizeEventHandler);
         this.resizeEventHandler();
 
-        this.requestContacts();
-        this.contacts = this.tempContacts;
-        this.onResetContactItem();
+        this.onFirstLoad();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
     },
@@ -217,6 +215,7 @@ export default {
             }
             return this.contacts.contactList[id].history;
         },
+
         // Scroll message area.
         updateMessageAreaAnim() {
             // You're not expected to understand this... Me too. :(
@@ -367,6 +366,20 @@ export default {
         },
 
         ////////////////////////////////////////////////////////////////////////
+        //  First load
+        ////////////////////////////////////////////////////////////////////////
+        async onFirstLoad() {
+            await this.requestContacts();
+            this.contacts = this.tempContacts;
+            this.onResetContactItem();
+
+            var uid = this.$route.query.uid;
+            if (uid != null) {
+                this.relocateContact(uid);
+            }
+        },
+
+        ////////////////////////////////////////////////////////////////////////
         //  Click event handlers
         ////////////////////////////////////////////////////////////////////////
 
@@ -466,6 +479,7 @@ export default {
         },
 
         relocateContact(uid) {
+            console.log(this.contacts.contactList);
             var id = -1;
             for (var i = 0; i < this.contacts.contactList.length; i++) {
                 if (this.contacts.contactList[i].uid == uid) {
@@ -473,6 +487,7 @@ export default {
                     break;
                 }
             }
+            // console.log("relocate: " + id);
             this.onClickContactItem(id);
         },
 
@@ -546,7 +561,7 @@ export default {
             this.isRefreshing = false;
         }
 
-        
+
     }
 }
 </script>
