@@ -248,6 +248,7 @@ export default {
         type: 'warning'
       }).then(() => {
         var data = this.changePassword();
+        console.log(data);
         if (data.meta.status != 0) {
           this.$message({
             type: 'info',
