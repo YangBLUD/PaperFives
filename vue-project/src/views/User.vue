@@ -206,7 +206,7 @@
         </el-col>
     </el-row>
 </template>
-  
+
 <script>
 import * as echarts from 'echarts'
 import Articles from "../components/hot/Articles.vue";
@@ -835,4 +835,3 @@ export default {
     align-items: center;
 }
 </style>
-  

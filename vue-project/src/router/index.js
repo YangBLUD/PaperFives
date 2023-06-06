@@ -10,6 +10,7 @@ import Info from '../views/UserInfo.vue'
 import Visitor from '../views/Visitor.vue'
 import Paper from '../views/Paper.vue'
 import Message from '../views/MessageView.vue'
+import PaperReview from '../views/PaperReview.vue'
 
 Vue.use(VueRouter)
 
@@ -26,7 +27,8 @@ const routes = [
       { path: '/info', component: Info },
       { path: '/visitor', component: Visitor },
       { path: '/paper', component: Paper },
-      { path: '/message', component: Message }
+      { path: '/message', component: Message },
+      { path: '/paperreview', component: PaperReview}
     ]
   },
   { path: '/login', component: Login },
