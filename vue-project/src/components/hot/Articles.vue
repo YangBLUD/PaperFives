@@ -4,10 +4,10 @@
       <div v-for="(article, index) in articles" v-bind:key="index">
         <div style="text-align: left">
           <div style="margin-bottom: 10px">
-            <span class="paper-title" @click="gotoPaper(article.paper_id)">{{ article.paper.attr.title }}</span>
+            <span class="paper-title" @click="gotoPaper(article.paper.pid)">{{ article.paper.attr.title }}</span>
           </div>
           <span v-for="(j, index) in article.paper.authors" :key="j" class="author-name">
-            <span @click="gotoSch(j.author_id)">{{ j.name }}</span>
+            <span @click="gotoSch(j.uid)">{{ j.name }}</span>
             <span v-if="index < article.paper.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> / </span>
           </span>
           <span class="publish-year"> · {{ article.paper.attr.publish_date }}</span>
@@ -36,8 +36,20 @@ export default {
   props: ["articles"],
   methods: {
     gotoSch(author_id) {
+      this.$router.push({
+        path: '/visitor',
+        query: {
+          uid: author_id,
+        }
+      })
     },
     gotoPaper(paper_id) {
+      this.$router.push({
+                path: '/paper',
+                query: {
+                    pid: paper_id,
+                }
+            })
     }
   },
   filters: {

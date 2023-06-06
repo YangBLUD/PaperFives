@@ -193,12 +193,12 @@
                 <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                         </el-card>
                     </el-carousel-item>
                 </el-carousel>
@@ -229,7 +229,8 @@ export default {
             Data: [],
             legend: [],
             motto: null,
-            myChartStyle: { float: "left", width: "100%", height: "300px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "340px" }, //图表样式
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, //图表样式
             activeName: 'first',
             showCard: [],
             dialogVisible: false,
@@ -407,6 +408,8 @@ export default {
         async initEcharts() {
             await this.getStatisticsBar();
             await this.getStatisticsPie();
+            if (!(this.paperList.length > 0))
+                return;
             // 基本柱状图
             const option1 = {
                 legend: {
@@ -504,29 +507,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "41%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 8,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
