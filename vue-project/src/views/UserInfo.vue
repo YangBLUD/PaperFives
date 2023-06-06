@@ -21,10 +21,7 @@
       <el-dialog title="基本信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="姓名">
-            <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="年龄">
-            <el-input v-model="form.age" placeholder="请输入年龄"></el-input>
+            <el-input v-model="this.userProfile.username" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="性别">
             <el-select v-model="form.sex" placeholder="请选择">
@@ -91,6 +88,7 @@
 export default {
   data() {
     return {
+      userProfile: {},
       dialogVisible: false,
       form: {
         name: '',
