@@ -320,6 +320,21 @@ export default {
             this.updateMessageAreaAnim();
         },
 
+        async requestUpdateContact(uid) {
+            await this.$http.post('api/v1/msgs/update', {
+                uid: uid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
+        },
+
         async sendMessage(uid, text, id, mid) {
             // id and mid for error handling
             await this.$http.post('api/v1/msgs/send', {
@@ -333,10 +348,7 @@ export default {
                 console.log(data);
                 var message = null;
                 if (data.meta.status != 0) {
-                    this.$message.error("Failed to send message!")
-                    // remove failed message
-                    // console.log(id + "" + mid);
-                    // setTimeout(this.markInvalidMessage, 50, id, mid);
+                    this.$message.error("Failed to send message!");
                     message = {
                         text: text,
                         income: false,
@@ -359,7 +371,7 @@ export default {
                 this.activeHistory.push(message);
                 this.updateMessageAreaAnim();
             }).catch(err => {
-                this.$message.error("Network error, try again later.")
+                this.$message.error("Network error, try again later.");
                 setTimeout(this.markInvalidMessage, 50, id, mid);
                 console.log(err);
             });
@@ -369,13 +381,17 @@ export default {
         //  First load
         ////////////////////////////////////////////////////////////////////////
         async onFirstLoad() {
-            await this.requestContacts();
-            this.contacts = this.tempContacts;
-            this.onResetContactItem();
-
             var uid = this.$route.query.uid;
             if (uid != null) {
+                await this.requestUpdateContact(uid);
+            }
+            await this.requestContacts();
+            this.contacts = this.tempContacts;
+
+            if (uid != null) {
                 this.relocateContact(uid);
+            } else {
+                this.onResetContactItem();
             }
         },
 
@@ -560,8 +576,6 @@ export default {
 
             this.isRefreshing = false;
         }
-
-
     }
 }
 </script>
