@@ -35,11 +35,9 @@ export default {
   name: 'Articles',
   props: ['articles'],
   methods: {
-    gotoSch (author_id) {
-
+    gotoSch(author_id) {
     },
-    gotoPaper (paper_id) {
-
+    gotoPaper(paper_id) {
     }
   },
   filters: {

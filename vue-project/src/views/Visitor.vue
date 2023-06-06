@@ -2,7 +2,7 @@
     <el-row class="border">
         <!-- 个人名片 -->
         <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px;">
-            <el-card class="box-card" style="margin: 0 auto;">
+            <el-card class="box-card" style="margin: 0 auto; text-align: left;">
                 <el-col :span="22">
                     <div class="user">
                         <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
@@ -32,7 +32,8 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col v-show="isFollowed !== null" :span="2" style="display: flex; justify-content: center; align-items: center;">
+                <el-col v-show="isFollowed !== null" :span="2"
+                    style="display: flex; justify-content: center; align-items: center;">
                     <div>
                         <i v-if="this.isFollowed" class="el-icon-star-on" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
@@ -43,65 +44,440 @@
             </el-card>
         </div>
 
-        <!-- 论文列表 -->
-        <el-row :gutter="20" class="paper-list">
-            <template v-if="paperList.length > 0">
-                <el-col :span="12" v-for="(item, index) in paperList" :key="index">
-                    <el-card shadow="hover" class="papaer-item">
-                        <!-- 查看操作 -->
-                        <div class="paper-action">
-                            <el-button type="primary" size="small" @click="">查看论文</el-button>
+        <!-- 最火论文 -->
+        <el-col :span="12" class="left-col">
+            <template v-if="this.truePaperList.length > 0">
+                <el-col v-for="(item, index) in paperList" :key="index">
+                    <el-card v-if="item.pid === hot" shadow="hover" style="height: 500px;">
+                        <div style="padding-top: 20px;">
+                            <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
+                            <span class="hot">&nbsp;&nbsp;RANK：{{ rank }}&nbsp;&nbsp;</span>
+                            <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
                         </div>
+                        <span class="paper_name" @click="gotoPaper(item.pid)">
+                            {{ item.attr.title }}
+                        </span>
+                        <div class="content">
+                            <div class="authors">
+                                <span v-for="(author, index) in item.authors" class="author-name">
+                                    <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                    <span v-if="index < item.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> /
+                                    </span>
+                                </span>
+                                <span class="publish-year"> · {{ item.attr.publish_date }}</span>
+                            </div>
+                            <div>
+                                <span v-for="(keyword) in item.attr.keywords" class="abstract">
+                                    ●{{ keyword }}&nbsp;&nbsp;&nbsp;
+                                </span>
+                            </div>
+                            <div>
+                                <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                            </div>
+                            <div class="citation-count">
+                                <span>{{ item.stat.cites }}&nbsp;被引用</span>
+                                <span>&nbsp;·&nbsp;{{ item.stat.downloads }}&nbsp;被收藏</span>
+                                <span>&nbsp;·&nbsp;{{ item.stat.favorites }}&nbsp;下载量</span>
+                                <span>&nbsp;·&nbsp;{{ item.stat.clicks }}&nbsp;点击量</span>
+                            </div>
+                        </div>
+                        <br>
+                        <span>
+                            <i class="fa-solid fa-fire-flame-curved fa-bounce" style="color: red; font-size: 40px;"></i>
+                        </span>
                     </el-card>
                 </el-col>
             </template>
             <template v-else>
-                <el-col :span="12">
-                    <el-empty description="无论文数据" :image-size="250"></el-empty>
-                </el-col>
+                <el-empty description="无论文数据" :image-size="250"></el-empty>
             </template>
-            <template v-if="paperList.length > 0">
-                <el-col :span="12" v-for="(item, index) in paperList" :key="index">
-                    <el-card shadow="hover" class="papaer-item">
-                        <!-- 查看操作 -->
-                        <div class="paper-action">
-                            <el-button type="primary" size="small" @click="">查看论文</el-button>
-                        </div>
-                    </el-card>
-                </el-col>
-            </template>
-            <template v-else>
-                <el-col :span="12">
-                    <el-empty description="无论文数据" :image-size="250"></el-empty>
-                </el-col>
-            </template>
-        </el-row>
+        </el-col>
+
+        <el-col :span="12" class="right-col">
+            <!-- 论文列表 -->
+            <el-row :gutter="20" class="paper-list">
+                <template v-if="truePaperList.length > 0">
+                    <el-col v-for="(item, index) in truePaperList" :key="index">
+                        <el-card shadow="hover" class="paper-item">
+                            <div class="wrapper">
+                                <div v-show="showCard[index]">
+                                    <div class="paper-item-title">
+                                        <span class="paper_name" @click="gotoPaper(item.pid)">{{ item.attr.title
+                                        }}</span>
+                                        <el-button class="shrink" icon="el-icon-arrow-left"
+                                            @click="$set(showCard, index, false)" size="mini"></el-button>
+                                    </div>
+                                    <div class="content">
+                                        <div class="authors">
+                                            <span v-for="(author, index) in item.authors" class="author-name">
+                                                <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                                <span v-if="index < item.authors.length - 1"
+                                                    style="color: #A0A0A0; font-size: 14px"> / </span>
+                                            </span>
+                                            <span class="publish-year"> · {{ item.attr.publish_date }}</span>
+                                        </div>
+                                        <div>
+                                            <span v-for="(keyword) in item.attr.keywords" class="abstract">
+                                                ●{{ keyword }}&nbsp;&nbsp;&nbsp;
+                                            </span>
+                                        </div>
+                                        <div style="text-align:left;margin-top:10px;">
+                                            <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                        </div>
+                                        <div class="citation-count">
+                                            <span>{{ item.stat.cites }}&nbsp;被引用</span>
+                                            <span>&nbsp;·&nbsp;{{ item.stat.downloads }}&nbsp;被收藏</span>
+                                            <span>&nbsp;·&nbsp;{{ item.stat.favorites }}&nbsp;下载量</span>
+                                            <span>&nbsp;·&nbsp;{{ item.stat.clicks }}&nbsp;点击量</span>
+                                        </div>
+                                    </div>
+                                    <div v-show="!showCard[index]">
+                                        {{ item.attr.title }}
+                                    </div>
+                                </div>
+                                <div v-show="!showCard[index]">
+                                    <div class="paper-content">
+                                        <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
+                                        }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                            style="color: #FFB90F; font-size: 30px;"></i>
+                                        <el-button icon="el-icon-view" size="mini" circle
+                                            @click="$set(showCard, index, true)"></el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </template>
+                <template v-else>
+                    <el-col>
+                        <el-empty description="无论文数据" :image-size="250"></el-empty>
+                    </el-col>
+                </template>
+            </el-row>
+        </el-col>
 
         <!-- 图表部分 -->
-        <div class="graph">
-            <el-card style="height: 330px">
-                <div class="echart" id="mychart1" :style="myChartStyle"></div>
-            </el-card>
-            <el-card style="height: 330px">
-                <div class="echart" id="mychart2" :style="myChartStyle"></div>
-            </el-card>
-        </div>
+        <el-col :span="24">
+            <el-col :span="12" class="left-col">
+                <el-card style="height: 350px;">
+                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                </el-card>
+            </el-col>
+            <el-col :span="12" class="right-col">
+                <el-card style="height: 350px;">
+                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                </el-card>
+            </el-col>
+        </el-col>
     </el-row>
 </template>
 
 <script>
 import * as echarts from 'echarts'
 export default {
-  data () {
-    return {
-      isFollowed: null,
-      userProfile: {},
-      userAttr: {},
-      paperList: [],
-      xData: ['1990s', '2000s', '2010s', '2020s'], // 横坐标
-      yData: [23, 24, 18, 25], // 数据
-      myChartStyle: { float: 'left', width: '90%', height: '280px' }, // 图表样式
-      activeName: 'first'
+    data() {
+        return {
+            isFollowed: null,
+            userProfile: {},
+            userAttr: {},
+            paperList: [],
+            truePaperList: [],
+            paperNum: 0,
+            showCard: [],
+            hot: 0,
+            rank: 0,
+            xData: [], //横坐标
+            yData_1: [], //数据
+            yData_2: [], //数据
+            Data: [],
+            legend: [],
+            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
+            activeName: 'first'
+        };
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.initEcharts();
+            this.getPaperlist();
+            this.getUserProfile();
+            this.isFollowee();
+            this.paperList.forEach(() => {
+                this.$set(this.showCard, this.showCard.length, false);
+            });
+        });
+    },
+    methods: {
+        async getUserProfile() {
+            await this.$http.get('api/v1/users/profile/user', {
+                params: {
+                    mode: 'all',
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    // console.log(res);
+                    this.userProfile = res.data.data;
+                    this.userAttr = res.data.data.attr;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async followUser() {
+            this.isFollowed = !this.isFollowed;
+            await this.$http.post('api/v1/users/favorite/follow', {
+                uid: this.$route.query.uid
+            })
+                .then(res => {
+                    // console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async removeFollower() {
+            this.isFollowed = !this.isFollowed;
+            await this.$http.post('api/v1/users/favorite/unfollow', {
+                uid: this.$route.query.uid
+            })
+                .then(res => {
+                    // console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async isFollowee() {
+            await this.$http.get('api/v1/users/favorite/isfollowee', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    // console.log(res);
+                    this.isFollowed = res.data.data.value
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getPaperlist() {
+            await this.$http.get('api/v1/papers/get/papers', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.paperList = res.data.data.papers;
+                    this.paperNum = res.data.data.total;
+                    this.truePaperList = this.paperList.filter(item => item.status === 5);
+                    this.hot = res.data.data.hot;
+                    this.rank = res.data.data.rank;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async gotoPaper(id) {
+            this.$router.push({
+                path: '/paper',
+                query: {
+                    pid: id,
+                }
+            })
+        },
+        async gotoProfile(id) {
+            if (id != this.$route.query.uid) {
+                this.$router.push({
+                    path: '/visitor',
+                    query: {
+                        uid: id,
+                    }
+                })
+                location.reload()
+            }
+            else {
+                location.reload()
+            }
+        },
+        async getStatisticsBar() {
+            await this.$http.get('api/v1/users/query/stat/bar', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    this.xData = res.data.data.stats.years;
+                    this.yData_1 = res.data.data.stats.lead_cnt;
+                    this.yData_2 = res.data.data.stats.co_cnt;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getStatisticsPie() {
+            await this.$http.get('api/v1/users/query/stat/pie', {
+                params: {
+                    uid: this.$route.query.uid
+                }
+            })
+                .then(res => {
+                    this.Data = res.data.data.stats;
+                    this.legend = res.data.data.legend;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async initEcharts() {
+            await this.getStatisticsBar();
+            await this.getStatisticsPie();
+            // 基本柱状图
+            const option1 = {
+                legend: {
+                    data: ['一作', '合作'],
+                    top: "10%",
+                    left: "80%",
+                },
+
+                title: {
+                    // 设置饼图标题，位置设为顶部居中
+                    text: "论文发表记录",
+                    top: "0%",
+                    left: "center",
+                    textStyle: {
+                        color: "#333",
+                        fontWeight: "bold",
+                        fontFamily: "Microsoft YaHei"
+                    }
+                },
+                grid: {
+                    top: 80,
+                    left: 80,
+                    right: 50
+                },
+                xAxis: {
+                    data: this.xData,
+                    axisLine: {
+                        lineStyle: {
+                            color: "#999"
+                        }
+                    },
+                    axisLabel: {
+                        fontWeight: "900",
+                        color: "#666",
+                        margin: 10
+                    },
+                    axisTick: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    minInterval: 1, // 设置y轴坐标的最小值为1
+                    axisLine: {
+                        lineStyle: {
+                            color: "#999"
+                        }
+                    },
+                    axisLabel: {
+                        fontWeight: "900",
+                        color: "#666",
+                        margin: 10
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: "dashed"
+                        }
+                    }
+                },
+                color: ["#2ec7c9"],
+                series: [
+                    {
+                        name: "一作",
+                        type: "bar", //形状为柱状图
+                        data: this.yData_1,
+                        barWidth: 30,
+                        itemStyle: {
+                            color: "#2ec7c9"
+                        }
+                    },
+                    {
+                        name: "合作",
+                        type: "bar", //形状为柱状图
+                        data: this.yData_2,
+                        barWidth: 30,
+                        itemStyle: {
+                            color: "#DCDCDC"
+                        }
+                    }
+                ]
+            };
+
+            const option2 = {
+                title: {
+                    // 设置饼图标题，位置设为顶部居中
+                    text: "研究领域分布",
+                    top: "0%",
+                    left: "center",
+                    textStyle: {
+
+                        color: "#333",
+                        fontWeight: "bold",
+                        fontFamily: "Microsoft YaHei"
+                    }
+                },
+                series: [
+                    {
+                        type: "pie",
+                        radius: ["50%", "70%"],
+                        center: ["50%", "55%"],
+                        label: {
+                            show: true,
+                            fontSize: 14,
+                            formatter: function (params) {
+                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
+                            },
+                            rich: {
+                                a: {
+                                    width: 100,
+                                    fontSize: 10,
+                                    fontWeight: "900",
+                                    lineHeight: 20,
+                                },
+                                b: {
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: 'red'
+                                }
+                            }
+
+                        },
+
+                        labelLine: {
+                            length: 5,
+                            length2: 10,
+                            lineStyle: {
+                                width: 1
+                            }
+                        },
+                        data: this.Data,
+                        itemStyle: {
+                            borderWidth: 10,
+                            borderColor: "#fff"
+                        }
+                    }
+                ]
+            };
+            const myChart1 = echarts.init(document.getElementById("mychart1"));
+            myChart1.setOption(option1);
+            //随着屏幕大小调节图表
+            window.addEventListener("resize", () => {
+                myChart1.resize();
+            });
+
+            const myChart2 = echarts.init(document.getElementById("mychart2"));
+            myChart2.setOption(option2);
+            //随着屏幕大小调节图表
+            window.addEventListener("resize", () => {
+                myChart2.resize();
+            });
+        },
     }
   },
   mounted () {
@@ -345,7 +721,7 @@ export default {
     }
 
     .name {
-        font-family: Montserrat;
+        font-family: Montserrat-Black;
         font-size: 35px;
         margin-bottom: 10px;
         width: 500px;
@@ -356,6 +732,7 @@ export default {
     }
 
     .institute {
+        font-family: Montserrat-Bold;
         font-size: 16px;
         margin-bottom: 10px;
         width: 500px;
@@ -364,7 +741,7 @@ export default {
 
     .motto {
         font-size: 16px;
-        font-style: italic;
+        font-family: Montserrat-Bold;
         margin-bottom: 10px;
         width: 500px;
     }
@@ -375,7 +752,7 @@ export default {
 }
 
 .el-button {
-    margin-left: 250px;
+    margin-left: auto;
 }
 
 .page-title {
@@ -386,9 +763,9 @@ export default {
 
 .graph {
     padding-top: 50px;
-    padding-left: 150px;
-    padding-right: 150px;
-    margin-top: 20px;
+    margin-left: 145px;
+    height: 500px;
+    padding-right: 40px;
     display: flex;
     justify-content: space-between;
 
@@ -397,22 +774,114 @@ export default {
     }
 }
 
-.paper-list {
+
+.left-col {
     padding-top: 50px;
-    height: auto;
-    overflow-y: auto;
+    margin-left: 145px;
+    width: 600px;
+    height: 500px;
+    padding-right: 40px;
 }
 
-.paper-item {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    margin-bottom: 10px;
+.right-col {
+    padding-top: 50px;
+    width: 600px;
+}
 
-    .follow-info {
-        display: flex;
+.hot {
+    font-family: Montserrat-Black;
+    color: red;
+    font-size: 35px;
+}
+
+.paper_name {
+    font-family: 'EB Garamond', serif;
+    margin-left: 20px;
+    color: black;
+    font-size: 35px;
+    font-weight: 800;
+    /* 设置初始状态字体为普通体 */
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+    line-height: 2;
+    white-space: nowrap;
+    /* 设置不换行 */
+    overflow: hidden;
+    /* 超出部分隐藏 */
+    text-overflow: ellipsis;
+    /* 超出部分显示省略号 */
+}
+
+.paper_name:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    color: #0077ff !important;
+}
+
+.content {
+    padding-left: 20px;
+}
+
+.paper-list {
+    height: 500px;
+    width: auto;
+    overflow-y: auto;
+    text-align: left !important;
+
+    .paper-item {
+        // display: flex;
         align-items: center;
-        flex: 1;
+        margin-bottom: 10px;
+
+        .wrapper {
+            width: 100%;
+            transition: 1s;
+
+            .paper-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .status {
+                    margin-left: auto;
+                    width: 8em;
+                }
+
+                .paper_name_init {
+                    font-family: 'EB Garamond', serif;
+                    margin-left: 20px;
+                    color: black;
+                    font-size: 25px;
+                    max-width: 600px;
+                    font-weight: 600;
+                    /* 设置初始状态字体为普通体 */
+                    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+                    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+                    white-space: nowrap;
+                    /* 设置不换行 */
+                    overflow: hidden;
+                    /* 超出部分隐藏 */
+                    text-overflow: ellipsis;
+                    /* 超出部分显示省略号 */
+                }
+
+                .paper_name_init:hover {
+                    cursor: pointer;
+                    transform: scale(1.05);
+                    color: #0077ff !important;
+                }
+            }
+
+            .paper-item-title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .shrink {
+                    margin-left: auto;
+                }
+            }
+        }
     }
 }
 </style>

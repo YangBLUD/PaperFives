@@ -53,7 +53,7 @@ body>.el-container {
 <script>
 
 export default {
-  data () {
+  data() {
     return {}
   }
 }

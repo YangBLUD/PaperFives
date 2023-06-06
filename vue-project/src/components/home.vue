@@ -49,67 +49,86 @@
 </template>
 
 <script>
-import path from 'path'
+require('../assets/js/fontawesome')
 
 export default {
-  data () {
-    return {
-      menuList: [
-        {
-          id: 1,
-          authName: '热门',
-          icon: 'el-icon-s-open',
-          path: '',
-          children: [
-            {
-              id: 1,
-              authName: '热门领域',
-              icon: 'el-icon-s-open',
-              path: ''
-            },
-            {
-              id: 1,
-              authName: '热门学者',
-              icon: 'el-icon-s-custom',
-              path: ''
-            }
-          ]
-        },
-        {
-          id: 11,
-          authName: '我的',
-          icon: 'el-icon-user-solid',
-          path: '',
-          children: [
-            {
-              id: 1,
-              authName: '主页',
-              icon: 'el-icon-house',
-              path: 'user'
-            },
-            {
-              id: 1,
-              authName: '信息',
-              icon: 'el-icon-document',
-              path: 'info'
-            },
-            {
-              id: 1,
-              authName: '消息',
-              icon: 'el-icon-chat-dot-square',
-              path: ''
-            }
-          ]
-        },
-        {
-          id: 1,
-          authName: '设置',
-          icon: 'el-icon-setting',
-          path: ''
+    data() {
+        return {
+            menuList: [
+                {
+                    id: 1,
+                    authName: '热门',
+                    icon: 'el-icon-s-open',
+                    path: '',
+                    children: [
+                        {
+                            id: 1,
+                            authName: '热门领域',
+                            icon: 'el-icon-s-open',
+                            path: '',
+                        },
+                        {
+                            id: 2,
+                            authName: '热门学者',
+                            icon: 'el-icon-s-custom',
+                            path: '',
+                        }
+                    ]
+                },
+                {
+                    id: 11,
+                    authName: '我的',
+                    icon: 'el-icon-user-solid',
+                    path: '',
+                    children: [
+                        {
+                            id: 1,
+                            authName: '主页',
+                            icon: 'el-icon-house',
+                            path: "user"
+                        },
+                        {
+                            id: 2,
+                            authName: '信息',
+                            icon: 'el-icon-document',
+                            path: "info"
+                        },
+                        {
+                            id: 3,
+                            authName: '消息',
+                            icon: 'el-icon-chat-dot-square',
+                            path: "message"
+                        },
+                    ]
+                },
+                {
+                    id: 2,
+                    authName: '设置',
+                    icon: 'el-icon-setting',
+                    path: '',
+                }
+            ],
+            isCollapse: false,  //是否折叠
+            activePath: '',
+
         }
-      ],
-      isCollapse: false, // 是否折叠
-      activePath: ''
+    },
+    created() {
+        this.activePath = window.sessionStorage.getItem('activePath')
+    },
+    methods: {
+        logout() {
+            window.sessionStorage.clear()
+            this.$router.push('/login')
+        },
+        // 切换侧边折叠与展开
+        toggleCollapse() {
+            this.isCollapse = !this.isCollapse
+        },
+        //保存链接激活
+        saveState(activePath) {
+            window.sessionStorage.setItem('activePath', activePath)
+        },
 
     }
   },
@@ -184,4 +203,9 @@ export default {
     background-color: white;
     min-width: 900px;
 }
+
+.el-aside {
+    overflow: hidden;
+}
+
 </style>

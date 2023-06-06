@@ -12,3 +12,8 @@
     font-family: 'Montserrat-Bold';
     src: url(./MontserratAlt1-Bold.ttf)
 }
+
+@font-face {
+    font-family: 'Montserrat-Thin';
+    src: url(./MontserratAlt1-Thin.ttf)
+}
