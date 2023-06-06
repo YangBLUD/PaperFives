@@ -3,7 +3,7 @@
         <div class="authors-body">
             <div class="author-main" v-for="(item,index) in authors" :key="index">
                 <div class="avator" v-if="item.user.avatar">
-                    <img :src="item.user.avatar" >
+                    <img :src="'http://81.70.161.76:5000' + item.user.avatar" />
                 </div>  
                 <div class="user-info">
                     <div>

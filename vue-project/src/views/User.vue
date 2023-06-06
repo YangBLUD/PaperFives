@@ -1,6 +1,7 @@
 <template>
     <!-- 页面框架 -->
     <el-row class="border">
+        <!-- 左栏 -->
         <el-col :span="8" class="left-col">
             <!-- 个人名片 -->
             <el-card class="box-card">
@@ -8,10 +9,18 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access">{{ this.userProfile.role === 1 ? '用户' : '学者' }}</p>
+                        <p class="access"><i class="fa-regular fa-pen-to-square" @click="editMotto"></i>&nbsp;{{ motto }}
+                        </p>
                     </div>
                 </div>
             </el-card>
+            <el-dialog title="修改签名" :visible.sync="dialogVisible">
+                <el-input v-model="newMotto" placeholder="请输入新签名"></el-input>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveMotto">确 定</el-button>
+                </span>
+            </el-dialog>
 
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
@@ -92,7 +101,7 @@
             </el-row>
         </el-col>
 
-        <!-- 论文列表 -->
+        <!-- 右栏 -->
         <el-col :span="16" class="right-col">
             <!-- 论文列表 -->
             <el-row :gutter="20" class="paper-list">
@@ -138,7 +147,8 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i class="el-icon-medal-1" style="font-size: 2em; color: #FFB90F;"></i>
+                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                            style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button v-if="item.status === 0" type="success" size="normal" class="status"
                                             icon="el-icon-edit">
                                             草稿
@@ -180,15 +190,15 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                <el-carousel type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
-                        <el-card style="height: 330px; width: 500px;">
-                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                        <el-card style="height: 350px; width: 500px;">
+                            <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
-                        <el-card style="height: 330px; width: 500px;">
-                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                        <el-card style="height: 350px; width: 500px;">
+                            <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                         </el-card>
                     </el-carousel-item>
                 </el-carousel>
@@ -213,11 +223,18 @@ export default {
             paperList: [],
             paparNum: 0,
             followeeTag: false,
-            xData: ["1990s", "2000s", "2010s", "2020s"], //横坐标
-            yData: [23, 24, 18, 25], //数据
-            myChartStyle: { float: "left", width: "90%", height: "280px" }, //图表样式
+            xData: [], //横坐标
+            yData_1: [], //数据
+            yData_2: [], //数据
+            Data: [],
+            legend: [],
+            motto: null,
+            myChartStyle1: { float: "left", width: "100%", height: "340px" }, //图表样式
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, //图表样式
             activeName: 'first',
             showCard: [],
+            dialogVisible: false,
+            newMotto: ""
         };
     },
     mounted() {
@@ -225,10 +242,9 @@ export default {
             this.initEcharts();
             this.getFollower();
             this.getFollowee();
-            this.getPaperlist();
             this.paperList.forEach(() => {
                 this.$set(this.showCard, this.showCard.length, false);
-            });
+            })
         });
         this.getUserProfile();
     },
@@ -241,8 +257,19 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.userProfile = res.data.data;
+                    this.motto = this.userProfile.attr.motto;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async changeProfile() {
+            await this.$http.post('api/v1/users/profile/profile', {
+                motto: this.motto
+            })
+                .then(res => {
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -309,7 +336,6 @@ export default {
                 })
         },
         async gotoProfile(id) {
-            console.log(this.followeeTag)
             this.$router.push({
                 path: '/visitor',
                 query: {
@@ -318,7 +344,6 @@ export default {
             })
         },
         async gotoPaper(id) {
-            console.log(this.followeeTag)
             this.$router.push({
                 path: '/paper',
                 query: {
@@ -352,9 +377,47 @@ export default {
                     console.log(err);
                 })
         },
-        initEcharts() {
+        async getStatisticsBar() {
+            await this.$http.get('api/v1/users/query/stat/bar', {
+                params: {
+                    uid: window.sessionStorage.getItem('uid')
+                }
+            })
+                .then(res => {
+                    this.xData = res.data.data.stats.years;
+                    this.yData_1 = res.data.data.stats.lead_cnt;
+                    this.yData_2 = res.data.data.stats.co_cnt;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async getStatisticsPie() {
+            await this.$http.get('api/v1/users/query/stat/pie', {
+                params: {
+                    uid: window.sessionStorage.getItem('uid')
+                }
+            })
+                .then(res => {
+                    this.Data = res.data.data.stats;
+                    this.legend = res.data.data.legend;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async initEcharts() {
+            await this.getPaperlist();
+            await this.getStatisticsBar();
+            await this.getStatisticsPie();
+            if (!(this.paperList.length > 0))
+                return;
             // 基本柱状图
             const option1 = {
+                legend: {
+                    data: ['一作', '合作'],
+                    top: "10%",
+                    left: "80%",
+                },
+
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "论文发表记录",
@@ -387,6 +450,7 @@ export default {
                     }
                 },
                 yAxis: {
+                    minInterval: 1, // 设置y轴坐标的最小值为1
                     axisLine: {
                         lineStyle: {
                             color: "#999"
@@ -406,37 +470,34 @@ export default {
                 color: ["#2ec7c9"],
                 series: [
                     {
+                        name: "一作",
                         type: "bar", //形状为柱状图
-                        data: this.yData,
+                        data: this.yData_1,
                         barWidth: 30,
                         itemStyle: {
                             color: "#2ec7c9"
+                        }
+                    },
+                    {
+                        name: "合作",
+                        type: "bar", //形状为柱状图
+                        data: this.yData_2,
+                        barWidth: 30,
+                        itemStyle: {
+                            color: "#DCDCDC"
                         }
                     }
                 ]
             };
 
             const option2 = {
-                legend: {
-                    // 图例
-                    data: ["OS", "OO", "DB", "SE", "AI"],
-                    right: "10%",
-                    top: "50%",
-                    orient: "vertical",
-                    textStyle: {
-                        color: "#666",
-                        fontSize: 14
-                    },
-                    itemWidth: 16,
-                    itemHeight: 16,
-                    itemGap: 20
-                },
                 title: {
                     // 设置饼图标题，位置设为顶部居中
                     text: "研究领域分布",
                     top: "0%",
                     left: "center",
                     textStyle: {
+
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -446,11 +507,20 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "41%"],
                         label: {
-                            show: true,
-                            fontSize: 16,
-                            formatter: "{b} {d}%"
+                            show: false,
+                            position: 'center',
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
                         },
                         labelLine: {
                             length: 5,
@@ -459,28 +529,7 @@ export default {
                                 width: 1
                             }
                         },
-                        data: [
-                            {
-                                value: 463,
-                                name: "OS"
-                            },
-                            {
-                                value: 395,
-                                name: "OO"
-                            },
-                            {
-                                value: 157,
-                                name: "DB"
-                            },
-                            {
-                                value: 149,
-                                name: "SE"
-                            },
-                            {
-                                value: 147,
-                                name: "AI"
-                            }
-                        ],
+                        data: this.Data,
                         itemStyle: {
                             borderWidth: 10,
                             borderColor: "#fff"
@@ -506,6 +555,19 @@ export default {
             this.mouseX = event.clientX
             this.mouseY = event.clientY
         },
+        editMotto() {
+            this.newMotto = this.motto;
+            this.dialogVisible = true;
+        },
+        saveMotto() {
+            this.motto = this.newMotto;
+            this.dialogVisible = false;
+            this.changeProfile();
+            this.$message({
+                type: 'success',
+                message: '修改成功!'
+            });
+        }
     }
 };
 
@@ -521,6 +583,25 @@ export default {
 
 .follow-item:hover {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.fa-pen-to-square {
+    transition: all 0.3s ease-in-out;
+    /* 添加过渡效果 */
+    transform: scale(1);
+    /* 设置默认的缩放比例 */
+    opacity: 0.8;
+    /* 设置默认的透明度 */
+}
+
+.fa-pen-to-square:hover {
+    cursor: pointer;
+    cursor: pointer;
+    position: relative;
+    transform: scale(1.2);
+    /* 鼠标移动到头像上时，放大 20% */
+    opacity: 1;
+    /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
 
@@ -561,7 +642,7 @@ export default {
     padding-left: 20px;
 
     img {
-        margin-right: 40px;
+        // margin-right: 40px;
         width: 150px;
         height: 150px;
         border-radius: 50%;
@@ -576,6 +657,14 @@ export default {
 
     .access {
         color: gray;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    .user {
+        flex-direction: column;
+        justify-content: center;
+        margin: auto;
     }
 }
 
