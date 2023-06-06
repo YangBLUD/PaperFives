@@ -35,11 +35,17 @@
                 <el-col v-show="isFollowed !== null" :span="2"
                     style="display: flex; justify-content: center; align-items: center;">
                     <div>
-                        <i v-if="this.isFollowed" class="el-icon-star-on" style="font-size:70px; color: #FFBE00;"
+                        <i v-if="this.isFollowed" class="fa-solid fa-star" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
-                        <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                        <!-- <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                            @click="followUser()"></i> -->
+                        <i v-else class="fa-regular fa-star fa-beat" style="font-size:70px; color: #FFBE00;"
                             @click="followUser()"></i>
                     </div>
+                </el-col>
+                <el-col :span="2" style="padding-top: 20px;">
+                    <el-button type="success" size="normal" class="status" style="width: 100px;"><i
+                            class="fa-sharp fa-regular fa-comment fa-fade" style="font-size: 30px;" @click="gotoMessage()"></i></el-button>
                 </el-col>
             </el-card>
         </div>
@@ -161,12 +167,12 @@
         <el-col :span="24">
             <el-col :span="12" class="left-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart1" :style="myChartStyle1"></div>
+                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
                 </el-card>
             </el-col>
             <el-col :span="12" class="right-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart2" :style="myChartStyle2"></div>
+                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
                 </el-card>
             </el-col>
         </el-col>
@@ -192,8 +198,7 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle1: { float: "left", width: "100%", height: "350px" }, 
-            myChartStyle2: { float: "left", width: "100%", height: "400px" }, 
+            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
             activeName: 'first'
         };
     },
@@ -298,6 +303,14 @@ export default {
                 location.reload()
             }
         },
+        async gotoMessage() {
+            this.$router.push({
+                path: '/message',
+                query: {
+                    uid: this.$route.query.uid
+                }
+            })
+        },
         async getStatisticsBar() {
             await this.$http.get('api/v1/users/query/stat/bar', {
                 params: {
@@ -360,6 +373,7 @@ export default {
                         }
                     },
                     axisLabel: {
+                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -375,6 +389,7 @@ export default {
                         }
                     },
                     axisLabel: {
+                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -415,6 +430,7 @@ export default {
                     top: "0%",
                     left: "center",
                     textStyle: {
+
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -424,21 +440,29 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "44%"],
+                        center: ["50%", "55%"],
                         label: {
-                            show: false,
-                            position: 'center',
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: '25',
-                                fontWeight: 'bold',
-                                formatter: function (params) {
-                                    return params.name + '\n' + '\n' + params.percent + '%';
+                            show: true,
+                            fontSize: 14,
+                            formatter: function (params) {
+                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
+                            },
+                            rich: {
+                                a: {
+                                    width: 100,
+                                    fontSize: 10,
+                                    fontWeight: "900",
+                                    lineHeight: 20,
                                 },
+                                b: {
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: 'red'
+                                }
                             }
+
                         },
+
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -557,7 +581,7 @@ export default {
 
 
 .left-col {
-    padding-top: 30px;
+    padding-top: 50px;
     margin-left: 145px;
     width: 600px;
     height: 500px;
@@ -565,7 +589,7 @@ export default {
 }
 
 .right-col {
-    padding-top: 30px;
+    padding-top: 50px;
     width: 600px;
 }
 
