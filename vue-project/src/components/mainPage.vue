@@ -12,7 +12,7 @@
                     <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item">
                     </el-option>
                 </el-select>
-                <el-button type="primary" slot="append" icon="el-icon-search" @click="gosearch()"></el-button>
+                <el-button type="primary" slot="append" icon="el-icon-search" @click="gosearch"></el-button>
             </el-input>
         </el-card>
         <div class="topRecommend" id="topRecommend">
