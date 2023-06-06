@@ -1,0 +1,5 @@
+/* .paper-border {} */
+
+.paper-border .paper-wrapper {
+    border-radius: 10px;
+}
