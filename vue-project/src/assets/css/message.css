@@ -53,6 +53,7 @@
 
 .msg-box .msg-box-nav {
     height: 50px;
+    min-height: 50px;
     line-height: 50px;
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
     z-index: 10;
@@ -140,7 +141,7 @@
     z-index: 20;
     font-size: 1.0em;
     border-radius: 0.75em;
-    background-image:radial-gradient(#ff0844 60%, #ffb199 100%);
+    background-image: radial-gradient(#ff0844 60%, #ffb199 100%);
     color: white;
 }
 
@@ -190,7 +191,7 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background-color: red;
+    background-color: lightgreen;
     cursor: default;
 }
 
@@ -199,21 +200,36 @@
     background-color: #3CD500;
 }
 
-.msg-wrapper .message-wrapper .title h2 {
+.msg-wrapper .message-wrapper .title .link {
+    text-align: center;
+}
+
+.msg-wrapper .message-wrapper .title .link h2 {
+    white-space: nowrap;
+    width: min-content;
+    margin: 0 auto;
     cursor: pointer;
 }
 
-.msg-wrapper .message-wrapper .title h2:hover {
+.msg-wrapper .message-wrapper .title .link h2:hover {
     text-decoration: underline;
 }
 
-.message-wrapper .title span {
+.message-wrapper .title .but {
     position: absolute;
+}
+
+.message-wrapper .title .r0 {
     top: 0;
     right: 10px;
 }
 
-.message-wrapper .title span i {
+.message-wrapper .title .r1 {
+    top: 0;
+    right: 70px;
+}
+
+.message-wrapper .title .but i {
     height: 50px;
     line-height: 50px;
     font-size: 2.5em;
@@ -223,6 +239,24 @@
 .message-wrapper span i:hover {
     opacity: 50%;
     cursor: pointer;
+}
+
+/* message loader */
+.message-wrapper .load {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: 0.5s;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+}
+
+.message-wrapper .load i {
+    font-size: 100px;
+}
+
+.message-wrapper .hide {
+    opacity: 0;
 }
 
 /* real message :( */
@@ -240,7 +274,9 @@
 */
 
 .message-scroller .message-content {
-    margin: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
     display: none;
 }
 
@@ -251,6 +287,7 @@
 .message-scroller .message-content .message {
     display: flex;
     margin-top: 20px;
+    animation-duration: 0.5s
 }
 
 .message-scroller .message-content .income {
@@ -296,7 +333,9 @@
 }
 
 .message-scroller .message-content .message .payload .text {
+    position: relative;
     max-width: 70%;
+    word-wrap: break-word;
     padding: 5px 10px;
     border-radius: 10px;
     background-color: aqua;
@@ -307,6 +346,16 @@
     font-size: 1.2em;
     line-height: 1.4em;
     text-align: justify;
+}
+
+.message-scroller .message-content .message .payload .text .mark {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+}
+
+.message-scroller .message-content .message .payload .text .mark i {
+    color: red;
 }
 
 
@@ -330,23 +379,37 @@
     margin-right: 5px;
 }
 
+
 /* input */
 .message-wrapper .message-input {
     display: flex;
     flex-direction: row;
 }
 
+.message-wrapper .message-input {
+    width: 100%;
+    transition: 0.5s;
+}
+
+.message-wrapper .show-input {
+    height: 55px;
+}
+
+.message-wrapper .hide-input {
+    transform: translate(0, 100%);
+}
+
 .message-wrapper .message-input textarea {
     width: 100%;
-    height: 55px;
-    min-height: 55px;
+    height: 100%;
+    padding: 5px 10px;
+    font-size: 1.8em;
+    line-height: 2.0em;
     resize: none;
-    font-size: 1.2em;
-    line-height: 1.3em;
     outline: none;
     border: none;
     overflow: hidden;
-    transition: 0.1s;
+    text-align: justify;
 }
 
 .message-wrapper .message-input .full {
