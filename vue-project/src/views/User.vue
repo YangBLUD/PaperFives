@@ -9,7 +9,8 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}</p>
+                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}
+                        </p>
                     </div>
                 </div>
             </el-card>
@@ -182,15 +183,15 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
+                <el-carousel :interval="false" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                         </el-card>
                     </el-carousel-item>
                 </el-carousel>
@@ -198,10 +199,10 @@
         </el-col>
     </el-row>
 </template>
-
+  
 <script>
 import * as echarts from 'echarts'
-import Articles from '../components/hot/Articles.vue'
+import Articles from "../components/hot/Articles.vue";
 export default {
     components: { Articles },
     data() {
@@ -220,7 +221,8 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "300px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "340px" }, 
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, 
             activeName: 'first',
             showCard: [],
         };
@@ -482,29 +484,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "41%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 8,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -539,292 +533,11 @@ export default {
             this.mouseY = event.clientY
         },
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.initEcharts()
-      this.getFollower()
-      this.getFollowee()
-      this.getPaperlist()
-      this.paperList.forEach(() => {
-        this.$set(this.showCard, this.showCard.length, false)
-      })
-    })
-    this.getUserProfile()
-  },
-  methods: {
-    async getUserProfile () {
-      await this.$http.get('api/v1/users/profile/user', {
-        params: {
-          mode: 'all',
-          uid: window.sessionStorage.getItem('uid')
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.userProfile = res.data.data
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async getFollower () {
-      await this.$http.get('api/v1/users/favorite/followers', {
-        params: {
-          uid: window.sessionStorage.getItem('uid')
-        }
-      })
-        .then(res => {
-          this.followerList = res.data.data.list
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async getFollowee () {
-      await this.$http.get('api/v1/users/favorite/followees', {
-        params: {
-          uid: window.sessionStorage.getItem('uid')
-        }
-      })
-        .then(res => {
-          this.followeeList = res.data.data.list
-          this.newList = this.followeeList.map(item => {
-            return {
-              ...item,
-              isFollowed: true
-            }
-          })
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
-    async removeFollower (id, index) {
-      // this.followeeList.splice(index, 1)
-      this.newList[index].isFollowed = !this.newList[index].isFollowed
-      await this.$http.post('api/v1/users/favorite/unfollow', {
-        uid: id
-      })
-        .then(res => {
-          // console.log(res);
-        }).catch(err => {
-          console.log(err)
-        })
-      // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag"));
-      // console.log(index)
-      // console.log(document.getElementById("pane-first").getElementsByClassName("follow-tag")[index]);
-      // pair = document.getElementById("pane-first").getElementsByClassName("follow-tag")[index];
-      // console.log(pair)
-      // .getElementsByTagName("button")
-      // pair[0].classList.add("hidden")
-      // pair[1].classList.remove("hidden"))
-    },
-    async followUser (id, index) {
-      this.newList[index].isFollowed = !this.newList[index].isFollowed
-      await this.$http.post('api/v1/users/favorite/follow', {
-        uid: id
-      })
-        .then(res => {
-          // console.log(res);
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async gotoProfile (id) {
-      console.log(this.followeeTag)
-      this.$router.push({
-        path: '/visitor',
-        query: {
-          uid: id
-        }
-      })
-    },
-    async uploadFile () {
-      const file = this.$refs.fileInput.files[0]
-      const formData = new FormData()
-      formData.append('file', file)
-      try {
-        const response = await axios.post('/api/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        // console.log(response.data);
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    async getPaperlist () {
-      await this.$http.get('api/v1/papers/get/papers', {
-        params: {
-          uid: window.sessionStorage.getItem('uid')
-        }
-      })
-        .then(res => {
-          this.paperList = res.data.data.papers
-          this.paperNum = res.data.data.total
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    initEcharts () {
-      // 基本柱状图
-      const option1 = {
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '论文发表记录',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        grid: {
-          top: 80,
-          left: 80,
-          right: 50
-        },
-        xAxis: {
-          data: this.xData,
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          axisTick: {
-            show: false
-          }
-        },
-        yAxis: {
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              type: 'dashed'
-            }
-          }
-        },
-        color: ['#2ec7c9'],
-        series: [
-          {
-            type: 'bar', // 形状为柱状图
-            data: this.yData,
-            barWidth: 30,
-            itemStyle: {
-              color: '#2ec7c9'
-            }
-          }
-        ]
-      }
-
-      const option2 = {
-        legend: {
-          // 图例
-          data: ['OS', 'OO', 'DB', 'SE', 'AI'],
-          right: '10%',
-          top: '50%',
-          orient: 'vertical',
-          textStyle: {
-            color: '#666',
-            fontSize: 14
-          },
-          itemWidth: 16,
-          itemHeight: 16,
-          itemGap: 20
-        },
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '研究领域分布',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: ['50%', '70%'],
-            center: ['50%', '55%'],
-            label: {
-              show: true,
-              fontSize: 16,
-              formatter: '{b} {d}%'
-            },
-            labelLine: {
-              length: 5,
-              length2: 10,
-              lineStyle: {
-                width: 1
-              }
-            },
-            data: [
-              {
-                value: 463,
-                name: 'OS'
-              },
-              {
-                value: 395,
-                name: 'OO'
-              },
-              {
-                value: 157,
-                name: 'DB'
-              },
-              {
-                value: 149,
-                name: 'SE'
-              },
-              {
-                value: 147,
-                name: 'AI'
-              }
-            ],
-            itemStyle: {
-              borderWidth: 10,
-              borderColor: '#fff'
-            }
-          }
-        ]
-      }
-      const myChart1 = echarts.init(document.getElementById('mychart1'))
-      myChart1.setOption(option1)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart1.resize()
-      })
-
-      const myChart2 = echarts.init(document.getElementById('mychart2'))
-      myChart2.setOption(option2)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart2.resize()
-      })
-    },
-    handleMouseMove (event) {
-      this.mouseX = event.clientX
-      this.mouseY = event.clientY
-    }
-  }
-}
+};
 
 </script>
 
+  
 <style lang="less" scoped>
 @import "../../src/assets/css/article.css";
 
@@ -836,7 +549,7 @@ export default {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.fa-pen-to-square{
+.fa-pen-to-square {
     transition: all 0.3s ease-in-out;
     /* 添加过渡效果 */
     transform: scale(1);
@@ -844,6 +557,7 @@ export default {
     opacity: 0.8;
     /* 设置默认的透明度 */
 }
+
 .fa-pen-to-square:hover {
     cursor: pointer;
     cursor: pointer;
@@ -921,6 +635,7 @@ export default {
 .paper-action .el-button {
     margin-left: 800px;
 }
+
 
 .page-title {
     font-size: 20px;
@@ -1077,9 +792,11 @@ export default {
     }
 }
 
+
 .follow-action {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 </style>
+  

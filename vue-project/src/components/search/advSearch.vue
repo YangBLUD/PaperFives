@@ -73,30 +73,30 @@
 <script>
 
 export default {
-  name: 'AdvSearch',
-  data () {
-    return {
+  name: "AdvSearch",
+  data(){
+    return{
       resultList: [],
-
-      isShow: true,
+    
+      isShow:true,
       isShowRes: false,
       searchValue: [
         {
           category: 'title',
-          content: '',
-          type: 'and'
+          content: "",
+          type:"and",
         },
         {
           category: 'authors',
-          content: '',
-          type: 'and'
-        }
+          content: "",
+          type: "and",
+        },
       ],
       timeRange: ['0', '0'],
       options: [
         {
           value: 'title',
-          label: '篇名'
+          label: '篇名',
         }, {
           value: 'authors',
           label: '作者'
@@ -106,63 +106,62 @@ export default {
         }, {
           value: 'keywords',
           label: '关键字'
-        }, {
+        },{
           value: 'areas',
           label: '领域'
         }
       ],
       types: [
         {
-          value: 'and',
-          label: 'and'
+          value: "and",
+          label: 'and',
         }, {
-          value: 'or',
+          value: "or",
           label: 'or'
         }, {
-          value: 'not',
+          value: "not",
           label: 'not'
-        }
-      ]
+        },
+      ],
     }
   },
-  methods: {
+  methods:{
     deleteCategory: function (index) {
       this.searchValue.splice(index, 1)
     },
     addCategory: function (index) {
       if (this.searchValue.length >= 10) {
         this.$message.warning('添加失败！检索项必须在10条以内！')
-        return
+        return;
       }
       this.searchValue.push({
         category: this.searchValue[index].category,
         content: '',
-        type: this.searchValue[index].type
+        type: this.searchValue[index].type,
       })
     },
-    isValueEmpty () {
-      for (let i = 0; i < this.searchValue.length; i++) {
-        if (this.searchValue[i].content !== '') { return false }
-      }
-      return true
+    isValueEmpty() {
+      for (let i = 0; i < this.searchValue.length; i++)
+        if (this.searchValue[i].content !== '')
+          return false;
+      return true;
     },
-    advanceSearch () {
+    advanceSearch() {
       console.log(this.searchValue)
-      localStorage.setItem('searchValue', JSON.stringify(this.searchValue))
-      this.$router.push({
-        path: '/searchres',
-        query: {
-          time_from: this.timeRange[0],
-          time_to: this.timeRange[1],
-          type: 2
-        }
-      })
+      localStorage.setItem("searchValue",JSON.stringify(this.searchValue))
+      this.$router.push({path:"/searchres",query:{
+          "time_from": this.timeRange[0],
+          "time_to": this.timeRange[1],
+          type:2
+      }})
+    
+
     },
-    getCollectStatus () {
+    getCollectStatus() {
     },
-    changeCollect (data) {
-    }
-  }
+    changeCollect(data) {
+    },
+  },
 }
 </script>
 

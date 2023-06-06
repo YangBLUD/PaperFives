@@ -131,25 +131,6 @@ export default {
         },
 
     }
-  },
-  created () {
-    this.activePath = window.sessionStorage.getItem('activePath')
-  },
-  methods: {
-    logout () {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
-    },
-    // 切换侧边折叠与展开
-    toggleCollapse () {
-      this.isCollapse = !this.isCollapse
-    },
-    // 保存链接激活
-    saveState (activePath) {
-      window.sessionStorage.setItem('activePath', activePath)
-    }
-
-  }
 }
 </script>
 <style lang="less" scoped>

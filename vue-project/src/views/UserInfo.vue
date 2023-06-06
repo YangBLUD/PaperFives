@@ -89,7 +89,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       dialogVisible: false,
       form: {
@@ -101,11 +101,11 @@ export default {
       }
     }
   },
-  mounted () {
-    this.getUserProfile()
+  mounted() {
+    this.getUserProfile();
   },
   methods: {
-    async getUserProfile () {
+    async getUserProfile() {
       await this.$http.get('api/v1/users/profile/user', {
         params: {
           mode: 'all',
@@ -113,13 +113,13 @@ export default {
         }
       })
         .then(res => {
-          console.log(res.data)
-          this.userProfile = res.data.data
+          console.log(res.data);
+          this.userProfile = res.data.data;
         }).catch(err => {
-          console.log(err)
+          console.log(err);
         })
     },
-    async changeProfile () {
+    async changeProfile() {
       await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/profile', {
         username: this.form.name,
         sex: this.form.sex,
@@ -127,30 +127,30 @@ export default {
         motto: this.form.motto
       })
         .then(res => {
-          console.log(res)
+          console.log(res);
         }).catch(err => {
-          console.log(err)
+          console.log(err);
         })
     },
-    async changePassword () {
+    async changePassword() {
       await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/password', {
         old: this.form.passwd_old,
         new: this.form.passwd_new
       })
         .then(res => {
-          console.log(res)
+          console.log(res);
         }).catch(err => {
-          console.log(err)
+          console.log(err);
         })
     },
-    handleClose (done) {
+    handleClose(done) {
       this.$confirm('确认关闭？')
         .then((_) => {
           done()
         })
         .catch((_) => { })
     },
-    openProfile () {
+    openProfile() {
       this.$confirm('此操作将修改用户的基本信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -159,15 +159,15 @@ export default {
         this.$message({
           type: 'success',
           message: '修改成功!'
-        })
+        });
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消修改'
-        })
-      })
+        });
+      });
     },
-    openPassword () {
+    openPassword() {
       this.$confirm('此操作将修改用户的密码, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -176,13 +176,13 @@ export default {
         this.$message({
           type: 'success',
           message: '修改成功!'
-        })
+        });
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消修改'
-        })
-      })
+        });
+      });
     }
   }
 }

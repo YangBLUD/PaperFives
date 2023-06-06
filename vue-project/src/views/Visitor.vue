@@ -161,18 +161,18 @@
         <el-col :span="24">
             <el-col :span="12" class="left-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                 </el-card>
             </el-col>
             <el-col :span="12" class="right-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                 </el-card>
             </el-col>
         </el-col>
     </el-row>
 </template>
-
+  
 <script>
 import * as echarts from 'echarts'
 export default {
@@ -192,7 +192,8 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "350px" }, 
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, 
             activeName: 'first'
         };
     },
@@ -359,7 +360,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -375,7 +375,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -416,7 +415,6 @@ export default {
                     top: "0%",
                     left: "center",
                     textStyle: {
-
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -426,29 +424,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "44%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 10,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -479,220 +469,11 @@ export default {
             });
         },
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.initEcharts()
-      this.getUserProfile()
-      this.isFollowee()
-    })
-  },
-  methods: {
-    async getUserProfile () {
-      await this.$http.get('api/v1/users/profile/user', {
-        params: {
-          mode: 'all',
-          uid: this.$route.query.uid
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.userProfile = res.data.data
-          this.userAttr = res.data.data.attr
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async followUser () {
-      this.isFollowed = !this.isFollowed
-      await this.$http.post('api/v1/users/favorite/follow', {
-        uid: this.$route.query.uid
-      })
-        .then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async removeFollower () {
-      this.isFollowed = !this.isFollowed
-      await this.$http.post('api/v1/users/favorite/unfollow', {
-        uid: this.$route.query.uid
-      })
-        .then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async isFollowee () {
-      await this.$http.get('api/v1/users/favorite/isfollowee', {
-        params: {
-          uid: this.$route.query.uid
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.isFollowed = res.data.data.value
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    initEcharts () {
-      // 基本柱状图
-      const option1 = {
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '论文发表记录',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        grid: {
-          top: 80,
-          left: 80,
-          right: 50
-        },
-        xAxis: {
-          data: this.xData,
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          axisTick: {
-            show: false
-          }
-        },
-        yAxis: {
-          axisLine: {
-            lineStyle: {
-              color: '#999'
-            }
-          },
-          axisLabel: {
-            color: '#666',
-            margin: 10
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              type: 'dashed'
-            }
-          }
-        },
-        color: ['#2ec7c9'],
-        series: [
-          {
-            type: 'bar', // 形状为柱状图
-            data: this.yData,
-            barWidth: 30,
-            itemStyle: {
-              color: '#2ec7c9'
-            }
-          }
-        ]
-      }
-
-      const option2 = {
-        legend: {
-          // 图例
-          data: ['OS', 'OO', 'DB', 'SE', 'AI'],
-          right: '10%',
-          top: '50%',
-          orient: 'vertical',
-          textStyle: {
-            color: '#666',
-            fontSize: 14
-          },
-          itemWidth: 16,
-          itemHeight: 16,
-          itemGap: 20
-        },
-        title: {
-          // 设置饼图标题，位置设为顶部居中
-          text: '研究领域分布',
-          top: '0%',
-          left: 'center',
-          textStyle: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontFamily: 'Microsoft YaHei'
-          }
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: ['50%', '70%'],
-            center: ['50%', '55%'],
-            label: {
-              show: true,
-              fontSize: 16,
-              formatter: '{b} {d}%'
-            },
-            labelLine: {
-              length: 5,
-              length2: 10,
-              lineStyle: {
-                width: 1
-              }
-            },
-            data: [
-              {
-                value: 463,
-                name: 'OS'
-              },
-              {
-                value: 395,
-                name: 'OO'
-              },
-              {
-                value: 157,
-                name: 'DB'
-              },
-              {
-                value: 149,
-                name: 'SE'
-              },
-              {
-                value: 147,
-                name: 'AI'
-              }
-            ],
-            itemStyle: {
-              borderWidth: 10,
-              borderColor: '#fff'
-            }
-          }
-        ]
-      }
-      const myChart1 = echarts.init(document.getElementById('mychart1'))
-      myChart1.setOption(option1)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart1.resize()
-      })
-
-      const myChart2 = echarts.init(document.getElementById('mychart2'))
-      myChart2.setOption(option2)
-      // 随着屏幕大小调节图表
-      window.addEventListener('resize', () => {
-        myChart2.resize()
-      })
-    }
-  }
-}
+};
 
 </script>
 
+  
 <style lang="less" scoped>
 .border {
     max-width: 1500px;
@@ -776,7 +557,7 @@ export default {
 
 
 .left-col {
-    padding-top: 50px;
+    padding-top: 30px;
     margin-left: 145px;
     width: 600px;
     height: 500px;
@@ -784,7 +565,7 @@ export default {
 }
 
 .right-col {
-    padding-top: 50px;
+    padding-top: 30px;
     width: 600px;
 }
 
@@ -885,3 +666,4 @@ export default {
     }
 }
 </style>
+  

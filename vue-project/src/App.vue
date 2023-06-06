@@ -4,6 +4,7 @@
   </div>
 </template>
 
+
 <style>
 html,
 body {
@@ -52,9 +53,10 @@ body>.el-container {
 
 <script>
 
+
 export default {
   data() {
     return {}
-  }
+  },
 }
 </script>

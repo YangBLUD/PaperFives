@@ -10,84 +10,82 @@
     </div>
 </template>
 <script>
-import Articles from '@/components/hot/Articles.vue'
+import Articles from "@/components/hot/Articles.vue";
 export default {
-  components: { Articles },
-  data () {
-    return {
-      field: '',
-      key: '',
-      type: '',
-      search_list: [],
-      time_from: '',
-      time_to: ''
-    }
-  },
-  created () {
-    this.field = this.$route.query.field
-    this.key = this.$route.query.key
-    this.type = this.$route.query.type
-    this.time_from = this.$route.query.time_from
-    this.time_to = this.$route.query.time_to
-    if (this.type == 1) {
-      this.getList()
-    } else {
-      this.getList1()
-    }
-  },
-  methods: {
-    async getList () {
-      const { data: res } = await this.$http.post('/api/v1/papers/search/query', {
-        ps: 20,
-        p: 1,
-        advanced: false,
-        cond: {
-          field: this.field,
-          key: this.key
-        }
-      })
-      if (res.meta.status != 0) return this.$message.error('获取失败')
-      const search_list = res.data.papers
-      this.search_list = search_list.map(item => {
+    components: { Articles },
+    data() {
         return {
-          paper: item
+            field: "",
+            key: "",
+            type:"",
+            search_list: [],
+            time_from:"",
+            time_to:""
         }
-      })
     },
-    async getList1 () {
-      const searchValue = JSON.parse(localStorage.getItem('searchValue'))
-      const where = {}
-      const arr = []
-      searchValue.forEach(item => {
-        if (item.content) {
-          arr.push({
-            mode: item.type,
-            field: item.category,
-            key: item.content
-          })
+    created() {
+        this.field = this.$route.query.field
+        this.key = this.$route.query.key
+        this.type = this.$route.query.type
+        this.time_from = this.$route.query.time_from
+        this.time_to = this.$route.query.time_to
+        if(this.type == 1){
+            this.getList();
+        }else{
+            this.getList1()
         }
-      })
-      where.cond = arr
-      where.attr = {
-        order: '-date',
-        from: this.time_from,
-        to: this.time_to
-      }
-      const { data: res } = await this.$http.post('/api/v1/papers/search/query', {
-        ps: 20,
-        p: 1,
-        advanced: true,
-        ...where
-      })
-      if (res.meta.status != 0) return this.$message.error('获取失败')
-      const search_list = res.data.papers
-      this.search_list = search_list.map(item => {
-        return {
-          paper: item
+        
+    },
+    methods: {
+        async getList() {
+            const { data: res } = await this.$http.post('/api/v1/papers/search/query', {
+                ps: 20, p: 1, advanced: false,
+                "cond": {
+                    "field": this.field,
+                    "key": this.key
+                }
+            })
+            if (res.meta.status != 0) return this.$message.error("获取失败")
+            let search_list = res.data.papers
+            this.search_list = search_list.map(item=>{
+                return {
+                    paper:item
+                }
+            })
+        },
+        async getList1(){
+            let searchValue = JSON.parse(localStorage.getItem("searchValue"))
+            let where ={}
+            let arr =[]
+           searchValue.forEach(item=>{
+                if(item.content){
+                    arr.push( {
+                        mode:item.type,
+                        field:item.category,
+                        key:item.content
+                    })
+                }
+                
+            })
+            where.cond = arr;
+            where.attr={
+                "order":"-date",
+                "from": this.time_from,
+                "to":this.time_to
+            }
+            const { data: res } = await this.$http.post('/api/v1/papers/search/query', {
+                ps: 20, p: 1, advanced: true,
+                ...where
+            })
+            if (res.meta.status != 0) return this.$message.error("获取失败")
+            let search_list = res.data.papers
+            this.search_list = search_list.map(item=>{
+                return {
+                    paper:item
+                }
+            })
         }
-      })
     }
-  }
 }
 </script>
 
