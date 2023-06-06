@@ -118,7 +118,7 @@ export default {
                 second: "2-digit",
                 hour12: false
             },
-            refreshRate: 30 * 1000  // refresh every half minute
+            refreshRate: 3 * 1000  // refresh every half minute
         }
     },
     beforeCreate() {
@@ -134,7 +134,7 @@ export default {
 
         this.onFirstLoad();
 
-        this.addUpdateHook();
+        // this.addUpdateHook();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
     },
@@ -297,7 +297,7 @@ export default {
             });
         },
 
-        async requestChatHistory(id, uid) {
+        async requestChatHistory(id, uid, subtle = false) {
             await this.$http.get('api/v1/msgs/get', {
                 params: {
                     uid: uid
@@ -320,7 +320,9 @@ export default {
             });
 
             // console.log(this.chatHistory[id])
-            this.updateMessageAreaAnim();
+            if (!subtle) {
+                this.updateMessageAreaAnim();
+            }
         },
 
         async requestUpdateContact(uid) {
@@ -415,7 +417,7 @@ export default {
         },
 
         // Contact click
-        async onClickContactItem(id) {
+        async onClickContactItem(id, subtle = false) {
             // backup input
             if ((this.choice.activeId != id) && (this.choice.activeId != -1)) {
                 this.inputHistory[this.choice.activeId] = this.$refs.input.value;
@@ -427,17 +429,21 @@ export default {
             }
 
             // start loading...
-            this.isLoading = true;
+            if (!subtle) {
+                this.isLoading = true;
+            }
 
             var contact = this.contacts.contactList[id];
 
             // request for history
             if (!contact.upToDate) {
-                await this.requestChatHistory(id, contact.uid);
+                await this.requestChatHistory(id, contact.uid, subtle);
                 contact.upToDate = true;
             }
             this.activeHistory = this.getContactHistory(id);
-            this.updateMessageAreaForce();
+            if (!subtle) {
+                this.updateMessageAreaForce();
+            }
 
             // reset layout
             contact.unread = 0;
@@ -452,7 +458,9 @@ export default {
             this.autoGrowTextArea();
 
             // stop loading...
-            this.isLoading = false;
+            if (!subtle) {
+                this.isLoading = false;
+            }
         },
 
         // Clear text area
@@ -507,7 +515,7 @@ export default {
                 }
             }
             // console.log("relocate: " + id);
-            this.onClickContactItem(id);
+            this.onClickContactItem(id, true);
         },
 
         async refreshContacts() {
@@ -524,11 +532,11 @@ export default {
             if (!subtle) {
                 this.isRefreshing = true;
             }
-            
+
             const id = this.choice.activeId;
-            if (id >= 0) {
-                await this.refreshChatHistory(id);
-            }
+            // if (id >= 0) {
+            //     await this.refreshChatHistory(id);
+            // }
             await this.refreshContacts();
 
             if (!subtle) {
