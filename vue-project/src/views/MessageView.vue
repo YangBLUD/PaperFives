@@ -11,7 +11,7 @@
                     <div class="contact-content">
                         <div v-for="(contact, index) in contacts.contactList"
                             class="contact-item animate__animated animate__slideInLeft"
-                            :style="getContactAnimDuration(index)" @click="onClickContactItem(index)">
+                            :style="getContactAnimDuration(index)" @click="onClickContactItem(index)" :key="contact.uid">
                             <div class="frame">
                                 <div class="avatar">
                                     <img :src="getAvatarUrl(contact.avatar)" />
@@ -35,10 +35,12 @@
                     <span class="link">
                         <h2 @click="onClickUsername()">{{ choice.title }}</h2>
                     </span>
-                    <span class="but r0" @click="onClickRefresh()"><i class="fa-solid fa-arrows-rotate"
-                            v-bind:class="{ 'fa-spin': isLoading || isRefreshing }" title="Refresh conversation"></i></span>
-                    <span class="but r1" @click="onClickDeleteConversation()"><i class="fa-solid fa-user-xmark"
+                    <span class="but r0" @click="onClickDeleteConversation()"><i class="fa-solid fa-xmark"
                             title="Close conversation"></i></span>
+                    <span class="but r1" @click="onClickRefresh()"><i class="fa-solid fa-arrows-rotate"
+                            v-bind:class="{ 'fa-spin': isLoading || isRefreshing }" title="Refresh conversation"></i></span>
+                    <span class="but r2" @click="onClickDeleteContact()"><i class="fa-solid fa-user-xmark"
+                            title="Delete contact"></i></span>
                 </div>
                 <!-- Loading indicator -->
                 <div class="load" v-bind:class="{ hide: !isLoading }"><i class="fa-solid fa-spinner fa-spin-pulse"></i>
@@ -48,7 +50,7 @@
                     <div v-for="i in contacts.contactsCnt" class="message-content"
                         v-bind:class="{ active: (choice.activeId == (i - 1)) }" v-bind:id="i">
                         <div v-for="(message, index) in activeHistory" class="message animate__animated"
-                            v-bind:class="getMessageClass(message.income)">
+                            v-bind:class="getMessageClass(message.income)" :key="message.timestamp">
                             <div class="avatar"><img :src="getAvatarUrl(message.avatar)" /></div>
                             <div class="payload">
                                 <div class="text">
@@ -117,7 +119,8 @@ export default {
                 minute: "2-digit",
                 second: "2-digit",
                 hour12: false
-            }
+            },
+            refreshRate: 3 * 1000  // refresh every half minute
         }
     },
     beforeCreate() {
@@ -132,6 +135,8 @@ export default {
         this.resizeEventHandler();
 
         this.onFirstLoad();
+
+        // this.addUpdateHook();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
     },
@@ -294,7 +299,7 @@ export default {
             });
         },
 
-        async requestChatHistory(id, uid) {
+        async requestChatHistory(id, uid, subtle = false) {
             await this.$http.get('api/v1/msgs/get', {
                 params: {
                     uid: uid
@@ -317,7 +322,24 @@ export default {
             });
 
             // console.log(this.chatHistory[id])
-            this.updateMessageAreaAnim();
+            if (!subtle) {
+                this.updateMessageAreaAnim();
+            }
+        },
+
+        async requestUpdateContact(uid) {
+            await this.$http.post('api/v1/msgs/update', {
+                uid: uid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
         },
 
         async sendMessage(uid, text, id, mid) {
@@ -333,10 +355,7 @@ export default {
                 console.log(data);
                 var message = null;
                 if (data.meta.status != 0) {
-                    this.$message.error("Failed to send message!")
-                    // remove failed message
-                    // console.log(id + "" + mid);
-                    // setTimeout(this.markInvalidMessage, 50, id, mid);
+                    this.$message.error("Failed to send message!");
                     message = {
                         text: text,
                         income: false,
@@ -359,8 +378,24 @@ export default {
                 this.activeHistory.push(message);
                 this.updateMessageAreaAnim();
             }).catch(err => {
-                this.$message.error("Network error, try again later.")
+                this.$message.error("Network error, try again later.");
                 setTimeout(this.markInvalidMessage, 50, id, mid);
+                console.log(err);
+            });
+        },
+
+        async requestDeleteContact(uid) {
+            await this.$http.post('api/v1/msgs/delete', {
+                uid: uid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.refreshContacts();
+                }
+            }).catch(err => {
                 console.log(err);
             });
         },
@@ -369,13 +404,17 @@ export default {
         //  First load
         ////////////////////////////////////////////////////////////////////////
         async onFirstLoad() {
-            await this.requestContacts();
-            this.contacts = this.tempContacts;
-            this.onResetContactItem();
-
             var uid = this.$route.query.uid;
             if (uid != null) {
+                await this.requestUpdateContact(uid);
+            }
+            await this.requestContacts();
+            this.contacts = this.tempContacts;
+
+            if (uid != null) {
                 this.relocateContact(uid);
+            } else {
+                this.onResetContactItem();
             }
         },
 
@@ -396,7 +435,7 @@ export default {
         },
 
         // Contact click
-        async onClickContactItem(id) {
+        async onClickContactItem(id, subtle = false) {
             // backup input
             if ((this.choice.activeId != id) && (this.choice.activeId != -1)) {
                 this.inputHistory[this.choice.activeId] = this.$refs.input.value;
@@ -408,17 +447,21 @@ export default {
             }
 
             // start loading...
-            this.isLoading = true;
+            if (!subtle) {
+                this.isLoading = true;
+            }
 
             var contact = this.contacts.contactList[id];
 
             // request for history
             if (!contact.upToDate) {
-                await this.requestChatHistory(id, contact.uid);
+                await this.requestChatHistory(id, contact.uid, subtle);
                 contact.upToDate = true;
             }
             this.activeHistory = this.getContactHistory(id);
-            this.updateMessageAreaForce();
+            if (!subtle) {
+                this.updateMessageAreaForce();
+            }
 
             // reset layout
             contact.unread = 0;
@@ -433,7 +476,9 @@ export default {
             this.autoGrowTextArea();
 
             // stop loading...
-            this.isLoading = false;
+            if (!subtle) {
+                this.isLoading = false;
+            }
         },
 
         // Clear text area
@@ -456,6 +501,16 @@ export default {
             await this.requestChatHistory(id, contact.uid);
             var history = this.getContactHistory(id);
             this.updateContactTime(id, history[history.length - 1].timestamp);
+        },
+
+        // Delete contact
+        async onClickDeleteContact() {
+            const id = this.choice.activeId;
+            if (id >= 0) {
+                await this.requestDeleteContact(this.getUid(id));
+                this.contacts.contactList.splice(id, 1);
+                this.onResetContactItem();
+            }
         },
 
         reorderContacts() {
@@ -488,7 +543,7 @@ export default {
                 }
             }
             // console.log("relocate: " + id);
-            this.onClickContactItem(id);
+            this.onClickContactItem(id, true);
         },
 
         async refreshContacts() {
@@ -501,16 +556,24 @@ export default {
             this.relocateContact(uid);
         },
 
-        async onClickRefresh() {
-            this.isLoading = true;
+        async refreshPage(subtle) {
+            if (!subtle) {
+                this.isRefreshing = true;
+            }
 
             const id = this.choice.activeId;
-            if (id >= 0) {
-                await this.refreshChatHistory(id);
-            }
+            // if (id >= 0) {
+            //     await this.refreshChatHistory(id);
+            // }
             await this.refreshContacts();
 
-            this.isLoading = false;
+            if (!subtle) {
+                this.isRefreshing = false;
+            }
+        },
+
+        async onClickRefresh() {
+            await this.refreshPage(false);
         },
 
         // Jump to user space.
@@ -559,9 +622,18 @@ export default {
             this.reorderContacts();
 
             this.isRefreshing = false;
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Routine update event handlers
+        ////////////////////////////////////////////////////////////////////////
+        addUpdateHook() {
+            setTimeout(this.updatePage, this.refreshRate);
+        },
+        updatePage() {
+            this.refreshPage(true);
+            setTimeout(this.updatePage, this.refreshRate);
         }
-
-
     }
 }
 </script>
