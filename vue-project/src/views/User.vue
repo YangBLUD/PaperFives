@@ -186,12 +186,12 @@
                 <el-carousel :interval="false" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                         </el-card>
                     </el-carousel-item>
                 </el-carousel>
@@ -221,7 +221,8 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "300px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "340px" }, 
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, 
             activeName: 'first',
             showCard: [],
         };
@@ -483,7 +484,7 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "41%"],
                         label: {
                             show: false,
                             position: 'center',

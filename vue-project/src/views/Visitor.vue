@@ -161,12 +161,12 @@
         <el-col :span="24">
             <el-col :span="12" class="left-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                 </el-card>
             </el-col>
             <el-col :span="12" class="right-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                 </el-card>
             </el-col>
         </el-col>
@@ -192,7 +192,8 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "350px" }, 
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, 
             activeName: 'first'
         };
     },
@@ -359,7 +360,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -375,7 +375,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -416,7 +415,6 @@ export default {
                     top: "0%",
                     left: "center",
                     textStyle: {
-
                         color: "#333",
                         fontWeight: "bold",
                         fontFamily: "Microsoft YaHei"
@@ -426,29 +424,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "44%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 10,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
