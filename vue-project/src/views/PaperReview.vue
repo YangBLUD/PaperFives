@@ -25,29 +25,6 @@
     <!-- 发布时间等信息 -->
     <h2 class="date">发表日期：{{ this.paperInfo.attr.publish_date }}</h2>
     <el-divider></el-divider>
-    <!-- 操作按钮 -->
-    <div class="other">
-      <div class="info">
-        <i class="el-icon-view icon">{{ this.stat.clicks }}</i>
-      </div>
-      <div class="button">
-        <i class="el-icon-paperclip icon" @click="getCiteInfo()"></i>
-        <el-dialog
-          title="论文引用"
-          :visible.sync="dialogVisible"
-          width="30%"
-          :before-close="handleClose">
-          <span>{{ this.citeInfo.cite }}</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-          </span>
-        </el-dialog>
-        <i class="el-icon-download icon" @click="downloadPaper()"></i>
-      </div>
-      <br>
-    </div>
-    <el-divider></el-divider>
     <!-- 论文摘要 -->
     <div class="abstract">
       <h2>论文摘要</h2>
@@ -62,6 +39,22 @@
       {{ this.refs }}
     </div>
     <el-divider></el-divider>
+    <!-- 论文审核 -->
+    <div class="review">
+      <h2>审核意见</h2>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="是否通过" prop="pass">
+          <el-switch inactive-color=#FF0000 v-model="ruleForm.pass"></el-switch>
+        </el-form-item>
+        <el-form-item label="指导意见" prop="desc">
+          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
@@ -75,7 +68,18 @@ export default {
       areas: '',
       stat: {},
       citeInfo: {},
-      dialogVisible: false
+      ruleForm: {
+        pass: false,
+        desc: ''
+      },
+      rules: {
+        pass: [
+          { required: true, message: '是否通过', trigger: 'change' }
+        ],
+        desc: [
+          { required: true, message: '请填写指导意见', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {
@@ -85,6 +89,35 @@ export default {
     })
   },
   methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('desc: ' + this.ruleForm.desc)
+          console.log('status: ' + this.ruleForm.pass)
+          this.reviewPaper()
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false;
+        }
+      });
+    },
+    reviewPaper () {
+      this.$http.post('/api/v1/papers/review/review', {
+        pid: this.paperInfo.pid,
+        status: this.ruleForm.pass,
+        comment: this.ruleForm.desc
+      })
+        .then(res => {
+          console.log('review paper')
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
@@ -107,13 +140,11 @@ export default {
         })
     },
     async getPaperInfo () {
-      await this.$http.get('/api/v1/papers/download/info', {
-        params: {
-          pid: this.$route.query.pid,
-          click: '0'
-        }
+      await this.$http.post('/api/v1/papers/review/get', {
+          pid: '1631'
       })
         .then(res => {
+          console.log('paper info')
           console.log(res)
           this.paperInfo = res.data.data
           this.attr = res.data.data.attr
@@ -228,6 +259,10 @@ export default {
     font-size: 16px;
   }
   .reference {
+    text-align: left;
+    font-size: 16px;
+  }
+  .review {
     text-align: left;
     font-size: 16px;
   }
