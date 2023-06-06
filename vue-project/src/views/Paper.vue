@@ -118,7 +118,7 @@ export default {
     async getPaperInfo () {
       await this.$http.get('/api/v1/papers/download/info', {
         params: {
-          pid: '1631',
+          pid: this.$route.query.pid,
           click: '0'
         }
       })
@@ -138,7 +138,7 @@ export default {
       this.$router.push({
         path: '/visitor',
         query: {
-          id: id
+          uid: id
         }
       })
     },

@@ -35,11 +35,18 @@
                 <el-col v-show="isFollowed !== null" :span="2"
                     style="display: flex; justify-content: center; align-items: center;">
                     <div>
-                        <i v-if="this.isFollowed" class="el-icon-star-on" style="font-size:70px; color: #FFBE00;"
+                        <i v-if="this.isFollowed" class="fa-solid fa-star" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
-                        <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                        <!-- <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
+                            @click="followUser()"></i> -->
+                        <i v-else class="fa-regular fa-star fa-beat" style="font-size:70px; color: #FFBE00;"
                             @click="followUser()"></i>
                     </div>
+                </el-col>
+                <el-col :span="2" style="padding-top: 20px;">
+                    <el-button type="success" size="normal" class="status" style="width: 100px;"><i
+                            class="fa-sharp fa-regular fa-comment fa-fade" style="font-size: 30px;"
+                            @click="gotoMessage()"></i></el-button>
                 </el-col>
             </el-card>
         </div>
@@ -88,15 +95,12 @@
                     </el-card>
                 </el-col>
             </template>
-            <template v-else>
-                <el-empty description="无论文数据" :image-size="250"></el-empty>
-            </template>
         </el-col>
 
         <el-col :span="12" class="right-col">
             <!-- 论文列表 -->
             <el-row :gutter="20" class="paper-list">
-                <template v-if="truePaperList.length > 0">
+                <template v-if="paperList.length > 0">
                     <el-col v-for="(item, index) in truePaperList" :key="index">
                         <el-card shadow="hover" class="paper-item">
                             <div class="wrapper">
@@ -149,24 +153,19 @@
                         </el-card>
                     </el-col>
                 </template>
-                <template v-else>
-                    <el-col>
-                        <el-empty description="无论文数据" :image-size="250"></el-empty>
-                    </el-col>
-                </template>
             </el-row>
         </el-col>
 
         <!-- 图表部分 -->
-        <el-col :span="24">
+        <el-col :span="24" v-if="paperList.length > 0">
             <el-col :span="12" class="left-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                 </el-card>
             </el-col>
             <el-col :span="12" class="right-col">
                 <el-card style="height: 350px;">
-                    <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                    <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                 </el-card>
             </el-col>
         </el-col>
@@ -192,7 +191,8 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "330px" }, //图表样式
+            myChartStyle1: { float: "left", width: "100%", height: "350px" }, //图表样式
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, //图表样式
             activeName: 'first'
         };
     },
@@ -297,6 +297,14 @@ export default {
                 location.reload()
             }
         },
+        async gotoMessage() {
+            this.$router.push({
+                path: '/message',
+                query: {
+                    uid: this.userProfile.uid
+                }
+            })
+        },
         async getStatisticsBar() {
             await this.$http.get('api/v1/users/query/stat/bar', {
                 params: {
@@ -327,6 +335,8 @@ export default {
         async initEcharts() {
             await this.getStatisticsBar();
             await this.getStatisticsPie();
+            if(!(this.paperList.length > 0))
+                return;
             // 基本柱状图
             const option1 = {
                 legend: {
@@ -359,7 +369,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -375,7 +384,6 @@ export default {
                         }
                     },
                     axisLabel: {
-                        fontWeight: "900",
                         color: "#666",
                         margin: 10
                     },
@@ -426,29 +434,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "42%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 10,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -477,6 +477,10 @@ export default {
             window.addEventListener("resize", () => {
                 myChart2.resize();
             });
+        },
+        handleMouseMove(event) {
+            this.mouseX = event.clientX
+            this.mouseY = event.clientY
         },
     }
 };

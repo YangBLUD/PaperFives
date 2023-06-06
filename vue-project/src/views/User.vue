@@ -9,10 +9,18 @@
                     <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" />
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
-                        <p class="access"><i class="fa-regular fa-pen-to-square"></i>&nbsp;{{ this.userProfile.attr.motto }}</p>
+                        <p class="access"><i class="fa-regular fa-pen-to-square" @click="editMotto"></i>&nbsp;{{ motto }}
+                        </p>
                     </div>
                 </div>
             </el-card>
+            <el-dialog title="修改签名" :visible.sync="dialogVisible">
+                <el-input v-model="newMotto" placeholder="请输入新签名"></el-input>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveMotto">确 定</el-button>
+                </span>
+            </el-dialog>
 
             <!-- 关注列表 -->
             <el-row :gutter="20" class="follow-list">
@@ -185,12 +193,12 @@
                 <el-carousel :interval="4000" type="card" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart1" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart1" :style="myChartStyle1"></div>
                         </el-card>
                     </el-carousel-item>
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
-                            <div class="echart" id="mychart2" :style="myChartStyle"></div>
+                            <div class="echart" id="mychart2" :style="myChartStyle2"></div>
                         </el-card>
                     </el-carousel-item>
                 </el-carousel>
@@ -220,9 +228,13 @@ export default {
             yData_2: [], //数据
             Data: [],
             legend: [],
-            myChartStyle: { float: "left", width: "100%", height: "300px" }, //图表样式
+            motto: null,
+            myChartStyle1: { float: "left", width: "100%", height: "340px" }, //图表样式
+            myChartStyle2: { float: "left", width: "100%", height: "400px" }, //图表样式
             activeName: 'first',
             showCard: [],
+            dialogVisible: false,
+            newMotto: ""
         };
     },
     mounted() {
@@ -248,6 +260,17 @@ export default {
                 .then(res => {
                     // console.log(res);
                     this.userProfile = res.data.data;
+                    this.motto = this.userProfile.attr.motto;
+                }).catch(err => {
+                    console.log(err);
+                })
+        },
+        async changeProfile() {
+            await this.$http.post('api/v1/users/profile/profile', {
+                motto: this.motto
+            })
+                .then(res => {
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -385,6 +408,8 @@ export default {
         async initEcharts() {
             await this.getStatisticsBar();
             await this.getStatisticsPie();
+            if (!(this.paperList.length > 0))
+                return;
             // 基本柱状图
             const option1 = {
                 legend: {
@@ -482,29 +507,21 @@ export default {
                     {
                         type: "pie",
                         radius: ["50%", "70%"],
-                        center: ["50%", "55%"],
+                        center: ["50%", "41%"],
                         label: {
-                            show: true,
-                            fontSize: 14,
-                            formatter: function (params) {
-                                return '{a|' + params.name + '}\n{b|' + params.percent + '%}';
-                            },
-                            rich: {
-                                a: {
-                                    width: 100,
-                                    fontSize: 8,
-                                    fontWeight: "900",
-                                    lineHeight: 20,
-                                },
-                                b: {
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    color: 'red'
-                                }
-                            }
-
+                            show: false,
+                            position: 'center',
                         },
-
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return params.name + '\n' + '\n' + params.percent + '%';
+                                },
+                            }
+                        },
                         labelLine: {
                             length: 5,
                             length2: 10,
@@ -538,6 +555,19 @@ export default {
             this.mouseX = event.clientX
             this.mouseY = event.clientY
         },
+        editMotto() {
+            this.newMotto = this.motto;
+            this.dialogVisible = true;
+        },
+        saveMotto() {
+            this.motto = this.newMotto;
+            this.dialogVisible = false;
+            this.changeProfile();
+            this.$message({
+                type: 'success',
+                message: '修改成功!'
+            });
+        }
     }
 };
 
@@ -555,7 +585,7 @@ export default {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.fa-pen-to-square{
+.fa-pen-to-square {
     transition: all 0.3s ease-in-out;
     /* 添加过渡效果 */
     transform: scale(1);
@@ -563,6 +593,7 @@ export default {
     opacity: 0.8;
     /* 设置默认的透明度 */
 }
+
 .fa-pen-to-square:hover {
     cursor: pointer;
     cursor: pointer;

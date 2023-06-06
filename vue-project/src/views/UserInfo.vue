@@ -6,49 +6,42 @@
           <h2 class="personal-info-title">个人信息</h2>
         </div>
         <br>
-        <el-descriptions title="基本信息" :border="true" :column="3" :size="size">
+        <el-descriptions title="基本信息" :border="true" :column="1" :size="size">
           <el-descriptions-item label="姓名" :span="2">{{ form.name }}</el-descriptions-item>
-          <el-descriptions-item label="年龄" :span="2">{{ form.age }}</el-descriptions-item>
-          <el-descriptions-item label="性别" :span="2">{{ form.sex === '1' ? '男' : '女' }}</el-descriptions-item>
-          <el-descriptions-item label="出生日期" :span="2" :type="date">{{ form.birth }}</el-descriptions-item>
-          <el-descriptions-item label="地址" :span="2">{{ form.addr }}</el-descriptions-item>
+          <el-descriptions-item label="性别" :span="2">{{ getSex() }}</el-descriptions-item>
+          <el-descriptions-item label="机构" :span="2">{{ form.institute }}</el-descriptions-item>
         </el-descriptions>
       </div>
       <div class="personal-info-footer">
-        <el-button @click="dialogVisible = true" type="primary">编辑信息</el-button>
+        <el-button @click="showEditDialog()" type="primary">编辑信息</el-button>
       </div>
 
       <el-dialog title="基本信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="姓名">
-            <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="年龄">
-            <el-input v-model="form.age" placeholder="请输入年龄"></el-input>
+            <el-input v-model="tempName" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-select v-model="form.sex" placeholder="请选择">
+            <el-select v-model="tempSex" placeholder="请选择">
+              <el-option label="女" value="2"></el-option>
               <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="0"></el-option>
+              <el-option label="未知" value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="出生日期">
-            <el-date-picker v-model="form.birth" type="date" placeholder="请选择出生日期"></el-date-picker>
-          </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="form.addr" placeholder="请输入地址"></el-input>
+            <el-input v-model="tempInstitute" placeholder="请输入机构"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="handleSaveData">确 定</el-button>
         </span>
       </el-dialog>
 
+
       <br>
       <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
-        <el-descriptions-item label="用户名" :span="8">{{ form.name }}</el-descriptions-item>
-        <el-descriptions-item label="账户" :span="8">{{ form.age }}</el-descriptions-item>
+        <el-descriptions-item label="账户" :span="8">{{ form.email }}</el-descriptions-item>
       </el-descriptions>
     </div>
   </div>
@@ -91,20 +84,46 @@
 export default {
   data() {
     return {
+      userProfile: {},
       dialogVisible: false,
       form: {
         name: '',
-        age: '',
         sex: '',
-        birth: '',
-        addr: ''
-      }
+        institute: '',
+        email: ''
+      },
+      tempName: '',
+      tempSex: '',
+      tempInstitute: ''
     }
   },
   mounted() {
-    this.getUserProfile();
+    this.$nextTick(() => {
+      this.getUserProfile();
+    })
   },
   methods: {
+    getSex(){
+      if(this.form.sex == 0 || this.form.sex == '未知')
+        return '未知'
+      else if(this.form.sex == 1 || this.form.sex == '男')
+        return '男'
+      else
+        return '女'
+    },
+    showEditDialog() {
+      this.tempName = this.form.name;
+      this.tempSex = this.form.sex;
+      this.tempInstitute = this.form.institute;
+      this.dialogVisible = true;
+    },
+    handleSaveData() {
+      this.form.name = this.tempName;
+      this.form.sex = this.tempSex;
+      this.form.institute = this.tempInstitute;
+      this.dialogVisible = false;
+      this.changeProfile();
+    },
     async getUserProfile() {
       await this.$http.get('api/v1/users/profile/user', {
         params: {
@@ -115,6 +134,15 @@ export default {
         .then(res => {
           console.log(res.data);
           this.userProfile = res.data.data;
+          this.form.name = res.data.data.username;
+          this.form.institute = res.data.data.attr.institute;
+          if(res.data.data.attr.sex === 0)
+            this.form.sex = '未知'
+          else if(res.data.data.attr.sex === 1)
+            this.form.sex = '男'
+          else
+            this.form.sex = '女'
+          this.form.email = res.data.data.email;
         }).catch(err => {
           console.log(err);
         })
@@ -124,7 +152,6 @@ export default {
         username: this.form.name,
         sex: this.form.sex,
         institute: this.form.institute,
-        motto: this.form.motto
       })
         .then(res => {
           console.log(res);
