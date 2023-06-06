@@ -3,10 +3,13 @@
     <div class="personal-info">
       <div class="personal-info-content">
         <div class="personal-info-header">
-          <h2 class="personal-info-title">个人信息</h2>
+          <div class="personal-info-title" style="font-size: 35px; font-weight: 900;">个人信息</div>
         </div>
-        <br>
-        <el-descriptions title="基本信息" :border="true" :column="1" :size="size">
+        <br><br>
+        <div style="text-align: left;">
+          <span style="font-size: 25px; font-weight: 800;">基本信息</span>
+        </div>
+        <el-descriptions :border="true" :column="1" style="font-size: 20px;">
           <el-descriptions-item label="姓名" :span="2">{{ form.name }}</el-descriptions-item>
           <el-descriptions-item label="性别" :span="2">{{ getSex() }}</el-descriptions-item>
           <el-descriptions-item label="机构" :span="2">{{ form.institute }}</el-descriptions-item>
@@ -16,20 +19,20 @@
         <el-button @click="showEditDialog()" type="primary">编辑信息</el-button>
       </div>
 
-      <el-dialog title="基本信息" :visible.sync="dialogVisibleProfile" width="50%" :before-close="handleClose" center>
-        <el-form ref="form" :model="form" label-width="80px">
+      <el-dialog title="基本信息" :visible.sync="dialogVisibleProfile" width="50%" :before-close="handleClose" center style="font-size: 16px">
+        <el-form ref="form" :model="form" label-width="80px" style="font-size: 20px;">
           <el-form-item label="姓名">
-            <el-input v-model="tempName" placeholder="请输入姓名"></el-input>
+            <el-input v-model="tempName" placeholder="请输入姓名" style="font-size: 20px;"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-select v-model="tempSex" placeholder="请选择">
+            <el-select v-model="tempSex" placeholder="请选择" style="font-size: 20px;">
               <el-option label="女" value="2"></el-option>
               <el-option label="男" value="1"></el-option>
               <el-option label="未知" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="tempInstitute" placeholder="请输入机构"></el-input>
+            <el-input v-model="tempInstitute" placeholder="请输入机构" style="font-size: 20px;"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -41,13 +44,13 @@
       <el-dialog title="修改密码" :visible.sync="dialogVisiblePasswd" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="旧密码">
-            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password></el-input>
+            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;"></el-input>
           </el-form-item>
           <el-form-item label="新密码">
-            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password></el-input>
+            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;"></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password></el-input>
+            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -56,8 +59,11 @@
         </span>
       </el-dialog>
 
-      <br>
-      <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
+      <br><br>
+      <div style="text-align: left;">
+        <span style="font-size: 25px; font-weight: 800;">账户信息</span>
+      </div>
+      <el-descriptions :border="true" :column="1" style="font-size: 20px;">
         <el-descriptions-item label="账户" :span="8">{{ form.email }}</el-descriptions-item>
       </el-descriptions>
       <div class="personal-info-footer">
@@ -98,6 +104,15 @@
     }
   }
 }
+::v-deep .el-dialog__title {
+  font-size: 25px;
+}
+
+::v-deep .el-form-item__label {
+  font-size: 20px;
+}
+
+
 </style>
 
 <script>
