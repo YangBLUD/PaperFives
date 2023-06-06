@@ -598,7 +598,7 @@ export default {
     /* 设置初始状态字体为普通体 */
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-    line-height: 2;
+    line-height: 1.5;
     overflow: hidden;
     /* 超出部分隐藏 */
     text-overflow: ellipsis;
