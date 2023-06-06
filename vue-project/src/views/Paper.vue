@@ -1,5 +1,8 @@
 <template>
-    <div class="paper-box">
+    <div class="paper-border">
+        <div class="paper-wrapper">
+            
+        </div>
         <h1 class="title" style="font-size:50px; font-weight: 700; text-align: center;">{{ this.paperInfo.attr.title }}</h1>
         <el-divider></el-divider>
         <!-- 作者栏 -->
