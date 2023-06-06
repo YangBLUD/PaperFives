@@ -16,7 +16,7 @@
         <el-button @click="showEditDialog()" type="primary">编辑信息</el-button>
       </div>
 
-      <el-dialog title="基本信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose" center>
+      <el-dialog title="基本信息" :visible.sync="dialogVisibleProfile" width="50%" :before-close="handleClose" center>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="姓名">
             <el-input v-model="tempName" placeholder="请输入姓名"></el-input>
@@ -38,11 +38,31 @@
         </span>
       </el-dialog>
 
+      <el-dialog title="修改密码" :visible.sync="dialogVisiblePasswd" width="50%" :before-close="handleClose" center>
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="旧密码">
+            <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="新密码">
+            <el-input v-model="passwdNew" placeholder="请输入新密码" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleSavePasswd">确 定</el-button>
+        </span>
+      </el-dialog>
 
       <br>
       <el-descriptions title="账户信息" :border="true" :column="1" :size="size">
         <el-descriptions-item label="账户" :span="8">{{ form.email }}</el-descriptions-item>
       </el-descriptions>
+      <div class="personal-info-footer">
+        <el-button @click="showEditPassword()" type="primary">修改密码</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +105,8 @@ export default {
   data() {
     return {
       userProfile: {},
-      dialogVisible: false,
+      dialogVisibleProfile: false,
+      dialogVisiblePasswd: false,
       form: {
         name: '',
         sex: '',
@@ -94,7 +115,10 @@ export default {
       },
       tempName: '',
       tempSex: '',
-      tempInstitute: ''
+      tempInstitute: '',
+      passwdOld: '',
+      passwdNew: '',
+      passwdNewCheck: ''
     }
   },
   mounted() {
@@ -103,10 +127,10 @@ export default {
     })
   },
   methods: {
-    getSex(){
-      if(this.form.sex == 0 || this.form.sex == '未知')
+    getSex() {
+      if (this.form.sex == 0 || this.form.sex == '未知')
         return '未知'
-      else if(this.form.sex == 1 || this.form.sex == '男')
+      else if (this.form.sex == 1 || this.form.sex == '男')
         return '男'
       else
         return '女'
@@ -115,14 +139,36 @@ export default {
       this.tempName = this.form.name;
       this.tempSex = this.form.sex;
       this.tempInstitute = this.form.institute;
-      this.dialogVisible = true;
+      this.dialogVisibleProfile = true;
     },
     handleSaveData() {
       this.form.name = this.tempName;
       this.form.sex = this.tempSex;
       this.form.institute = this.tempInstitute;
-      this.dialogVisible = false;
-      this.changeProfile();
+      this.dialogVisibleProfile = false;
+      this.openProfile();
+    },
+    showEditPassword() {
+      this.dialogVisiblePasswd = true;
+    },
+    handleSavePasswd() {
+      const reg = new RegExp('^[a-zA-Z0-9_]{6,16}$')
+      if (!reg.test(this.passwdNew)) {
+        this.$message({
+          type: 'info',
+          message: '新密码格式错误！'
+        });
+        return;
+      }
+      if (this.passwdNew != this.passwdNewCheck) {
+        this.$message({
+          type: 'info',
+          message: '两次新密码输入不一致！'
+        });
+        return;
+      }
+      this.dialogVisiblePasswd = false;
+      this.openPassword();
     },
     async getUserProfile() {
       await this.$http.get('api/v1/users/profile/user', {
@@ -136,9 +182,9 @@ export default {
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;
           this.form.institute = res.data.data.attr.institute;
-          if(res.data.data.attr.sex === 0)
+          if (res.data.data.attr.sex === 0)
             this.form.sex = '未知'
-          else if(res.data.data.attr.sex === 1)
+          else if (res.data.data.attr.sex === 1)
             this.form.sex = '男'
           else
             this.form.sex = '女'
@@ -161,11 +207,11 @@ export default {
     },
     async changePassword() {
       await this.$http.post('http://81.70.161.76:5000/api/v1/users/profile/password', {
-        old: this.form.passwd_old,
-        new: this.form.passwd_new
+        old: this.passwdOld,
+        new: this.passwdNew
       })
         .then(res => {
-          console.log(res);
+          return res;
         }).catch(err => {
           console.log(err);
         })
@@ -183,15 +229,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.changeProfile();
         this.$message({
           type: 'success',
           message: '修改成功!'
         });
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消修改'
-        });
+        // this.$message({
+        //   type: 'info',
+        //   message: '已取消修改'
+        // });
       });
     },
     openPassword() {
@@ -200,15 +247,24 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        });
+        var data = this.changePassword();
+        if (data.meta.status != 0) {
+          this.$message({
+            type: 'info',
+            message: '旧密码输入错误！'
+          });
+        }
+        else {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+        };
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消修改'
-        });
+        // this.$message({
+        //   type: 'info',
+        //   message: '已取消修改'
+        // });
       });
     }
   }
