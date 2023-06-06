@@ -29,7 +29,7 @@
     width: 100%;
     margin: auto;
     overflow: hidden;
-    background-color: aqua;
+    /* background-color: aqua; */
     display: flex;
     flex-direction: row;
 }
@@ -180,7 +180,7 @@
     top: 0;
     background-image: linear-gradient(90deg, rgba(255, 215, 0, 0) 0%, gold 100%);
     z-index: 20;
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
 
@@ -227,14 +227,24 @@
 
 .message-wrapper .title .r1 {
     top: 0;
-    right: 70px;
+    right: 65px;
+}
+
+.message-wrapper .title .r2 {
+    top: 0;
+    right: 130px;
 }
 
 .message-wrapper .title .but i {
     height: 50px;
+    width: 50px;
     line-height: 50px;
-    font-size: 2.5em;
+    font-size: 2.3em;
     transition: 0.2s;
+}
+
+.message-wrapper .title .r0 i {
+    font-size: 2.5em !important;
 }
 
 .message-wrapper span i:hover {
@@ -310,7 +320,7 @@
     max-height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    background-color: cyan;
+    /* background-color: cyan; */
 }
 
 .message-scroller .message-content .message .avatar img {
