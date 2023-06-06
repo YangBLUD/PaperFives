@@ -200,7 +200,7 @@ export default {
         institute: this.form.institute,
       })
         .then(res => {
-          console.log(res);
+          // console.log(res);
         }).catch(err => {
           console.log(err);
         })
@@ -211,7 +211,23 @@ export default {
         new: this.passwdNew
       })
         .then(res => {
-          return res;
+          this.passwdOld = '';
+          this.passwdNew = '';
+          this.passwdNewCheck = '';
+          var data = res.data;
+          console.log(data);
+          if (data.meta.status != 0) {
+            this.$message({
+              type: 'info',
+              message: '旧密码输入错误！'
+            });
+          }
+          else {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
+          };
         }).catch(err => {
           console.log(err);
         })
@@ -247,20 +263,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        var data = this.changePassword();
-        console.log(data);
-        if (data.meta.status != 0) {
-          this.$message({
-            type: 'info',
-            message: '旧密码输入错误！'
-          });
-        }
-        else {
-          this.$message({
-            type: 'success',
-            message: '修改成功!'
-          })
-        };
+        this.changePassword();
       }).catch(() => {
         // this.$message({
         //   type: 'info',
