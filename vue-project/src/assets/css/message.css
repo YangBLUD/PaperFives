@@ -65,7 +65,8 @@
     flex: 2;
     margin-right: 20px;
     max-width: 250px;
-    background-color: lightblue;
+    /* background-color: lightblue; */
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
     cursor: default;
 }
 
@@ -93,21 +94,21 @@
     display: flex;
     flex-direction: row;
     height: 80px;
-    /* line-height: 80px; */
     padding: 5px;
-    background-image: linear-gradient(135deg, #FFF720 5%, #3CD500 95%);
+    background-image: linear-gradient(-45deg, #fff1eb 0%, #ace0f9 100%);
     transition: 0.3s;
     animation-duration: 0.3s;
 }
 
 .msg-wrapper .contact-wrapper .contact-scroller .contact-content .contact-padding {
     height: 80px;
+    background-image: linear-gradient(to bottom, #e6e9f0 0%, #eef1f5 100%);
 }
 
 .contact-item:hover {
     cursor: pointer;
     opacity: 80%;
-    box-shadow: 0 0 20px gold inset;
+    box-shadow: inset 0 0 10px 3px #ace0f9;
 }
 
 .contact-item .frame {
@@ -125,7 +126,7 @@
     height: 60px;
     border-radius: 50%;
     overflow: hidden;
-    background-color: purple;
+    /* background-color: purple; */
 }
 
 .contact-item .frame .avatar img {
@@ -174,14 +175,18 @@
 
 /* contact indicator */
 .msg-wrapper .contact-wrapper .contact-scroller .contact-indicator {
-    width: 20px;
+    width: 15px;
     height: 80px;
     position: absolute;
     right: 0;
     top: 0;
-    background-image: linear-gradient(90deg, rgba(255, 215, 0, 0) 0%, gold 100%);
+    /* background-image: linear-gradient(to right, transparent 0%, #fbc2eb 80%); */
+    /* background-image: linear-gradient(to right, transparent 10%, #a6c1ee 100%); */
+    background-image: linear-gradient(to right, transparent 30%, #ace0f9 100%);
+    /* background-image: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 100%); */
     z-index: 20;
     transition: 0.3s;
+    box-shadow: 0 5 1px 2px #fbc2eb;
 }
 
 
@@ -193,13 +198,14 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background-color: lightgreen;
+    background-image: linear-gradient(-45deg, #fff1eb 0%, #ace0f9 100%);
     cursor: default;
 }
 
 .msg-wrapper .message-wrapper .title {
     position: relative;
-    background-color: #3CD500;
+    /* background-color: #3CD500; */
+    background-color: #ace0f9;
 }
 
 .msg-wrapper .message-wrapper .title .link {
@@ -242,6 +248,10 @@
     line-height: 50px;
     font-size: 2.3em;
     transition: 0.2s;
+}
+
+.message-wrapper .title .r2 i {
+    font-size: 2.2em !important;
 }
 
 .message-wrapper .title .r0 i {
@@ -350,8 +360,17 @@
     word-wrap: break-word;
     padding: 5px 10px;
     border-radius: 10px;
-    background-color: aqua;
+    /* background-image: linear-gradient(135deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%); */
     align-self: flex-start;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.message-scroller .message-content .income .text {
+    background-image: linear-gradient(135deg, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+}
+
+.message-scroller .message-content .outcome .text {
+    background-image: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
 }
 
 .message-scroller .message-content .message .payload .text p {
