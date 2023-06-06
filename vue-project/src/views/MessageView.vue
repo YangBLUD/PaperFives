@@ -11,7 +11,7 @@
                     <div class="contact-content">
                         <div v-for="(contact, index) in contacts.contactList"
                             class="contact-item animate__animated animate__slideInLeft"
-                            :style="getContactAnimDuration(index)" @click="onClickContactItem(index)">
+                            :style="getContactAnimDuration(index)" @click="onClickContactItem(index)" :key="contact.uid">
                             <div class="frame">
                                 <div class="avatar">
                                     <img :src="getAvatarUrl(contact.avatar)" />
@@ -35,10 +35,12 @@
                     <span class="link">
                         <h2 @click="onClickUsername()">{{ choice.title }}</h2>
                     </span>
-                    <span class="but r0" @click="onClickRefresh()"><i class="fa-solid fa-arrows-rotate"
-                            v-bind:class="{ 'fa-spin': isLoading || isRefreshing }" title="Refresh conversation"></i></span>
-                    <span class="but r1" @click="onClickDeleteConversation()"><i class="fa-solid fa-user-xmark"
+                    <span class="but r0" @click="onClickDeleteConversation()"><i class="fa-solid fa-xmark"
                             title="Close conversation"></i></span>
+                    <span class="but r1" @click="onClickRefresh()"><i class="fa-solid fa-arrows-rotate"
+                            v-bind:class="{ 'fa-spin': isLoading || isRefreshing }" title="Refresh conversation"></i></span>
+                    <span class="but r2" @click="onClickDeleteContact()"><i class="fa-solid fa-user-xmark"
+                            title="Delete contact"></i></span>
                 </div>
                 <!-- Loading indicator -->
                 <div class="load" v-bind:class="{ hide: !isLoading }"><i class="fa-solid fa-spinner fa-spin-pulse"></i>
@@ -48,7 +50,7 @@
                     <div v-for="i in contacts.contactsCnt" class="message-content"
                         v-bind:class="{ active: (choice.activeId == (i - 1)) }" v-bind:id="i">
                         <div v-for="(message, index) in activeHistory" class="message animate__animated"
-                            v-bind:class="getMessageClass(message.income)">
+                            v-bind:class="getMessageClass(message.income)" :key="message.timestamp">
                             <div class="avatar"><img :src="getAvatarUrl(message.avatar)" /></div>
                             <div class="payload">
                                 <div class="text">
@@ -382,6 +384,22 @@ export default {
             });
         },
 
+        async requestDeleteContact(uid) {
+            await this.$http.post('api/v1/msgs/delete', {
+                uid: uid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.refreshContacts();
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
         ////////////////////////////////////////////////////////////////////////
         //  First load
         ////////////////////////////////////////////////////////////////////////
@@ -483,6 +501,16 @@ export default {
             await this.requestChatHistory(id, contact.uid);
             var history = this.getContactHistory(id);
             this.updateContactTime(id, history[history.length - 1].timestamp);
+        },
+
+        // Delete contact
+        async onClickDeleteContact() {
+            const id = this.choice.activeId;
+            if (id >= 0) {
+                await this.requestDeleteContact(this.getUid(id));
+                this.contacts.contactList.splice(id, 1);
+                this.onResetContactItem();
+            }
         },
 
         reorderContacts() {
