@@ -239,7 +239,7 @@
                                         </div>
                                         <div v-show="!showCardFav[index]">
                                             <div class="paper-content">
-                                                <span class="paper_name_init" @click="gotoPaper(item.pid)">{{
+                                                <span class="paper_name_init" @click="gotoPaper(item.pid)" style="max-width: 770px;">{{
                                                     item.attr.title
                                                 }}</span>
                                                 <i v-if="item.isFavorite" class="fa-solid fa-star"
