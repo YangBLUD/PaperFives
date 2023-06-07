@@ -214,6 +214,11 @@ export default {
       })
         .then(res => {
           // console.log(res.data);
+          var data = res.data;
+          if (data.meta.status != 0) {
+            this.$message.error("请先登录！");
+            this.$router.push({ path: '/login' });
+          }
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;
           this.form.institute = res.data.data.attr.institute;
