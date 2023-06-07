@@ -34,6 +34,7 @@
     </div>
 </template>
 <script>
+require("../../assets/js/background.js")
 export default {
     data() {
         // 验证邮箱手机的规则 （自定义校验规则

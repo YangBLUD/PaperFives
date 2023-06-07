@@ -26,6 +26,7 @@
 </template>
 
 <script>
+require("../../assets/js/background")
 export default {
     data() {
         var checkEmail = (rule, value, callback) => {
@@ -81,11 +82,14 @@ export default {
 
 <style lang="less" scoped>
 .login_con {
-    background-color: #2b4b6b;
+    background-color: #98c1ea;
+    opacity: 0.5;
+    z-index: -1;
     height: 100%;
 }
 
 .login_box {
+    z-index: 1;
     width: 450px;
     height: 300px;
     background-color: white;
