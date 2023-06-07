@@ -272,7 +272,7 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel type="card" height="330px" style="width: 1000px;">
+                <el-carousel type="card" :autoplay="false" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart1" :style="myChartStyle1"></div>
@@ -864,7 +864,7 @@ export default {
 
 .follow-list {
     padding-left: 10px;
-    height: 550px;
+    height: 535px;
     width: 480px;
     overflow-y: auto;
 }
