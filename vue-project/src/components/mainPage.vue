@@ -3,10 +3,10 @@
         <el-card class="search">
             <!-- 搜索与添加区域 -->
             <!-- @keyup.enter.native="goSearch" -->
-            <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select" 
+            <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
                 style="width: 600px; font-size: 15px; margin: 0px 18%">
                 <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
-                    <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item">
+                    <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item">
                     </el-option>
                 </el-select>
                 <el-button type="primary" slot="append" icon="el-icon-search" @click="gosearch"></el-button>
@@ -61,7 +61,7 @@ export default {
             top_articles: {},
             top_areas: {},
             top_authors: [],
-            search_list:[], //搜索结果
+            search_list: [], //搜索结果
         }
     },
     created() {
@@ -71,11 +71,13 @@ export default {
     },
     methods: {
         async gosearch() {
-            this.$router.push({path:"/searchres",query:{
-                "field": this.select.value,
-                "key": this.searchValue,
-                type:1
-            }})
+            this.$router.push({
+                path: "/searchres", query: {
+                    "field": this.select.value,
+                    "key": this.searchValue,
+                    type: 1
+                }
+            })
         },
         async getHotArticles() {
             const { data: res } = await this.$http.get('/api/v1/papers/hot/papers', { ps: 20, p: 1 })

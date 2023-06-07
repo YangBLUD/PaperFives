@@ -26,9 +26,7 @@ export default {
         }
     },
     data() {
-        return {
-
-        }
+        return {}
     },
     methods: {
         async gosearch(name) {
