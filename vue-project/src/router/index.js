@@ -13,11 +13,12 @@ import Message from '../views/MessageView.vue'
 import PaperReview from '../views/PaperReview.vue'
 import PaperUpload from '../views/PaperUpload.vue'
 import Admin from '../views/Admin.vue'
+import searchRes from '../components/search/searchRes.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/home' },
   {
     path: '/home',
     component: Home,
@@ -32,7 +33,8 @@ const routes = [
       { path: '/message', component: Message },
       { path: '/paperreview', component: PaperReview},
       { path: '/paperupload', component: PaperUpload},
-      { path: '/admin', component: Admin}
+      { path: '/admin', component: Admin},
+      { path:'/searchres',component:searchRes}
     ]
   },
   { path: '/login', component: Login },

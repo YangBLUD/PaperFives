@@ -1,74 +1,95 @@
 <template>
-    <div class="authors">
-        <div class="authors-body">
-            <div class="author-main" v-for="(item,index) in Areas" :key="index">
+    <div class="areas">
+        <div class="areas-body">
+            <div class="area-main" v-for="(item, index) in Areas" :key="index">
                 <div class="user-info">
                     <div>
-                        <span class="author-name">{{ item.area.name }}</span>
+                        <span class="area-name" @click="gosearch(item.area.name)">{{ item.area.name }}</span>
                     </div>
                     <div>
-                        <span class="author-email">领域大类：{{ item.area.primary }}    </span>
-                        <span class="author-des">领域小类：{{ item.area.secondary }}</span>
-                    </div>
-
-                    <div>
-                        <span class="author-email author-grade">等级: {{ item.rank.toFixed(2) }}</span>
+                        <span class="area-email">领域大类：{{ item.area.primary }} </span>
+                        <span class="area-des">领域小类：{{ item.area.secondary }}</span>
                     </div>
                 </div>
-               
+
             </div>
         </div>
     </div>
 </template>
 <script>
-export default{
-    name:'Areas',
-    props:{
-        Areas:{
-            type:Array,
-            default:[]
+export default {
+    name: 'Areas',
+    props: {
+        Areas: {
+            type: Array,
+            default: []
         }
+    },
+    data() {
+        return {}
+    },
+    methods: {
+        async gosearch(name) {
+            this.$router.push({
+                path: "/searchres", query: {
+                    "field": "areas",
+                    "key": name,
+                    type: 1
+                }
+            })
+        },
     }
 }
 </script>
 <style lang="scss">
-.authors{
-    .authors-body{
+.areas {
+    .area-name {
+        color: #2d94d4;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .areas-body {
         display: flex;
         flex-wrap: wrap;
     }
-    .author-main{
+
+    .area-main {
         display: flex;
         align-items: center;
         flex: 0 0 50%;
         padding-bottom: 20px;
-        &:not(:last-child){
+
+        &:not(:last-child) {
             border-bottom: 1px solid #d3dce6;
         }
-        .avator{
-            width:80px;
+
+        .avator {
+            width: 80px;
             height: 100px;
             text-align: center;
             display: flex;
             align-items: center;
-            img{
+
+            img {
                 width: 42px;
                 height: 42px;
                 border: 1px solid;
                 vertical-align: middle;
             }
         }
-        .user-info{
+
+        .user-info {
             flex: 1;
         }
-        .author-des{
+
+        .area-des {
             font-size: 12px;
             color: #666;
         }
-        .author-grade{
+
+        .area-grade {
             font-size: 12px;
         }
     }
-}
-
-</style>
+}</style>

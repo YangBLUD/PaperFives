@@ -3,14 +3,18 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="topRecommend" id="topRecommend">
-            <h1>为您搜索到以下 {{search_list.length}} 条内容</h1>
+        <div class="topRecommend" >
+            <div>
+                <h1>为您搜索到以下 {{search_list.length}} 条内容</h1>
+            </div>
             <Articles :articles="search_list"></Articles>
         </div>
     </div>
 </template>
 <script>
 import Articles from "@/components/hot/Articles.vue";
+
+
 export default {
     components: { Articles },
     data() {
