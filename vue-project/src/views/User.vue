@@ -325,7 +325,11 @@ export default {
         };
     },
     mounted() {
-        this.$nextTick(() => {
+        this.onLoad();
+    },
+    methods: {
+        async onLoad() {
+            await this.getUserProfile();
             this.initEcharts();
             this.getFollower();
             this.getFollowee();
@@ -336,10 +340,7 @@ export default {
             this.newListPaper.forEach(() => {
                 this.$set(this.showCardFav, this.showCardFav.length, false);
             })
-        });
-        this.getUserProfile();
-    },
-    methods: {
+        },
         uploadAvatar() {
             const input = document.createElement('input')
             input.type = 'file'
@@ -370,6 +371,12 @@ export default {
             })
                 .then(res => {
                     // console.log(res);
+                    var data = res.data;
+                    if (data.meta.status != 0) {
+                        this.$message.error(data.meta.msg);
+                        this.$router.push({ path: '/login' });
+                    }
+
                     this.userProfile = res.data.data;
                     this.motto = this.userProfile.attr.motto;
                 }).catch(err => {
@@ -561,8 +568,14 @@ export default {
             await this.getPaperlist();
             await this.getStatisticsBar();
             await this.getStatisticsPie();
-            if (!(this.paperList.length > 0))
+            try {
+                if (!(this.paperList.length > 0)) {
+                    return;
+                }
+            } catch (err) {
+                console.log(err);
                 return;
+            }
             // 基本柱状图
             const option1 = {
                 legend: {
