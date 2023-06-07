@@ -28,7 +28,7 @@
 
 /* title */
 .paper-wrapper .title {
-    background-color: greenyellow;
+    /* background-color: greenyellow; */
     text-align: left;
 }
 
@@ -208,6 +208,7 @@
 .shard-wrapper .action-wrapper .action {
     width: 40px;
     height: 40px;
+    line-height: 40px;
     margin: 5px;
     background-color: lightgreen;
     border-radius: 10px;
@@ -222,12 +223,13 @@
 .shard-wrapper .action-wrapper .action i {
     width: 100%;
     height: 100%;
+    font-size: 1.3em;
 }
 
 /* abstract */
 .paper-wrapper .abstract-wrapper {
     width: 100%;
-    padding: 10px;
+    padding: 10px 30px;
 }
 
 .abstract-wrapper p {
@@ -238,4 +240,37 @@
 
 .abstract-wrapper p::first-letter {
     initial-letter: 2;
+    font-family: 'ZillaSlab';
+    text-transform: uppercase;
+}
+
+/* reference */
+.paper-wrapper .ref-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    padding: 10px 30px;
+}
+
+.paper-wrapper .ref-list hr {
+    width: 100%;
+    margin: 5px 0px;
+    height: 1px;
+    border: none;
+    background-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.3) 10%, transparent 80%);
+}
+
+.ref-list .ref {
+    font-size: 0.9em;
+    line-height: 1.5em;
+    text-align: left;
+}
+
+.ref-list .ref .bullet {
+    margin-right: 0.5em;
+}
+
+.ref-list .ref .text {
+
+    
 }

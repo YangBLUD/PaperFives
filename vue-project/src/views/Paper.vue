@@ -4,7 +4,7 @@
             <!-- title -->
             <div class="section"><span>title</span></div>
             <div class="title">
-                <h1>This Is The Title of a Paper This Is The Title of a Paper</h1>
+                <h1 class="mathjax">{{ title }}</h1>
             </div>
 
             <hr class="split" />
@@ -93,7 +93,7 @@
                         <i class="fa-solid fa-bookmark"></i>
                     </div>
                     <div class="action" title="Downloads">
-                        <i class="fa-regular fa-circle-down"></i>
+                        <i class="fa-solid fa-file-arrow-down"></i>
                     </div>
                 </div>
 
@@ -104,7 +104,33 @@
             <!-- abstract -->
             <div class="section"><span>abstract</span></div>
             <div class="abstract-wrapper">
-                <p ref="math">{{ formula }}</p>
+                <p class="mathjax">{{ formula }}</p>
+            </div>
+
+            <hr class="split">
+            <!-- reference -->
+            <div class="section"><span>reference</span></div>
+            <div class="ref-list">
+                <div class="ref">
+                    <span class="bullet">[1]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[2]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[3]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
             </div>
         </div>
     </div>
@@ -116,7 +142,8 @@ import { initMathJax, renderByMathjax } from 'mathjax-vue';
 export default {
     data() {
         return {
-            formula: String.raw`We study the basic question of characterizing which boundary homeomorphisms of the unit sphere can be
+            title: String.raw`This $ x_a $  Is  The Title of a Paper This Is The Title of a Paper`,
+            formula: String.raw`We $ x_a $ study the basic question of characterizing which boundary homeomorphisms of the unit sphere can be
                     extended to a Sobolev homeomorphism of the interior in 3D space. While the planar variants of this
                     problem are well-understood, completely new and direct ways of constructing an extension are required in
                     3D. We prove, among other things, that a Sobolev homeomorphism $\varphi \colon \mathbb R^2 \to \mathbb
@@ -148,14 +175,18 @@ export default {
     },
     methods: {
         onMathJaxReady() {
-            const math = this.$refs.math
-            renderByMathjax(math);
+            // const math = this.$refs.math
+            const maths = document.getElementsByClassName('mathjax');
+            for (var i = 0; i < maths.length; i++) {
+                // console.log(maths[i]);
+                renderByMathjax(maths[i]).catch(err => {
+                    console.log(err)
+                });
+            }
         }
     }
 }
 </script>
 
-<style>
-@import '../assets/css/paper.css';
-@import '../assets/css/animate.css';
-</style>
+<style>@import '../assets/css/paper.css';
+@import '../assets/css/animate.css';</style>
