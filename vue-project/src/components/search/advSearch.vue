@@ -130,8 +130,8 @@ export default {
       this.searchValue.splice(index, 1)
     },
     addCategory: function (index) {
-      if (this.searchValue.length >= 10) {
-        this.$message.warning('添加失败！检索项必须在10条以内！')
+      if (this.searchValue.length >= 5) {
+        this.$message.warning('添加失败！检索项必须在5条以内！')
         return;
       }
       this.searchValue.push({
