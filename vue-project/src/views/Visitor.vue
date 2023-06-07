@@ -37,8 +37,6 @@
                     <div>
                         <i v-if="this.isFollowed" class="fa-solid fa-star" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
-                        <!-- <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
-                            @click="followUser()"></i> -->
                         <i v-else class="fa-regular fa-star fa-beat" style="font-size:70px; color: #FFBE00;"
                             @click="followUser()"></i>
                     </div>
@@ -61,7 +59,7 @@
                             <span class="hot">&nbsp;&nbsp;RANK：{{ rank }}&nbsp;&nbsp;</span>
                             <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
                         </div>
-                        <span class="paper_name" @click="gotoPaper(item.pid)" style="max-width: 600px;">
+                        <span class="paper_name_hot" @click="gotoPaper(item.pid)" style="max-width: 600px;">
                             {{ item.attr.title }}
                         </span>
                         <div class="content">
@@ -79,7 +77,7 @@
                                 </span>
                             </div>
                             <div>
-                                <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                <span class="abstract">{{ item.attr.abstract }}</span>
                             </div>
                             <div class="citation-count">
                                 <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -106,8 +104,9 @@
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
                                     <div class="paper-item-title">
-                                        <span class="paper_name" @click="gotoPaper(item.pid)" style="white-space: nowrap;">{{ item.attr.title
-                                        }}</span>
+                                        <span class="paper_name" @click="gotoPaper(item.pid)"
+                                            style="white-space: nowrap;">{{ item.attr.title
+                                            }}</span>
                                         <el-button class="shrink" icon="el-icon-arrow-left"
                                             @click="$set(showCard, index, false)" size="mini"></el-button>
                                     </div>
@@ -126,7 +125,7 @@
                                             </span>
                                         </div>
                                         <div style="text-align:left;margin-top:10px;">
-                                            <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                            <span class="abstract">{{ item.attr.abstract }}</span>
                                         </div>
                                         <div class="citation-count">
                                             <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -143,7 +142,7 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                        <i v-if="item.lead" class="fa-solid fa-medal"
                                             style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button icon="el-icon-view" size="mini" circle
                                             @click="$set(showCard, index, true)"></el-button>
@@ -264,7 +263,7 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.paperList = res.data.data.papers;
                     this.paperNum = res.data.data.total;
                     this.truePaperList = this.paperList.filter(item => item.status === 5);
@@ -335,7 +334,7 @@ export default {
             await this.getPaperlist();
             await this.getStatisticsBar();
             await this.getStatisticsPie();
-            if(!(this.paperList.length > 0))
+            if (!(this.paperList.length > 0))
                 return;
             // 基本柱状图
             const option1 = {
@@ -503,6 +502,10 @@ export default {
     width: 1050px;
 }
 
+.fa-star:hover {
+    cursor: pointer;
+}
+
 .user {
     display: flex;
     align-items: center;
@@ -527,18 +530,20 @@ export default {
     }
 
     .institute {
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         font-size: 16px;
         margin-bottom: 10px;
         width: 500px;
         color: #0077c2;
+        line-height: 1.5;
     }
 
     .motto {
         font-size: 16px;
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         margin-bottom: 10px;
         width: 500px;
+        line-height: 1.5;
     }
 }
 
@@ -589,8 +594,8 @@ export default {
     font-size: 35px;
 }
 
-.paper_name {
-    font-family: 'EB Garamond', serif;
+.paper_name_hot {
+    font-family: 'OpenSans-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 35px;
@@ -598,7 +603,29 @@ export default {
     /* 设置初始状态字体为普通体 */
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-    line-height: 2;
+    line-height: 1.5;
+    overflow: hidden;
+    /* 超出部分隐藏 */
+    text-overflow: ellipsis;
+    /* 超出部分显示省略号 */
+}
+
+.paper_name_hot:hover {
+    cursor: pointer;
+    transform: scale(1.3);
+    color: #FFC125 !important;
+}
+
+.paper_name {
+    font-family: 'OpenSans-Bold', sans-serif;
+    margin-left: 20px;
+    color: black;
+    font-size: 25px;
+    font-weight: 800;
+    /* 设置初始状态字体为普通体 */
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+    line-height: 1.5;
     overflow: hidden;
     /* 超出部分隐藏 */
     text-overflow: ellipsis;
@@ -641,7 +668,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'EB Garamond', serif;
+                    font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
@@ -676,6 +703,10 @@ export default {
             }
         }
     }
+}
+
+.paper-list::-webkit-scrollbar {
+    display: none;
 }
 </style>
   

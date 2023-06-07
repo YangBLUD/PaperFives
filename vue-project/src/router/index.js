@@ -12,6 +12,7 @@ import Paper from '../views/Paper.vue'
 import Message from '../views/MessageView.vue'
 import PaperReview from '../views/PaperReview.vue'
 import PaperUpload from '../views/PaperUpload.vue'
+import Admin from '../views/Admin.vue'
 
 Vue.use(VueRouter)
 
@@ -30,7 +31,8 @@ const routes = [
       { path: '/paper', component: Paper },
       { path: '/message', component: Message },
       { path: '/paperreview', component: PaperReview},
-      { path: '/paperupload', component: PaperUpload}
+      { path: '/paperupload', component: PaperUpload},
+      { path: '/admin', component: Admin}
     ]
   },
   { path: '/login', component: Login },
