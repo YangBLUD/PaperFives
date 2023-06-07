@@ -20,7 +20,8 @@
                 <br><br><br>
                 <div style="font-size: 130px; color: red; font-family: Montserrat-Black;">{{ this.total }}</div>
                 <br><br>
-                <i class="fa-solid fa-pen-to-square fa-shake" style="font-size: 100px; color: red;"></i>
+                <i class="fa-solid fa-pen-to-square fa-shake" style="font-size: 100px; color: red;"
+                    @click="randomReview()"></i>
             </el-card>
         </el-col>
         <el-col :span="16" class="right-col">
@@ -35,8 +36,9 @@
                                 <div class="content">
                                     <div class="authors">
                                         <span v-for="(author, index) in item.authors">
-                                            <span v-if="author.uid != 0" @click="gotoProfile(author.uid)" class="author-name">{{
-                                                author.name }}</span>
+                                            <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
+                                                class="author-name">{{
+                                                    author.name }}</span>
                                             <span v-else class="author-not-exist">{{ author.name }}</span>
                                             <span v-if="index < item.authors.length - 1"
                                                 style="color: #A0A0A0; font-size: 14px"> / </span>
@@ -132,6 +134,20 @@ export default {
                 path: '/paperreview',
                 query: {
                     pid: id,
+                }
+            })
+        },
+        randomReview() {
+            // 获取 paperlist 数组的长度
+            const len = this.paperList.length;
+            // 生成一个随机下标
+            const randomIndex = Math.floor(Math.random() * len);
+            // 获取一个随机元素
+            const randomPaper = this.paperList[randomIndex];
+            this.$router.push({
+                path: '/paperreview',
+                query: {
+                    pid: randomPaper.pid,
                 }
             })
         },
