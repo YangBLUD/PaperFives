@@ -15,19 +15,19 @@
                     <el-input v-model="regForm.password"></el-input>
                 </el-form-item>
 
-                <el-form-item label="邮箱" prop="email" >
+                <el-form-item label="邮箱" prop="email">
                     <el-input v-model="regForm.email"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
-                    <el-button  type="primary" @click="checkCode" >发送验证码</el-button>
-                </el-form-item >
+                    <el-button type="primary" @click="checkCode">发送验证码</el-button>
+                </el-form-item>
                 <el-form-item label="验证码" prop="VC">
                     <el-input v-model="regForm.code"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="primary" @click="regUser">注 册</el-button>
                     <el-button type="warning" @click="cancle">取 消</el-button>
-                    <el-button type="info" @click="resetRegForm" >重 置</el-button>
+                    <el-button type="info" @click="resetRegForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -51,7 +51,7 @@ export default {
                 username: '',
                 password: '',
                 email: '',
-                code:''
+                code: ''
             },
             regFormRules: {
                 username: [
@@ -75,36 +75,38 @@ export default {
             this.$refs.regFormRef.resetFields();
         },
         // 注册
-        regUser(){
-            this.$refs.regFormRef.validate(async (valid)=>{
-                if(!valid) return ;
-                const {data:res} = await this.$http.post('/api/v1/users/register',this.regForm);
-                if(res.meta.status!=0) 
+        regUser() {
+            this.$refs.regFormRef.validate(async (valid) => {
+                if (!valid) return;
+                const { data: res } = await this.$http.post('/api/v1/users/register', this.regForm);
+                if (res.meta.status != 0)
                     return this.$message.error(res.meta.msg)
                 this.$message.success(res.meta.msg)
                 // // 页面跳转
                 this.$router.push("/login");
             });
         },
-        cancle(){
+        cancle() {
             this.$router.push('/main')
         },
         //发送验证码
-        async checkCode(){
-            const {data:res} = await this.$http.post('/api/v1/users/verification',{email:this.regForm.email});
-            if(res.meta.status!=0){
+        async checkCode() {
+            const { data: res } = await this.$http.post('/api/v1/users/verification', { email: this.regForm.email });
+            if (res.meta.status != 0) {
                 return this.$message.error(res.meta.msg)
             }
             this.$message.success(res.meta.msg)
         },
-        
+
     }
 }
 </script>
 
 <style lang="less" scoped>
-.regist_con {
-    background-color: #2b4b6b;
+.login_con {
+    background-color: #98c1ea;
+    opacity: 0.5;
+    z-index: -1;
     height: 100%;
 }
 
