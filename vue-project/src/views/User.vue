@@ -160,27 +160,27 @@
                                                 <i v-if="item.lead" class="fa-solid fa-medal"
                                                     style="color: #FFB90F; font-size: 30px;"></i>
                                                 <el-button v-if="item.status === 0" type="success" size="normal"
-                                                    class="status" icon="el-icon-edit">
+                                                    class="status" icon="el-icon-edit" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 1" type="success" size="normal"
-                                                    class="status" icon="el-icon-edit">
+                                                    class="status" icon="el-icon-edit" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 2" type="warning" size="normal"
-                                                    class="status" icon="el-icon-s-check">
+                                                    class="status" icon="el-icon-s-check" @click="gotoUpload(item.pid)">
                                                     审核中
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 3" type="warning" size="normal"
-                                                    class="status" icon="el-icon-s-check">
+                                                    class="status" icon="el-icon-s-check" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 4" type="danger" size="normal"
-                                                    class="status" icon="el-icon-error">
+                                                    class="status" icon="el-icon-error" @click="gotoUpload(item.pid)">
                                                     已驳回
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 5" type="primary" size="normal"
-                                                    class="status" icon="el-icon-success">
+                                                    class="status" icon="el-icon-success" @click="gotoUpload(item.pid)">
                                                     已发表
                                                 </el-button>
                                                 <el-button icon="el-icon-view" size="mini" circle
@@ -470,6 +470,14 @@ export default {
         async gotoPaper(id) {
             this.$router.push({
                 path: '/paper',
+                query: {
+                    pid: id,
+                }
+            })
+        },
+        async gotoUpload(id) {
+            this.$router.push({
+                path: '/paperupload',
                 query: {
                     pid: id,
                 }
