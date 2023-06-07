@@ -14,24 +14,25 @@
           <span class="publish-year"> · {{ article.paper.attr.publish_date }}</span>
         </div>
 
-        <div style="text-align:left;margin-top:10px;">
-          <span class="abstract">{{ article.paper.attr.abstract | ellipsis }}</span>
-        </div>
+                <div style="text-align:left;margin-top:10px;">
+                    <span class="abstract mathjax">{{ article.paper.attr.abstract | ellipsis }}</span>
+                </div>
 
-        <div class="citation-count">
-          <span>{{ article.paper.stat.cites }}&nbsp;被引用</span>
-          <span>&nbsp;·&nbsp;{{ article.paper.stat.downloads }}&nbsp;被收藏</span>
-          <span>&nbsp;·&nbsp;{{ article.paper.stat.favorites }}&nbsp;下载量</span>
-          <span>&nbsp;·&nbsp;{{ article.paper.stat.clicks }}&nbsp;点击量</span>
-        </div>
+                <div class="citation-count">
+                    <span>{{ article.paper.stat.cites }}&nbsp;被引用</span>
+                    <span>&nbsp;·&nbsp;{{ article.paper.stat.downloads }}&nbsp;被收藏</span>
+                    <span>&nbsp;·&nbsp;{{ article.paper.stat.favorites }}&nbsp;下载量</span>
+                    <span>&nbsp;·&nbsp;{{ article.paper.stat.clicks }}&nbsp;点击量</span>
+                </div>
 
-        <el-divider v-if="index < articles.length - 1"></el-divider>
-      </div>
+                <el-divider v-if="index < articles.length - 1"></el-divider>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
   
 <script>
+import { initMathJax, renderByMathjax } from 'mathjax-vue';
 export default {
   name: "Articles",
   props: ["articles"],
@@ -61,7 +62,15 @@ export default {
       }
       return value;
     },
-  }
+    filters: {
+        ellipsis: function (value) {
+            if (!value) return "";
+            if (value.length > 300) {
+                return value.slice(0, 300) + "...";
+            }
+            return value;
+        },
+    }
 }
 </script>
   

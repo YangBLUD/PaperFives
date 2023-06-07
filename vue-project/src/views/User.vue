@@ -943,11 +943,9 @@ export default {
 }
 
 .graph {
-    margin: 0 auto;
     margin-top: 20px;
     display: flex;
-    justify-content: space-between;
-
+    justify-content: center;
     .el-card {
         width: 48%;
     }
