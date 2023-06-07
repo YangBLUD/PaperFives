@@ -109,6 +109,11 @@ export default {
             })
                 .then(res => {
                     // console.log(res);
+                    var data = res.data;
+                    if (data.meta.status != 0) {
+                        this.$message.error("没有该权限!");
+                        this.$router.push({ path: '/main' });
+                    }
                     this.userProfile = res.data.data;
                 }).catch(err => {
                     console.log(err);
