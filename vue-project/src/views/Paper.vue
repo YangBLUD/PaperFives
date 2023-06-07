@@ -235,7 +235,7 @@ export default {
         },
 
         async onClickCite() {
-            cite = await this.requestCite(this.pid);
+            var cite = await this.requestCite(this.paper.pid);
             if (cite == null) {
                 this.$message.error("Network error! Please try again later.");
             } else {

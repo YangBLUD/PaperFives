@@ -134,9 +134,10 @@ export default {
     },
     mounted() {
         // adjust size
+        
         window.addEventListener("resize", this.resizeEventHandler);
         this.resizeEventHandler();
-
+ 
         this.onFirstLoad();
 
         initMathJax({}, this.onMathJaxReady);
@@ -175,6 +176,7 @@ export default {
                 // console.log(maths[i]);
                 renderByMathjax(maths[i]).catch(err => {
                     console.log(err)
+                    window.location.reload();
                 });
             }
         },
