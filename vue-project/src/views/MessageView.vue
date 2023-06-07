@@ -134,9 +134,10 @@ export default {
     },
     mounted() {
         // adjust size
+        
         window.addEventListener("resize", this.resizeEventHandler);
         this.resizeEventHandler();
-
+ 
         this.onFirstLoad();
 
         initMathJax({}, this.onMathJaxReady);
@@ -175,6 +176,7 @@ export default {
                 // console.log(maths[i]);
                 renderByMathjax(maths[i]).catch(err => {
                     console.log(err)
+                    window.location.reload();
                 });
             }
         },
@@ -466,6 +468,10 @@ export default {
 
         // Contact click
         async onClickContactItem(id, subtle = false) {
+            if (id == this.choice.activeId) {
+                return;
+            }
+
             // backup input
             if ((this.choice.activeId != id) && (this.choice.activeId != -1)) {
                 this.inputHistory[this.choice.activeId] = this.$refs.input.value;
@@ -532,7 +538,9 @@ export default {
             var contact = this.contacts.contactList[id];
             await this.requestChatHistory(id, contact.uid);
             var history = this.getContactHistory(id);
-            this.updateContactTime(id, history[history.length - 1].timestamp);
+            if (history.length > 0) {
+                this.updateContactTime(id, history[history.length - 1].timestamp);
+            }
         },
 
         // Delete contact
@@ -594,9 +602,9 @@ export default {
             }
 
             const id = this.choice.activeId;
-            // if (id >= 0) {
-            //     await this.refreshChatHistory(id);
-            // }
+            if (id >= 0) {
+                await this.refreshChatHistory(id);
+            }
             await this.refreshContacts();
 
             if (!subtle) {

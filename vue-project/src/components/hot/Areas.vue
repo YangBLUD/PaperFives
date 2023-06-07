@@ -24,23 +24,18 @@ export default {
             default: []
         }
     },
-    data(){
-        return{
-            
-        }
-    }, 
-    beforeDestroy() {
-    if (this.myData.__ob__) {
-      console.warn('myData is not properly destroyed');
-    }
+    data() {
+        return {}
     },
-    methods:{
+    methods: {
         async gosearch(name) {
-            this.$router.push({path:"/searchres",query:{
-                "field": "areas",
-                "key": name,
-                type:1
-            }})
+            this.$router.push({
+                path: "/searchres", query: {
+                    "field": "areas",
+                    "key": name,
+                    type: 1
+                }
+            })
         },
     }
 }

@@ -65,6 +65,7 @@
       </div>
       <el-descriptions :border="true" :column="1" style="font-size: 20px; padding-top: 10px;">
         <el-descriptions-item label="账户" :span="8">{{ form.email }}</el-descriptions-item>
+        <el-descriptions-item label="密码" :span="8"> ****** </el-descriptions-item>
       </el-descriptions>
       <div class="personal-info-footer">
         <el-button @click="showEditPassword()" type="primary">修改密码</el-button>

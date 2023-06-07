@@ -59,7 +59,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       paperInfo: {},
       attr: {},
@@ -82,7 +82,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       this.getPaperInfo()
       this.getAuthorsData()
@@ -102,7 +102,7 @@ export default {
         }
       });
     },
-    reviewPaper () {
+    reviewPaper() {
       this.$http.post('/api/v1/papers/review/review', {
         pid: this.paperInfo.pid,
         status: this.ruleForm.pass,
@@ -119,13 +119,13 @@ export default {
       this.$refs[formName].resetFields();
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      },
-    async getUserProfile (email) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => { });
+    },
+    async getUserProfile(email) {
       await this.$http.get('api/v1/users/profile/user', {
         params: {
           mode: 'all',
@@ -139,9 +139,9 @@ export default {
           console.log(err)
         })
     },
-    async getPaperInfo () {
+    async getPaperInfo() {
       await this.$http.post('/api/v1/papers/review/get', {
-          pid: '1631'
+        pid: this.$route.query.pid
       })
         .then(res => {
           console.log('paper info')
@@ -156,7 +156,7 @@ export default {
           console.log(err)
         })
     },
-    gotoProfile (id) {
+    gotoProfile(id) {
       this.$router.push({
         path: '/visitor',
         query: {
@@ -164,7 +164,7 @@ export default {
         }
       })
     },
-    downloadPaper () {
+    downloadPaper() {
       const url = '/api/v1/papers/download/file'
       const params = { pid: this.paperInfo.pid }
       // 使用axios进行请求
@@ -183,7 +183,7 @@ export default {
           console.log(error)
         })
     },
-    async getCiteInfo () {
+    async getCiteInfo() {
       await this.$http.get('/api/v1/papers/action/cite', {
         params: {
           pid: this.paperInfo.pid
@@ -201,69 +201,86 @@ export default {
 }
 </script>
 <style lang="css">
-  .paper-box {
-    width: 90%;
-    padding: 40px;
-    margin-top: 2%;
-    margin-left: 2%;
-    background-color: #fffffff0;
-  }
-  .info {
-    /* 靠左 */
-    float: left;
-    display: inline-block;
-  }
-  .button {
-    /* 靠右 */
-    float: right;
-    display: inline-block;
-  }
-  .icon {
-    font-size: 20px;
-    margin-right: 20px;
-  }
-  .author-list-container {
-    width: 100%; /* 设置固定宽度和高度 */
-    height: 50px;
-    overflow-x: auto;/* 设置溢出内容显示和滚动条样式 */
-    white-space: nowrap; /* 防止文本换行 */
-  }
-  /*作者列表*/
-  .author-list-horizontal {
-    display: inline-block;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .author-list-horizontal li {
-    display: inline-block;
-    margin-right: 30px; /* 可以根据需要调整项目之间的间距 */
-  }
-  .author-list {
-    display: flex;
-    align-items: center;
-  }
-  .author-info {
-    display: flex;
-    align-items: center;
-  }
-  .author-avatar {
-    margin-right: 10px;
-  }
-  .date {
-    text-align: left;
-    font-size: 20px;
-  }
-  .abstract {
-    text-align: left;
-    font-size: 16px;
-  }
-  .reference {
-    text-align: left;
-    font-size: 16px;
-  }
-  .review {
-    text-align: left;
-    font-size: 16px;
-  }
+.paper-box {
+  width: 90%;
+  padding: 40px;
+  margin-top: 2%;
+  margin-left: 2%;
+  background-color: #fffffff0;
+}
+
+.info {
+  /* 靠左 */
+  float: left;
+  display: inline-block;
+}
+
+.button {
+  /* 靠右 */
+  float: right;
+  display: inline-block;
+}
+
+.icon {
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+.author-list-container {
+  width: 100%;
+  /* 设置固定宽度和高度 */
+  height: 50px;
+  overflow-x: auto;
+  /* 设置溢出内容显示和滚动条样式 */
+  white-space: nowrap;
+  /* 防止文本换行 */
+}
+
+/*作者列表*/
+.author-list-horizontal {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.author-list-horizontal li {
+  display: inline-block;
+  margin-right: 30px;
+  /* 可以根据需要调整项目之间的间距 */
+}
+
+.author-list {
+  display: flex;
+  align-items: center;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.author-avatar {
+  margin-right: 10px;
+}
+
+.date {
+  text-align: left;
+  font-size: 20px;
+}
+
+.abstract {
+  text-align: left;
+  font-size: 16px;
+}
+
+.reference {
+  text-align: left;
+  font-size: 16px;
+}
+
+.review {
+  text-align: left;
+  font-size: 16px;
+}
 </style>
