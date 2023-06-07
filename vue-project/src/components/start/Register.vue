@@ -103,12 +103,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login_con {
-    background-color: #98c1ea;
-    opacity: 0.5;
-    z-index: -1;
-    height: 100%;
-}
 
 .regist_box {
     width: 450px;
