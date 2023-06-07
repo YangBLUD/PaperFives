@@ -234,31 +234,39 @@ export default {
       },
       date: "",
       areas: [],
-      state: "",
-      timeout: null,
-    };
+      state: '',
+      timeout: null
+    }
   },
   methods: {
     async submitAllInfo() {
-      await this.$http
-        .post("/api/v1/papers/upload/info", {
-          pid: 0,
-          attr: {
-            title: this.titleForm.title,
-            keywords: this.keywords.domains.map((domain) => domain.keyword),
-            abstract: this.abstractForm.desc,
-            publish_date: this.formatDate(this.date),
-          },
-          authors: this.dynamicValidateForm.domains.map((domain, index) => ({
-            email: domain.email,
-            name: domain.name,
-            order: index,
-          })),
-          refs: this.refs.domains.map((domain) => ({
-            text: domain.ref,
-            link: "",
-          })),
-          areas: this.areas.map((area) => area.id),
+      await this.$http.post('/api/v1/papers/upload/info', {
+        pid: 0,
+        attr: {
+          title: this.titleForm.title,
+          keywords: this.keywords.domains.map(domain => domain.keyword),
+          abstract: this.abstractForm.desc,
+          publish_date: this.formatDate(this.date)
+        },
+        authors: this.dynamicValidateForm.domains.map((domain, index) => ({
+          email: domain.email,
+          name: domain.name,
+          order: index
+        })),
+        refs: this.refs.domains.map(domain => ({
+          text: domain.ref,
+          link: ''
+        })),
+        areas: this.areas.map(area => area.id)
+      })
+        .then(res => {
+          console.log('submit all information success!')
+          console.log(this.formatDate(this.date))
+          console.log(res)
+          this.pid = res.data.data.pid
+          console.log(this.pid)
+        }).catch(err => {
+          console.log(err)
         })
         .then((res) => {
           console.log("submit all information success!");
@@ -326,26 +334,22 @@ export default {
       };
       input.click();
     },
-    sendRequest(pid, file) {
+    async sendRequest(pid, file) {
+      console.log(pid)
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      formData.append('pid', pid)
+
       // 发送文件上传请求
-      fetch("/api/v1/papers/upload/file", {
-        method: "POST",
-        pid: pid,
-        file: file,
-      })
-        .then((response) => {
-          // 处理响应
-          if (response.ok) {
-            console.log("文件上传成功");
-            // 可以根据需要进行后续处理
-            console.log(response);
-          } else {
-            console.error("文件上传失败");
+      const res= await this.$http.post(
+        '/api/v1/papers/upload/file', formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
-        })
-        .catch((error) => {
-          console.error("文件上传失败:", error);
-        });
+        }
+      )
+      console.log(res)
     },
     querySearchAsync(queryString, cb) {
       var areas = this.areas;

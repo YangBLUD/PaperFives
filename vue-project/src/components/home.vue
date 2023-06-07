@@ -17,7 +17,6 @@
     <el-container>
       <!-- 主页侧边栏 -->
       <el-aside width="64px">
-        <div class="toggle-button" >|||</div>
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened
           :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
@@ -115,8 +114,8 @@ export default {
   },
   methods: {
     logout() {
-      window.sessionStorage.clear();
       this.isLogin=false
+      window.sessionStorage.clear();
     },
     login(){
       this.$router.push({
