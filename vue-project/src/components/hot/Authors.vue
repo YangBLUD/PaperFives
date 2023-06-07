@@ -12,9 +12,7 @@
                     <div>
                         <span class="author-email">{{ item.user.email }}</span>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -24,7 +22,6 @@ export default {
     name: 'Authors',
     props: {
         authors: {
-            type: Array,
             default: []
         }
     },
@@ -46,7 +43,9 @@ export default {
         display: flex;
         flex-wrap: wrap;
     }
-
+    .author-name{
+        font-size: 18px;
+    }
     .author-main {
         display: flex;
         align-items: center;
@@ -59,15 +58,13 @@ export default {
             text-align: center;
             display: flex;
             align-items: center;
-
             img {
-                width: 42px;
-                height: 42px;
+                width: 62px;
+                height: 62px;
                 border: 1px solid;
                 vertical-align: middle;
             }
         }
-
         .user-info {
             flex: 1;
         }

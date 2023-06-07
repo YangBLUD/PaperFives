@@ -9,17 +9,16 @@
             <el-form :model="loginForm" :rules="loginRules" label-width="80px" class="login_form" ref="loginRef">
                 <!-- 用户名 -->
                 <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="loginForm.email" prefix-icon="iconfont icon-user"></el-input>
+                    <el-input v-model="loginForm.email" prefix-icon="iconfont icon-user" clearable></el-input>
                 </el-form-item>
                 <!-- 密码 -->
                 <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
+                    <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" clearable></el-input>
                 </el-form-item>
                 <!-- 按钮区域 -->
                 <el-form-item class="btns">
                     <el-button type="primary" @click="login">登 录</el-button>
                     <el-button type="warning" @click="register">注 册</el-button>
-                    <el-button type="info" @click="resetLoginForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -56,10 +55,6 @@ export default {
         }
     },
     methods: {
-        //重置
-        resetLoginForm() {
-            this.$refs.loginRef.resetFields();
-        },
         // 登录
         login() {
             this.$refs.loginRef.validate(async (valid)=>{
