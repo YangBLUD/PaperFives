@@ -1,8 +1,5 @@
 <template>
   <div class="advSearch">
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
-        </el-breadcrumb>
     <div id="option-div" v-bind:class="{changeH:!isShow}">
         <el-row >
           <el-col class="retrieval">

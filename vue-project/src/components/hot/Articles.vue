@@ -4,7 +4,7 @@
       <div v-for="(article, index) in articles" v-bind:key="index">
         <div style="text-align: left">
           <div style="margin-bottom: 10px">
-            <span class="paper-title" @click="gotoPaper(article.paper.pid)">{{ article.paper.attr.title }}</span>
+            <span class="paper-title mathjax" @click="gotoPaper(article.paper.pid)" >{{ article.paper.attr.title }}</span>
           </div>
           <span v-for="(j, index) in article.paper.authors" :key="j" class="author-name">
             <span @click="gotoSch(j.uid)">{{ j.name }}</span>

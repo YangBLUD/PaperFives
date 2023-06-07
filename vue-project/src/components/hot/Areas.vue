@@ -21,12 +21,18 @@ export default {
     name: 'Areas',
     props: {
         Areas: {
-            type: Array,
             default: []
         }
     },
     data(){
-        
+        return{
+            
+        }
+    }, 
+    beforeDestroy() {
+    if (this.myData.__ob__) {
+      console.warn('myData is not properly destroyed');
+    }
     },
     methods:{
         async gosearch(name) {
