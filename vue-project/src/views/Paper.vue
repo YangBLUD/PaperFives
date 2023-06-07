@@ -106,6 +106,8 @@
             <div class="abstract-wrapper">
                 <p class="mathjax">{{ formula }}</p>
             </div>
+
+            <!--  -->
         </div>
     </div>
 </template>

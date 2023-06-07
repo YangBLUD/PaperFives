@@ -54,7 +54,7 @@
                             <div class="avatar"><img :src="getAvatarUrl(message.avatar)" /></div>
                             <div class="payload">
                                 <div class="text">
-                                    <p>{{ message.text }}</p>
+                                    <p class="mathjax">{{ message.text }}</p>
                                     <div class="mark" v-show="message.invalid"><i
                                             class="fa-solid fa-circle-exclamation"></i></div>
                                 </div>
@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import { initMathJax, renderByMathjax } from 'mathjax-vue';
+
 export default {
     data() {
         return {
@@ -105,6 +107,7 @@ export default {
                 contactsCnt: 0,
                 contactList: []
             },
+            myAvatar: '',
             inputHistory: [],
             // Barnacle Vue2 array & objects! >:(
             activeHistory: [],
@@ -136,6 +139,8 @@ export default {
 
         this.onFirstLoad();
 
+        initMathJax({}, this.onMathJaxReady);
+
         // this.addUpdateHook();
 
         // this.$refs.scroller.addEventListener("scroll", this.scrollEventHandler); 
@@ -161,6 +166,25 @@ export default {
 
         scrollEventHandler() {
             console.log("Scrolling");
+        },
+
+        onMathJaxReady() {
+            // const math = this.$refs.math
+            const maths = document.getElementsByClassName('mathjax');
+            for (var i = 0; i < maths.length; i++) {
+                // console.log(maths[i]);
+                renderByMathjax(maths[i]).catch(err => {
+                    console.log(err)
+                });
+            }
+        },
+
+        async renderMathJax() {
+            try {
+                setTimeout(this.onMathJaxReady, 500);
+            } catch (err) {
+                console.log(err);
+            }
         },
 
         // Auto-Grow-TextArea script.
@@ -280,7 +304,10 @@ export default {
                     // alert(data.meta.msg);
                     this.$message.error(data.meta.msg);
                     this.$router.push({ path: '/login' });
+                    return;
                 }
+
+                // get contacts
                 this.tempContacts.contactsCnt = data.data.total;
                 this.tempContacts.contactList = []
                 for (var i = 0; i < data.data.total; i++) {
@@ -289,6 +316,9 @@ export default {
                     contact['history'] = [];
                     this.tempContacts.contactList.push(contact);
                 }
+
+                // get self avatar
+                this.myAvatar = data.data.avatar;
 
                 // prepare user history
                 for (var i = 0; i < this.tempContacts.contactList.length; i++) {
@@ -359,7 +389,7 @@ export default {
                     message = {
                         text: text,
                         income: false,
-                        avatar: this.contacts.contactList[id].avatar,
+                        avatar: this.myAvatar,
                         timestamp: '',
                         invalid: true
                     }
@@ -370,7 +400,7 @@ export default {
                     message = {
                         text: content.msg.text,
                         income: false,
-                        avatar: this.contacts.contactList[id].avatar,
+                        avatar: this.myAvatar,
                         timestamp: content.timestamp,
                         invalid: false
                     }
@@ -474,6 +504,8 @@ export default {
             // reset input textarea
             this.$refs.input.value = this.inputHistory[this.choice.activeId];
             this.autoGrowTextArea();
+
+            this.renderMathJax();
 
             // stop loading...
             if (!subtle) {
