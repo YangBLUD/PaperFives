@@ -1,4 +1,5 @@
 .author-name {
+    font-family: 'OpenSans', sans-serif;
     color: #2d94d4;
     cursor: pointer;
     font-size: 14px;
@@ -9,12 +10,12 @@
     font-weight: 700;
     line-height: 1.4;
     cursor: pointer;
-    font-family: Tahoma,fantasy;
+    font-family: 'ZillaSlab-Bold', sans-serif;
 }
 
 .abstract {
     cursor: pointer;
-    font-family: Georgia, Lato-Regular,Lato,sans-serif;
+    font-family: 'OpenSans', sans-serif;
     font-size: 15px;
     line-height: 22px;
     color: #262625;
@@ -22,7 +23,7 @@
 
 .citation-count {
     margin-top: 10px;
-    font-family: "Trebuchet MS", fantasy;
+    font-family: 'OpenSans', sans-serif;
     font-size: 13px;
     font-weight: 400;
     color: #73716f;
@@ -30,11 +31,13 @@
 }
 
 .publish-year {
+    font-family: 'OpenSans', sans-serif;
     color:grey;
     font-size: 14px;
 }
 
 .author-affiliation {
+    font-family: 'OpenSans', sans-serif;
     color:grey;
     font-size: 14px;
 }
