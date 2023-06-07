@@ -6,8 +6,10 @@
             <!-- 个人名片 -->
             <el-card class="box-card">
                 <div class="user">
-                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" @click="uploadAvatar"
-                        class="avatar-box" />
+                    <div class="avatar-change">
+                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar"/>
+                        <span class="camera-icon"  @click="uploadAvatar"><i class="fas fa-camera"></i></span>
+                    </div>
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
                         <p class="access"><i class="fa-regular fa-pen-to-square" @click="editMotto"></i>&nbsp;{{ motto }}
@@ -245,11 +247,11 @@
                                                     style="max-width: 770px;">{{
                                                         item.attr.title
                                                     }}</span>
-                                                <i v-if="item.isFavorite" class="fa-solid fa-star"
-                                                    style="font-size:35px; color: #FFBE00; margin-left: auto; padding-right: 8px;"
+                                                <i v-if="item.isFavorite" class="fa-solid fa-bookmark"
+                                                    style="font-size:35px; color: #FFBE00; margin-left: auto; padding-right: 15px;"
                                                     @click="removeFavorite(item.pid, index)"></i>
-                                                <i v-else class="fa-regular fa-star"
-                                                    style="font-size:35px; color: #FFBE00; margin-left: auto;padding-right: 8px;"
+                                                <i v-else class="fa-regular fa-bookmark"
+                                                    style="font-size:35px; color: #FFBE00; margin-left: auto;padding-right: 15px;"
                                                     @click="favoritePaper(item.pid, index)"></i>
                                                 <el-button icon="el-icon-view" size="mini" circle
                                                     @click="$set(showCardFav, index, true)"></el-button>
@@ -727,6 +729,7 @@ export default {
   
 <style lang="less" scoped>
 @import "../../src/assets/css/article.css";
+@import "../assets/css/fontawesome.min.css";
 
 .border {
     max-width: max-content;
@@ -747,7 +750,6 @@ export default {
 
 .fa-pen-to-square:hover {
     cursor: pointer;
-    cursor: pointer;
     position: relative;
     transform: scale(1.2);
     /* 鼠标移动到头像上时，放大 20% */
@@ -755,6 +757,33 @@ export default {
     /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
+.avatar-change .avatar{
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    opacity: 0.8;
+}
+
+.avatar-change:hover .avatar{
+    transform: scale(1.2);
+    opacity: 0.2;
+}
+
+.avatar-change .camera-icon {
+    position: absolute;
+    top: 14%;
+    left: 9.5%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    opacity: 1;
+    display: none;
+}
+
+.avatar-change:hover .camera-icon {
+    cursor: pointer;
+    display: block;
+    opacity: 1;
+}
 
 .avatar-box {
     position: relative;
@@ -766,7 +795,7 @@ export default {
     /* 设置默认的透明度 */
 }
 
-.fa-star:hover {
+.fa-bookmark:hover {
     cursor: pointer;
 }
 
