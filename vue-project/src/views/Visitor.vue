@@ -37,8 +37,6 @@
                     <div>
                         <i v-if="this.isFollowed" class="fa-solid fa-star" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
-                        <!-- <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
-                            @click="followUser()"></i> -->
                         <i v-else class="fa-regular fa-star fa-beat" style="font-size:70px; color: #FFBE00;"
                             @click="followUser()"></i>
                     </div>
@@ -79,7 +77,7 @@
                                 </span>
                             </div>
                             <div>
-                                <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                <span class="abstract">{{ item.attr.abstract }}</span>
                             </div>
                             <div class="citation-count">
                                 <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -126,7 +124,7 @@
                                             </span>
                                         </div>
                                         <div style="text-align:left;margin-top:10px;">
-                                            <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                            <span class="abstract">{{ item.attr.abstract }}</span>
                                         </div>
                                         <div class="citation-count">
                                             <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -143,7 +141,7 @@
                                     <div class="paper-content">
                                         <span class="paper_name_init" @click="gotoPaper(item.pid)">{{ item.attr.title
                                         }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        <i v-if="item.lead" class="fa-solid fa-medal fa-beat-fade"
+                                        <i v-if="item.lead" class="fa-solid fa-medal"
                                             style="color: #FFB90F; font-size: 30px;"></i>
                                         <el-button icon="el-icon-view" size="mini" circle
                                             @click="$set(showCard, index, true)"></el-button>
@@ -264,7 +262,7 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.paperList = res.data.data.papers;
                     this.paperNum = res.data.data.total;
                     this.truePaperList = this.paperList.filter(item => item.status === 5);
@@ -527,7 +525,7 @@ export default {
     }
 
     .institute {
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         font-size: 16px;
         margin-bottom: 10px;
         width: 500px;
@@ -536,7 +534,7 @@ export default {
 
     .motto {
         font-size: 16px;
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans', sans-serif;
         margin-bottom: 10px;
         width: 500px;
     }
@@ -590,7 +588,7 @@ export default {
 }
 
 .paper_name {
-    font-family: 'EB Garamond', serif;
+    font-family: 'OpenSans-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 35px;
@@ -598,7 +596,7 @@ export default {
     /* 设置初始状态字体为普通体 */
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-    line-height: 2;
+    line-height: 1.5;
     overflow: hidden;
     /* 超出部分隐藏 */
     text-overflow: ellipsis;
@@ -641,7 +639,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'EB Garamond', serif;
+                    font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;

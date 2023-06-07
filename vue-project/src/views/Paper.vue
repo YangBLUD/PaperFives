@@ -1,234 +1,192 @@
-<template lang="html">
-  <div class="paper-box">
-    <!-- 题目栏 -->
-    <h1 class="title" style="font-size:50px; font-weight: 700; text-align: center;">{{ this.paperInfo.attr.title }}</h1>
-    <el-divider></el-divider>
-    <!-- 作者栏 -->
-    <div class="author-list-container">
-      <div class="author-list" style="font-size: 20px;">
-        <span>作者列表：</span>
-        <ul class="author-list-horizontal">
-          <li v-for="(author, index) in authors" :key="index">
-            <span @click="gotoProfile(author.uid)" class="author-info">
-              <span class="author-avatar">
-                <el-avatar :src="'http://81.70.161.76:5000' + author.avatar" size="medium" :border="false"></el-avatar>
-              </span>
-              <span>
-                {{ author.name }}
-              </span>
-            </span>
-          </li>
-        </ul>
-      </div>
+<template>
+    <div class="paper-border">
+        <div class="paper-wrapper">
+            <!-- title -->
+            <div class="section"><span>title</span></div>
+            <div class="title">
+                <h1 class="mathjax">{{ title }}</h1>
+            </div>
+
+            <hr class="split" />
+
+            <!-- authors -->
+            <div class="section"><span>authors</span></div>
+            <div class="author-list horizontal-list">
+                <div class="author-item horizontal-list-item">
+                    <div class="avatar">
+                        <img src="http://81.70.161.76:5000/media/avatar/default.png" />
+                    </div>
+                    <div class="name clickable">Tony long long Skywalker</div>
+                    <i class="fa-regular fa-envelope"></i>
+                    <div class="tooltip">
+                        <span class="email">12312312185@qq.com</span>
+                        <div class="box"></div>
+                    </div>
+                </div>
+                <div v-for="i in 5" class="author-item horizontal-list-item">
+                    <div class="avatar">
+                        <img src="http://81.70.161.76:5000/media/avatar/default.png" />
+                    </div>
+                    <div class="name">Tony Skywalker</div>
+                    <i class="fa-regular fa-envelope"></i>
+                    <div class="tooltip">
+                        <span class="email">185@qq.com</span>
+                        <div class="box"></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="split" />
+
+            <!-- keywords -->
+            <div class="section"><span>keywords</span></div>
+            <div class="keywords-list horizontal-list">
+                <div class="keyword"><i class="fa-solid fa-circle"></i><span>computer vision</span></div>
+                <div class="keyword"><i class="fa-solid fa-circle"></i><span>unreal engine</span></div>
+                <div class="keyword"><i class="fa-solid fa-circle"></i><span>software engineering</span></div>
+            </div>
+
+            <hr class="split" />
+
+            <!-- time -->
+            <div class="section"><span>update history</span></div>
+            <div class="time-wrapper horizontal-list">
+                <div class="time horizontal-list-item">
+                    <span class="time-type">Publish Time: </span>
+                    <span>2023-01-01</span>
+                </div>
+                <div class="time horizontal-list-item">
+                    <span class="time-type">Last Update: </span>
+                    <span>2023-01-02</span>
+                </div>
+            </div>
+
+            <hr class="split" />
+
+            <!-- shards -->
+            <div class="shard-wrapper">
+                <div class="stat-wrapper horizontal-list">
+                    <div class="stat" title="Clicks">
+                        <i class="fa-regular fa-eye"></i>
+                        <span>99+</span>
+                    </div>
+                    <div class="stat" title="Cites">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <span>99+</span>
+                    </div>
+                    <div class="stat" title="Downloads">
+                        <i class="fa-regular fa-circle-down"></i>
+                        <span>99+</span>
+                    </div>
+                </div>
+                <div class="action-wrapper horizontal-list">
+                    <div class="action" title="Cite">
+                        <i class="fa-solid fa-quote-right"></i>
+                    </div>
+                    <div class="action" title="Share">
+                        <i class="fa-regular fa-share-from-square"></i>
+                    </div>
+                    <div class="action" title="Add to bookmark">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </div>
+                    <div class="action" title="Remove from bookmark">
+                        <i class="fa-solid fa-bookmark"></i>
+                    </div>
+                    <div class="action" title="Downloads">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="split" />
+
+            <!-- abstract -->
+            <div class="section"><span>abstract</span></div>
+            <div class="abstract-wrapper">
+                <p class="mathjax">{{ formula }}</p>
+            </div>
+
+            <hr class="split">
+            <!-- reference -->
+            <div class="section"><span>reference</span></div>
+            <div class="ref-list">
+                <div class="ref">
+                    <span class="bullet">[1]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[2]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[3]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+            </div>
+        </div>
     </div>
-    <el-divider></el-divider>
-    <!-- 发布时间等信息 -->
-    <h2 class="date">发表日期：{{ this.paperInfo.attr.publish_date }}</h2>
-    <el-divider></el-divider>
-    <!-- 操作按钮 -->
-    <div class="other">
-      <div class="info">
-        <i class="el-icon-view icon">{{ this.stat.clicks }}</i>
-      </div>
-      <div class="button">
-        <i class="el-icon-paperclip icon" @click="getCiteInfo()"></i>
-        <el-dialog
-          title="论文引用"
-          :visible.sync="dialogVisible"
-          width="30%"
-          :before-close="handleClose">
-          <span>{{ this.citeInfo.cite }}</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-          </span>
-        </el-dialog>
-        <i class="el-icon-download icon" @click="downloadPaper()"></i>
-      </div>
-      <br>
-    </div>
-    <el-divider></el-divider>
-    <!-- 论文摘要 -->
-    <div class="abstract">
-      <h2>论文摘要</h2>
-      <div>
-        {{ this.paperInfo.attr.abstract }}
-      </div>
-    </div>
-    <el-divider></el-divider>
-    <!-- 论文引用 -->
-    <div class="reference">
-      <h2>论文引用</h2>
-      {{ this.refs }}
-    </div>
-    <el-divider></el-divider>
-  </div>
 </template>
+
 <script>
+import { initMathJax, renderByMathjax } from 'mathjax-vue';
+
 export default {
-  data () {
-    return {
-      paperInfo: {},
-      attr: {},
-      authors: [],
-      refs: [],
-      areas: '',
-      stat: {},
-      citeInfo: {},
-      dialogVisible: false
+    data() {
+        return {
+            title: String.raw`This $ x_a $  Is  The Title of a Paper This Is The Title of a Paper`,
+            formula: String.raw`We $ x_a $ study the basic question of characterizing which boundary homeomorphisms of the unit sphere can be
+                    extended to a Sobolev homeomorphism of the interior in 3D space. While the planar variants of this
+                    problem are well-understood, completely new and direct ways of constructing an extension are required in
+                    3D. We prove, among other things, that a Sobolev homeomorphism $\varphi \colon \mathbb R^2 \to \mathbb
+                    R^2$ in $W_{loc}^{1,p} (\mathbb R^2 , \mathbb R^2)$ for some $p\in [1,\infty )$ admits a homeomorphic
+                    extension $h \colon \mathbb R^3 \to \mathbb R^3$ in $W_{loc}^{1,q} (\mathbb R^3, \mathbb R^3) $ for
+                    $1\le q < \frac{3}{2}p$. Such an extension result is nearly sharp, as the bound $q=\frac{3}{2}p$ cannot
+                        be improved due to the H\"older embedding. The case $q=3$ gains an additional interest as it also
+                        provides an $L^1$-variant of the celebrated Beurling-Ahlfors extension result.`
+        }
+    },
+    beforeCreate() {
+    },
+    created() {
+    },
+    beforeMount() {
+    },
+    mounted() {
+        initMathJax({}, this.onMathJaxReady);
+    },
+    beforeUnmount() {
+    },
+    unmounted() {
+    },
+    destroyed() {
+    },
+    computed: {
+    },
+    watch: {
+    },
+    methods: {
+        onMathJaxReady() {
+            // const math = this.$refs.math
+            const maths = document.getElementsByClassName('mathjax');
+            for (var i = 0; i < maths.length; i++) {
+                // console.log(maths[i]);
+                renderByMathjax(maths[i]).catch(err => {
+                    console.log(err)
+                });
+            }
+        }
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.getPaperInfo()
-      this.getAuthorsData()
-    })
-  },
-  methods: {
-    handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      },
-    async getUserProfile (email) {
-      await this.$http.get('api/v1/users/profile/user', {
-        params: {
-          mode: 'all',
-          email: email
-        }
-      })
-        .then(res => {
-          console.log('user profile')
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    async getPaperInfo () {
-      await this.$http.get('/api/v1/papers/download/info', {
-        params: {
-          pid: this.$route.query.pid,
-          click: '0'
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.paperInfo = res.data.data
-          this.attr = res.data.data.attr
-          this.authors = res.data.data.authors
-          this.refs = res.data.data.refs
-          this.areas = res.data.data.areas
-          this.stat = res.data.data.stat
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    gotoProfile (id) {
-      this.$router.push({
-        path: '/visitor',
-        query: {
-          uid: id
-        }
-      })
-    },
-    downloadPaper () {
-      const url = '/api/v1/papers/download/file'
-      const params = { pid: this.paperInfo.pid }
-      // 使用axios进行请求
-      this.$http.get(url, { params, responseType: 'blob' }) // 设置responseType为blob用来接收pdf文件
-        .then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement('a')
-          link.href = url
-          link.setAttribute('download', this.paperInfo.attr.title + '.pdf')// 'paper.pdf' 可以替换为你想要的文件名
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        })
-        .catch(error => {
-          // Handle error here
-          console.log(error)
-        })
-    },
-    async getCiteInfo () {
-      await this.$http.get('/api/v1/papers/action/cite', {
-        params: {
-          pid: this.paperInfo.pid
-        }
-      })
-        .then(res => {
-          console.log(res)
-          this.dialogVisible = true
-          this.citeInfo = res.data.data
-        }).catch(err => {
-          console.log(err)
-        })
-    }
-  }
 }
 </script>
-<style lang="css">
-  .paper-box {
-    width: 90%;
-    padding: 40px;
-    margin-top: 2%;
-    margin-left: 2%;
-    background-color: #fffffff0;
-  }
-  .info {
-    /* 靠左 */
-    float: left;
-    display: inline-block;
-  }
-  .button {
-    /* 靠右 */
-    float: right;
-    display: inline-block;
-  }
-  .icon {
-    font-size: 20px;
-    margin-right: 20px;
-  }
-  .author-list-container {
-    width: 100%; /* 设置固定宽度和高度 */
-    height: 50px;
-    overflow-x: auto;/* 设置溢出内容显示和滚动条样式 */
-    white-space: nowrap; /* 防止文本换行 */
-  }
-  /*作者列表*/
-  .author-list-horizontal {
-    display: inline-block;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .author-list-horizontal li {
-    display: inline-block;
-    margin-right: 30px; /* 可以根据需要调整项目之间的间距 */
-  }
-  .author-list {
-    display: flex;
-    align-items: center;
-  }
-  .author-info {
-    display: flex;
-    align-items: center;
-  }
-  .author-avatar {
-    margin-right: 10px;
-  }
-  .date {
-    text-align: left;
-    font-size: 20px;
-  }
-  .abstract {
-    text-align: left;
-    font-size: 16px;
-  }
-  .reference {
-    text-align: left;
-    font-size: 16px;
-  }
-</style>
+
+<style>@import '../assets/css/paper.css';
+@import '../assets/css/animate.css';</style>

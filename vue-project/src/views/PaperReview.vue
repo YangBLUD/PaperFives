@@ -1,4 +1,4 @@
-<template lang="html">
+<template lang>
   <div class="paper-box">
     <!-- 题目栏 -->
     <h1 class="title" style="font-size:50px; font-weight: 700; text-align: center;">{{ this.paperInfo.attr.title }}</h1>
