@@ -35,7 +35,7 @@ export default {
   name: "Articles",
   props: ["articles"],
   methods: {
-    gotoSch(author_id) {
+    async gotoSch(author_id) {
       this.$router.push({
         path: '/visitor',
         query: {
@@ -43,7 +43,7 @@ export default {
         }
       })
     },
-    gotoPaper(paper_id) {
+    async gotoPaper(paper_id) {
       this.$router.push({
                 path: '/paper',
                 query: {

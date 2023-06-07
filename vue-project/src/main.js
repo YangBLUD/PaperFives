@@ -31,14 +31,6 @@ Vue.use(VueHead);
 // LaTeX dependency
 import MathJax, { initMathJax, renderByMathjax } from 'mathjax-vue'
 
-// function onMathJaxReady() {
-//     const maths = document.getElementsByClassName('mathjax');
-//     for (var i = 0; i < maths.length; i++) {
-//         console.log(maths[i]);
-//         renderByMathjax(maths[i]);
-//     }
-// }
-// initMathJax({}, onMathJaxReady);
 
 Vue.use(MathJax);
 Vue.use(store)

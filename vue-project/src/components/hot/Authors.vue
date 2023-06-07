@@ -29,7 +29,7 @@ export default {
         }
     },
     methods: {
-        gotoSch(author_id) {
+        async gotoSch(author_id) {
             this.$router.push({
                 path: '/visitor',
                 query: {
