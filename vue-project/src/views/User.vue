@@ -125,7 +125,7 @@
                                                     @click="$set(showCard, index, false)" size="mini"></el-button>
                                             </div>
                                             <div class="content">
-                                                <div class="authors">
+                                                <div>
                                                     <span v-for="(author, index) in item.authors" class="author-name">
                                                         <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
                                                         <span v-if="index < item.authors.length - 1"
@@ -214,7 +214,7 @@
                                                     @click="$set(showCardFav, index, false)" size="mini"></el-button>
                                             </div>
                                             <div class="content">
-                                                <div class="authors">
+                                                <div>
                                                     <span v-for="(author, index) in item.authors">
                                                         <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
                                                             class="author-name">{{
