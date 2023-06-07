@@ -181,7 +181,7 @@ export default {
 
         async renderMathJax() {
             try {
-                setTimeout(this.onMathJaxReady, 500);
+                setTimeout(this.onMathJaxReady, 100);
             } catch (err) {
                 console.log(err);
             }

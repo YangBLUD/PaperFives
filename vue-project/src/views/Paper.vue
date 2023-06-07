@@ -93,7 +93,7 @@
                         <i class="fa-solid fa-bookmark"></i>
                     </div>
                     <div class="action" title="Downloads">
-                        <i class="fa-regular fa-circle-down"></i>
+                        <i class="fa-solid fa-file-arrow-down"></i>
                     </div>
                 </div>
 
@@ -107,7 +107,31 @@
                 <p class="mathjax">{{ formula }}</p>
             </div>
 
-            <!--  -->
+            <hr class="split">
+            <!-- reference -->
+            <div class="section"><span>reference</span></div>
+            <div class="ref-list">
+                <div class="ref">
+                    <span class="bullet">[1]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[2]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+                <hr />
+                <div class="ref">
+                    <span class="bullet">[3]</span>
+                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
+                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
+                        (2008), 9.</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -154,15 +178,15 @@ export default {
             // const math = this.$refs.math
             const maths = document.getElementsByClassName('mathjax');
             for (var i = 0; i < maths.length; i++) {
-                console.log(maths[i]);
-                renderByMathjax(maths[i]);
+                // console.log(maths[i]);
+                renderByMathjax(maths[i]).catch(err => {
+                    console.log(err)
+                });
             }
         }
     }
 }
 </script>
 
-<style>
-@import '../assets/css/paper.css';
-@import '../assets/css/animate.css';
-</style>
+<style>@import '../assets/css/paper.css';
+@import '../assets/css/animate.css';</style>
