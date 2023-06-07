@@ -215,8 +215,11 @@
                                             </div>
                                             <div class="content">
                                                 <div class="authors">
-                                                    <span v-for="(author, index) in item.authors" class="author-name">
-                                                        <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                                    <span v-for="(author, index) in item.authors">
+                                                        <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
+                                                            class="author-name">{{
+                                                                author.name }}</span>
+                                                        <span v-else class="author-not-exist">{{ author.name }}</span>
                                                         <span v-if="index < item.authors.length - 1"
                                                             style="color: #A0A0A0; font-size: 14px"> / </span>
                                                     </span>
@@ -370,13 +373,15 @@ export default {
                 }
             })
                 .then(res => {
-                    // console.log(res);
+                    console.log(res);
                     var data = res.data;
                     if (data.meta.status != 0) {
                         this.$message.error(data.meta.msg);
                         this.$router.push({ path: '/login' });
                     }
-
+                    if (data.data.role == 3) {
+                        this.$router.push({ path: '/admin' });
+                    }
                     this.userProfile = res.data.data;
                     this.motto = this.userProfile.attr.motto;
                 }).catch(err => {
