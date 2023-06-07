@@ -66,7 +66,7 @@ export default {
                     console.log(err)
                     window.location.reload();
                 });
-            }}, 1000);
+            }}, 200);
         }
     },
     filters: {

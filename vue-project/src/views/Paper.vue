@@ -112,6 +112,7 @@
             </div>
 
             <hr class="split">
+
             <!-- reference -->
             <div class="section"><span>reference</span></div>
             <div class="ref-list">
@@ -122,6 +123,24 @@
                 <div v-for="(ref, index) in paper.refs" class="ref">
                     <span class="bullet">[{{ index + 1 }}]</span>
                     <span class="text">{{ ref.text }}</span>
+                </div>
+            </div>
+
+            <hr class="split">
+
+            <!-- related -->
+            <div class="section"><span>related papers</span></div>
+            <div class="related-list">
+                <div v-if="relatedPapers.length == 0">
+                    hel
+                </div>
+                <div v-for="(paper, index) in relatedPapers" class="related-item" @click="onClickRelatedPaper(paper.pid)">
+                    <div class="title"><h3>{{ paper.attr.title }}</h3></div>
+                    <div class="keywords">
+                        <div v-for="(keyword, index) in relatedPapers[index].attr.keywords" class="keyword">
+                            <p>{{ keyword }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,7 +177,8 @@ export default {
                 refs: []
             },
             isFavorite: false,
-            relatedPapers: []
+            relatedPapers: [],
+            key: 0
         }
     },
     beforeCreate() {
@@ -185,14 +205,16 @@ export default {
         //  Initialization
         ////////////////////////////////////////////////////////////////////////
         onMathJaxReady() {
-            // const math = this.$refs.math
-            const maths = document.getElementsByClassName('mathjax');
-            for (var i = 0; i < maths.length; i++) {
-                // console.log(maths[i]);
-                renderByMathjax(maths[i]).catch(err => {
-                    console.log(err)
-                });
-            }
+            setTimeout(function () {
+                const maths = document.getElementsByClassName('mathjax');
+                for (var i = 0; i < maths.length; i++) {
+                    console.log(maths[i]);
+                    renderByMathjax(maths[i]).catch(err => {
+                        console.log(err)
+                        window.location.reload();
+                    });
+                }
+            }, 200);
         },
 
         async onLoad() {
@@ -240,7 +262,7 @@ export default {
             if (uid == 0) {
                 return;
             }
-            this.$router.push({
+            this.$router.go({
                 path: '/visitor',
                 query: {
                     uid: uid
@@ -274,6 +296,16 @@ export default {
         async onClickDownload() {
             await this.requestDownloadPaper(this.paper.pid);
         },
+
+        async onClickRelatedPaper(pid) {
+            await this.$router.push({
+                path: '/paper',
+                query: {
+                    pid: pid
+                }
+            });
+        },
+
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -406,7 +438,7 @@ export default {
 
         async requestRelatedPapers() {
             var data = {
-                ps: 10,
+                ps: 11,
                 p: 1,
                 advanced: true,
                 cond: []
@@ -431,10 +463,10 @@ export default {
                     }
                     this.relatedPapers.push(papers[i]);
                 }
+                this.key++;
             }).catch(err => {
                 console.log(err);
             });
-            console.log(this.relatedPapers);
         }
     }
 }
@@ -442,5 +474,4 @@ export default {
 
 <style>
 @import '../assets/css/paper.css';
-@import '../assets/css/animate.css';
-</style>
+@import '../assets/css/animate.css';</style>
