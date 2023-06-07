@@ -5,6 +5,12 @@
     font-size: 14px;
 }
 
+.author-not-exist {
+    font-family: 'OpenSans', sans-serif;
+    color: black;
+    font-size: 14px;
+}
+
 .paper-title {
     font-size: 20px;
     font-weight: 700;
@@ -14,7 +20,6 @@
 }
 
 .abstract {
-    cursor: pointer;
     font-family: 'OpenSans', sans-serif;
     font-size: 15px;
     line-height: 22px;
