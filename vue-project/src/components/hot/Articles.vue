@@ -34,38 +34,14 @@
 <script>
 import { initMathJax, renderByMathjax } from 'mathjax-vue';
 export default {
-    name: "Articles",
-    props: ["articles"],
-    mounted() {
-        initMathJax({}, this.onMathJaxReady);
-    },
-    methods: {
-        gotoSch(author_id) {
-            this.$router.push({
-                path: '/visitor',
-                query: {
-                    uid: author_id,
-                }
-            })
-        },
-        gotoPaper(paper_id) {
-            this.$router.push({
-                path: '/paper',
-                query: {
-                    pid: paper_id,
-                }
-            })
-        },
-        onMathJaxReady() {
-            setTimeout(function() {
-            const maths = document.getElementsByClassName('mathjax');
-            for (var i = 0; i < maths.length; i++) {
-                console.log(maths[i]);
-                renderByMathjax(maths[i]).catch(err => {
-                    console.log(err)
-                    window.location.reload();
-                });
-            }}, 200);
+  name: "Articles",
+  props: ["articles"],
+  methods: {
+    async gotoSch(author_id) {
+      this.$router.push({
+        path: '/visitor',
+        query: {
+          uid: author_id,
         }
       })
     },
