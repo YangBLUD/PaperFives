@@ -376,7 +376,7 @@ export default {
                     console.log(res);
                     var data = res.data;
                     if (data.meta.status != 0) {
-                        this.$message.error(data.meta.msg);
+                        this.$message.error("请先登录!");
                         this.$router.push({ path: '/login' });
                     }
                     if (data.data.role == 3) {
