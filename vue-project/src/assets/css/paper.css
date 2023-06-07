@@ -18,8 +18,9 @@
 .paper-wrapper .section span {
     text-transform: uppercase;
     font-family: 'OpenSans', sans-serif;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .paper-wrapper .section::first-letter {
@@ -34,9 +35,15 @@
 
 .paper-wrapper .title h1 {
     font-family: 'ZillaSlab-Bold', sans-serif;
-    font-size: 3.5em;
-    line-height: 1.2em;
+    font-size: 2.2em;
+    line-height: 1.1em;
 }
+
+/* 
+.paper-wrapper .title h1::first-letter {
+    font-size: 2.3em;
+}
+*/
 
 /* spilt line */
 .paper-wrapper .split {
@@ -67,6 +74,7 @@
     display: flex;
     flex-direction: row;
     cursor: default;
+    margin-top: 5px;
 }
 
 .paper-wrapper .author-list .author-item .avatar {
@@ -270,7 +278,4 @@
     margin-right: 0.5em;
 }
 
-.ref-list .ref .text {
-
-    
-}
+.ref-list .ref .text {}
