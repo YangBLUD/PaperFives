@@ -25,16 +25,20 @@ export default {
             default: []
         }
     },
-    data(){
-        
+    data() {
+        return {
+
+        }
     },
-    methods:{
+    methods: {
         async gosearch(name) {
-            this.$router.push({path:"/searchres",query:{
-                "field": "areas",
-                "key": name,
-                type:1
-            }})
+            this.$router.push({
+                path: "/searchres", query: {
+                    "field": "areas",
+                    "key": name,
+                    type: 1
+                }
+            })
         },
     }
 }
