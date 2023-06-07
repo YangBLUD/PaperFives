@@ -21,6 +21,7 @@ export default {
     name: 'Areas',
     props: {
         Areas: {
+            type: Array,
             default: []
         }
     },
