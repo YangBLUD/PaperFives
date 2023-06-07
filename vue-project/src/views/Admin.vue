@@ -110,7 +110,7 @@ export default {
                 .then(res => {
                     // console.log(res);
                     var data = res.data;
-                    if (data.meta.status != 0) {
+                    if (data.data.role != 3) {
                         this.$message.error("没有该权限!");
                         this.$router.push({ path: '/main' });
                     }
