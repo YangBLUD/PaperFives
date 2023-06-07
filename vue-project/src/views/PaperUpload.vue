@@ -114,14 +114,15 @@
             :fetch-suggestions="querySearchAsync"
             placeholder="请输入论文领域"
             @select="handleSelect"
+            @input="loadAreas"
           ></el-autocomplete>
         </div>
         <el-divider></el-divider>
         <!-- 提交论文信息 -->
-        <button @click="submitAllInfo()">提交论文信息</button>
+        <el-button type="primary" @click="submitAllInfo()">提交论文信息</el-button>
         <el-divider></el-divider>
         <!-- 提交论文 -->
-        <button @click="uploadFile(1)">上传论文</button>
+        <el-button type="primary" @click="uploadFile(1)">上传论文</el-button>
       </div>
     </div>
   </div>
@@ -293,24 +294,43 @@ export default {
     handleSelect(item) {
       console.log(item);
     },
-    loadAllAreas() {
-      this.$http.get('/api/v1/papers/areas/get')
-        .then(res => {
-          console.log('load all areas success!')
-          console.log(res)
-          // 将请求到的areas数组进行转换
-          this.areas = res.data.data.areas.map(area => ({
-            value: area.name,
-            id: area.id
-          }));
-          console.log(this.areas)
-        }).catch(err => {
-          console.log(err)
-        })
+    // loadAreas() {
+    //   this.$http.get('/api/v1/papers/areas/get')
+    //     .then(res => {
+    //       console.log('load all areas success!')
+    //       console.log(res)
+    //       // 将请求到的areas数组进行转换
+    //       this.areas = res.data.data.areas.map(area => ({
+    //         value: area.name,
+    //         id: area.id
+    //       }));
+    //       console.log(this.areas)
+    //     }).catch(err => {
+    //       console.log(err)
+    //     })
+    // }
+    async loadAreas() {
+      console.log('load all areas');
+    try {
+      const response = await this.$http.post('/api/v1/papers/search/areas', { key: this.state });
+      const data = response.data;
+      if (data && data.areas && Array.isArray(data.areas)) {
+        this.areas = data.areas.map(area => ({
+          value: area.name,
+          id: area.id
+        }));
+        console.log('load all areas success!');
+        console.log(this.areas);
+      } else {
+          console.error('Invalid response format');
+        }
+      } catch (error) {
+        console.error('Failed to load areas:', error);
+      }
     }
   },
   mounted() {
-    this.loadAllAreas();
+    this.loadAreas();
   }
 }
 </script>
