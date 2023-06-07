@@ -24,11 +24,12 @@
             </el-dialog>
 
             <!-- 关注列表 -->
-            <el-row :gutter="20" class="follow-list">
-                <el-tabs v-model="activeName" @tab-click="handleClick" style="height: auto; width: auto;">
-                    <el-tab-pane name="followee">
-                        <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
-                        <!-- 有关注 -->
+
+            <el-tabs v-model="activeName" style="height: auto; width: auto; margin-top: 20px;">
+                <el-tab-pane name="followee">
+                    <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
+                    <!-- 有关注 -->
+                    <el-row :gutter="20" class="follow-list">
                         <template v-if="followeeList.length > 0">
                             <div v-for="(item, index) in      newList     " :key="index">
                                 <el-card shadow="hover" class="follow-item">
@@ -67,11 +68,13 @@
                                 <el-empty description="无关注用户" :image-size="250"></el-empty>
                             </el-col>
                         </template>
-                    </el-tab-pane>
+                    </el-row>
+                </el-tab-pane>
 
-                    <!-- 粉丝列表 -->
-                    <el-tab-pane name="follower">
-                        <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
+                <!-- 粉丝列表 -->
+                <el-tab-pane name="follower">
+                    <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
+                    <el-row :gutter="20" class="follow-list">
                         <!-- 有粉丝 -->
                         <template v-if="followerList.length > 0">
                             <div v-for="(     item, index     ) in      followerList     " :key="index">
@@ -97,14 +100,14 @@
                                 <el-empty description="无粉丝" :image-size="250"></el-empty>
                             </el-col>
                         </template>
-                    </el-tab-pane>
-                </el-tabs>
-            </el-row>
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
         </el-col>
 
         <!-- 右栏 -->
         <el-col :span="16" class="right-col">
-            <el-tabs v-model="activePaper" @tab-click="handleClick" style="height: auto; width: auto;">
+            <el-tabs v-model="activePaper" style="height: auto; width: auto;">
                 <el-tab-pane name="myPaper">
                     <span slot="label" style="font-size:20px; font-weight: 700;">我的</span>
                     <!-- 论文列表 -->
@@ -135,7 +138,7 @@
                                                     </span>
                                                 </div>
                                                 <div style="text-align:left;margin-top:10px;">
-                                                    <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                                    <span class="abstract">{{ item.attr.abstract }}</span>
                                                 </div>
                                                 <div class="citation-count">
                                                     <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -224,7 +227,7 @@
                                                     </span>
                                                 </div>
                                                 <div style="text-align:left;margin-top:10px;">
-                                                    <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                                    <span class="abstract">{{ item.attr.abstract }}</span>
                                                 </div>
                                                 <div class="citation-count">
                                                     <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -239,9 +242,10 @@
                                         </div>
                                         <div v-show="!showCardFav[index]">
                                             <div class="paper-content">
-                                                <span class="paper_name_init" @click="gotoPaper(item.pid)" style="max-width: 770px;">{{
-                                                    item.attr.title
-                                                }}</span>
+                                                <span class="paper_name_init" @click="gotoPaper(item.pid)"
+                                                    style="max-width: 770px;">{{
+                                                        item.attr.title
+                                                    }}</span>
                                                 <i v-if="item.isFavorite" class="fa-solid fa-star"
                                                     style="font-size:35px; color: #FFBE00; margin-left: auto; padding-right: 8px;"
                                                     @click="removeFavorite(item.pid, index)"></i>
@@ -832,11 +836,12 @@ export default {
 }
 
 .follow-list {
-    margin-top: 20px;
+    margin-left: unset;
+    margin-right: unset;
     padding-left: 10px;
     height: 550px;
+    width: auto;
     overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .follow-item {
@@ -845,7 +850,7 @@ export default {
     align-items: center;
     // padding: 20px;
     width: 100%;
-    margin-bottom: 10px;
+    line-height: 1;
 
     .follow-info {
         display: flex;

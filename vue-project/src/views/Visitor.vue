@@ -77,7 +77,7 @@
                                 </span>
                             </div>
                             <div>
-                                <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                <span class="abstract">{{ item.attr.abstract }}</span>
                             </div>
                             <div class="citation-count">
                                 <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -124,7 +124,7 @@
                                             </span>
                                         </div>
                                         <div style="text-align:left;margin-top:10px;">
-                                            <span class="abstract">{{ item.attr.abstract | ellipsis }}</span>
+                                            <span class="abstract">{{ item.attr.abstract }}</span>
                                         </div>
                                         <div class="citation-count">
                                             <span>{{ item.stat.cites }}&nbsp;被引用</span>
@@ -262,7 +262,7 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.paperList = res.data.data.papers;
                     this.paperNum = res.data.data.total;
                     this.truePaperList = this.paperList.filter(item => item.status === 5);

@@ -208,7 +208,7 @@ export default {
         }
       })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;
           this.form.institute = res.data.data.attr.institute;
@@ -245,7 +245,7 @@ export default {
           this.passwdNew = '';
           this.passwdNewCheck = '';
           var data = res.data;
-          console.log(data);
+          // console.log(data);
           if (data.meta.status != 0) {
             this.$message.error('旧密码输入错误！');
           }
