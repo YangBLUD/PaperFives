@@ -98,7 +98,7 @@
                         <template v-else>
                             <el-col :span="24">
                                 <br><br>
-                                <el-empty description="无粉丝" :image-size="250"></el-empty>
+                                <el-empty description="无粉丝用户" :image-size="250"></el-empty>
                             </el-col>
                         </template>
                     </el-row>
@@ -266,7 +266,7 @@
                         </template>
                         <template v-else>
                             <el-col :span="24">
-                                <el-empty description="无论文数据" :image-size="250"></el-empty>
+                                <el-empty description="无收藏论文" :image-size="250"></el-empty>
                             </el-col>
                         </template>
                     </el-row>

@@ -2,8 +2,9 @@
     <div>
         <div class="topRecommend" >
             <div>
-                <h1>为您搜索到以下 {{search_list.length}} 条内容</h1>
+                <h1 style="font-size: 35px;">为您搜索到以下 {{search_list.length}} 条内容</h1>
             </div>
+            <br>
             <Articles :articles="search_list"></Articles>
         </div>
     </div>

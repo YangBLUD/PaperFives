@@ -225,4 +225,8 @@ export default {
   margin-top: 20px;
   margin-left: 696px;
 }
+
+::v-deep .el-date-editor .el-range-separator {
+  width: 30px;
+}
 </style>
