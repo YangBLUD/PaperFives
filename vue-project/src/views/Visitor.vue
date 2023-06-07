@@ -519,7 +519,7 @@ export default {
     }
 
     .name {
-        font-family: Montserrat-Black;
+        font-family: 'OpenSans-Bold', sans-serif;
         font-size: 35px;
         margin-bottom: 10px;
         width: 500px;
@@ -595,7 +595,7 @@ export default {
 }
 
 .paper_name_hot {
-    font-family: 'OpenSans-Bold', sans-serif;
+    font-family: 'ZillaSlab-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 35px;
@@ -617,7 +617,7 @@ export default {
 }
 
 .paper_name {
-    font-family: 'OpenSans-Bold', sans-serif;
+    font-family: 'ZillaSlab-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 25px;
@@ -643,7 +643,7 @@ export default {
 }
 
 .paper-list {
-    height: 500px;
+    min-height: 600px;
     width: auto;
     overflow-y: auto;
     text-align: left !important;
@@ -668,7 +668,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'OpenSans-Bold', sans-serif;
+                    font-family: 'ZillaSlab-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
