@@ -129,25 +129,27 @@
             <hr class="split">
 
             <!-- review -->
-            <div class="review">
-                <div class="section"><span>审核意见</span></div>
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="是否通过" prop="pass">
-                        <div>
-                            <el-radio-group v-model="radio">
-                                <el-radio-button label="通过"></el-radio-button>
-                                <el-radio-button label="不通过"></el-radio-button>
-                            </el-radio-group>
-                        </div>
-                    </el-form-item>
-                    <el-form-item label="指导意见" prop="desc">
-                        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                        <el-button @click="resetForm('ruleForm')">重置</el-button>
-                    </el-form-item>
-                </el-form>
+            <div class="section"><span>review</span></div>
+
+            <div class="review-wrapper">
+                <div class="comment-wrapper">
+                    <!-- <div class="comment-title">Comment</div> -->
+                    <div class="comment-text">
+                        <textarea ref="input" placeholder="Give a brief comment on this paper..."></textarea>
+                    </div>
+                </div>
+                <div class="button-wrapper">
+                    <div class="status-wrapper">
+                        <div class="status icon-wrapper" :class="{ pass: pass.isPassed }" @click="onSelectPass()"><i
+                                class="fa-solid fa-check" :class="{ 'fa-bounce': pass.onPassed }"></i></div>
+                        <div class="status icon-wrapper" :class="{ reject: reject.isRejected }" @click="onSelectReject()"><i
+                                class="fa-solid fa-xmark" :class="{ 'fa-bounce': reject.onRejected }"></i></div>
+                    </div>
+                    <div class="submit-wrapper">
+                        <div class="submit icon-wrapper" @click="onClickSubmit()"><i class="fa-solid fa-circle-arrow-right"
+                                :class="{ 'fa-bounce': onSubmit }"></i></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -155,6 +157,7 @@
 
 <script>
 import { initMathJax, renderByMathjax } from 'mathjax-vue';
+import download from 'downloadjs';
 
 export default {
     data() {
@@ -185,19 +188,15 @@ export default {
             isFavorite: false,
             relatedPapers: [],
             key: 0,
-            ruleForm: {
-                pass: false,
-                desc: ''
+            pass: {
+                isPassed: false,
+                onPassed: false
             },
-            rules: {
-                pass: [
-                    { required: true, message: '是否通过', trigger: 'change' }
-                ],
-                desc: [
-                    { required: true, message: '请填写指导意见', trigger: 'blur' }
-                ]
+            reject: {
+                isRejected: false,
+                onRejected: false
             },
-            radio: null,
+            onSubmit: false
         }
     },
     beforeCreate() {
@@ -256,22 +255,15 @@ export default {
             return 'http://81.70.161.76:5000' + url;
         },
 
-
-        ////////////////////////////////////////////////////////////////////////
-        //  Auxiliary functions
-        ////////////////////////////////////////////////////////////////////////
-
-
-        ////////////////////////////////////////////////////////////////////////
-        //  Auxiliary functions
-        ////////////////////////////////////////////////////////////////////////
-
-
         ////////////////////////////////////////////////////////////////////////
         //  Auxiliary functions
         ////////////////////////////////////////////////////////////////////////
         copyTextToClipboard(text) {
             navigator.clipboard.writeText(text);
+        },
+
+        goBack() {
+            this.$router.back();
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -281,7 +273,7 @@ export default {
             if (uid == 0) {
                 return;
             }
-            this.$router.go({
+            this.$router.push({
                 path: '/visitor',
                 query: {
                     uid: uid
@@ -317,15 +309,74 @@ export default {
         },
 
         async onClickRelatedPaper(pid) {
+            console.log(pid);
             await this.$router.push({
                 path: '/paper',
                 query: {
                     pid: pid
                 }
             });
+            window.location.reload();
         },
 
+        async onSelectPass() {
+            this.unSelectReject();
+            if (this.pass.isPassed) {
+                return;
+            }
+            this.pass.isPassed = true;
+            this.pass.onPassed = true;
+            setTimeout(function (obj) {
+                obj.pass.onPassed = false;
+            }, 1000, this);
+        },
+        unSelectPass() {
+            this.pass.isPassed = false;
+            this.pass.onPassed = false;
+        },
 
+        async onSelectReject() {
+            this.unSelectPass();
+            if (this.reject.isRejected) {
+                return;
+            }
+            this.reject.isRejected = true;
+            this.reject.onRejected = true;
+            setTimeout(function (obj) {
+                obj.reject.onRejected = false;
+            }, 1000, this);
+        },
+        unSelectReject() {
+            this.reject.isRejected = false;
+            this.reject.onRejected = false;
+        },
+
+        async onClickSubmit() {
+            if (this.onSubmit) {
+                return;
+            }
+
+            this.onSubmit = true;
+            setTimeout(function (obj) {
+                obj.onSubmit = false;
+            }, 1000, this);
+
+            if (!this.pass.isPassed && !this.reject.isRejected) {
+                this.$message.info("请选择是否通过哦");
+                return;
+            }
+
+            const input = this.$refs.input;
+            const text = input.value.trim();
+            if (text == '') {
+                this.$message.info("请记得留下你的评语哦");
+                return;
+            }
+
+            await this.requestReviewPaper(this.paper.pid, this.pass.isPassed, text);
+
+            input.value = '';
+        },
 
         ////////////////////////////////////////////////////////////////////////
         //  Requests
@@ -361,7 +412,7 @@ export default {
                 var data = res.data;
                 console.log(data);
                 if (data.meta.status != 0) {
-                    this.$message.error(data.meta.msg);
+                    // this.$message.error(data.meta.msg);
                     this.isFavorite = false;
                 } else {
                     this.isFavorite = data.data.value;
@@ -406,6 +457,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = true;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -426,6 +478,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = false;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -437,19 +490,13 @@ export default {
             await this.$http.get('api/v1/papers/download/file', {
                 params: {
                     pid: pid
-                }
+                },
+                responseType: 'blob'
             }).then(res => {
-                console.log(res);
-
-                // var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                // var fUrl = document.createElement('a');
-                // var filename = this.paper.attr.title + '.pdf';
-
-                // fUrl.href = fileUrl;
-                // fUrl.setAttribute('download', filename)
-
-                // document.body.appendChild(fURL);
-                // fURL.click();
+                const filename = this.paper.attr.title + '.pdf';
+                const contentType = res.headers['content-type'];
+                download(res.data, filename, contentType);
+                // window.open(URL.createObjectURL(res.data), '_blank');
             }).catch(err => {
                 console.log(err);
             });
@@ -486,6 +533,25 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+
+        async requestReviewPaper(pid, status, comment) {
+            await this.$http.post('api/v1/papers/review/review', {
+                pid: pid,
+                status: status,
+                comment: comment
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    return;
+                }
+                this.$message.success("论文审核完成");
+                setTimeout(this.goBack, 2000);
+            }).catch(err => {
+                console.log(err);
+            });
         }
     }
 }
@@ -494,4 +560,5 @@ export default {
 <style>
 @import '../assets/css/paper.css';
 @import '../assets/css/animate.css';
+@import '../assets/css/review.css';
 </style>
