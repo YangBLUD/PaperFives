@@ -155,6 +155,7 @@
 
 <script>
 import { initMathJax, renderByMathjax } from 'mathjax-vue';
+import download from 'downloadjs';
 
 export default {
     data() {
@@ -268,7 +269,7 @@ export default {
             if (uid == 0) {
                 return;
             }
-            this.$router.go({
+            this.$router.push({
                 path: '/visitor',
                 query: {
                     uid: uid
@@ -394,6 +395,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = true;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -414,6 +416,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = false;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -425,17 +428,13 @@ export default {
             await this.$http.get('api/v1/papers/download/file', {
                 params: {
                     pid: pid
-                }
+                },
+                responseType: 'blob'
             }).then(res => {
-                var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                var fUrl = document.createElement('a');
-                var filename = this.paper.attr.title + '.pdf';
-
-                fUrl.href = fileUrl;
-                fUrl.setAttribute('download', filename)
-
-                document.body.appendChild(fURL);
-                fURL.click();
+                const filename = this.paper.attr.title + '.pdf';
+                const contentType = res.headers['content-type'];
+                download(res.data, filename, contentType);
+                // window.open(URL.createObjectURL(res.data), '_blank');
             }).catch(err => {
                 console.log(err);
             });
