@@ -729,7 +729,6 @@ export default {
   
 <style lang="less" scoped>
 @import "../../src/assets/css/article.css";
-@import "../assets/css/fontawesome.min.css";
 
 .border {
     max-width: max-content;
