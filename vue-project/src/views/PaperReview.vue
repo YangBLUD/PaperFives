@@ -282,5 +282,4 @@ export default {
 .review {
   text-align: left;
   font-size: 16px;
-}
-</style>
+}</style>

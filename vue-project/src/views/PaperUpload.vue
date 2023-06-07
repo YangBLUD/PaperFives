@@ -3,8 +3,8 @@
     <div class="paper-upload-box">
       <div class="input-box">
         <!-- 论文题目栏 -->
-        <div class="title-box content-box">
-          <div class="label">论文题目：</div>
+        <div class="label">论文题目：</div>
+        <div class="content-box">
           <div class="title-input">
             <el-form :model="titleForm" :rules="rules" ref="titleForm" label-width="100px">
               <el-form-item label="题目：" prop="title">
@@ -15,8 +15,8 @@
         </div>
         <el-divider></el-divider>
         <!-- 论文作者栏 -->
-        <div class="author-box content-box">
-          <div class="label">论文作者：</div>
+        <div class="label">论文作者：</div>
+        <div class="content-box">
           <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
             <el-form-item v-for="(domain, index) in dynamicValidateForm.domains" :label="'作者' + (index + 1)"
               :key="domain.key" :prop="'domains.' + index + '.email'" :rules="{
@@ -28,18 +28,20 @@
                 <el-button class="delet-button" @click.prevent="removeDomain(domain)">删除</el-button>
               </div>
             </el-form-item>
-            <el-form-item>
-              <el-button @click="addDomain">增添作者</el-button>
-            </el-form-item>
+            <el-button class="add-button" @click="addDomain">增添作者</el-button>
           </el-form>
         </div>
         <el-divider></el-divider>
         <!-- 论文关键词栏 -->
-        <div class="keyword-box content-box">
-          <div class="label">论文关键词：</div>
+        <div  class="label">论文关键词：</div>
+        <div class="content-box">
           <el-form :model="keywords" ref="keywords" label-width="100px">
-            <el-form-item v-for="(domain, index) in keywords.domains" :label="'关键词' + index" :key="domain.key"
-              :prop="'domains.' + index + '.keyword'" :rules="{
+            <el-form-item
+              v-for="(domain, index) in keywords.domains"
+              :label="'关键词' + (index + 1)"
+              :key="domain.key"
+              :prop="'domains.' + index + '.keyword'"
+              :rules="{
                 required: true, message: '关键词内容不能为空', trigger: 'blur'
               }">
               <div class="addable-form">
@@ -47,15 +49,13 @@
                 <el-button @click.prevent="removeKeyword(domain)">删除</el-button>
               </div>
             </el-form-item>
-            <el-form-item>
-              <el-button @click="addKeyword">新增关键词</el-button>
-            </el-form-item>
+            <el-button class="add-button" @click="addKeyword">新增关键词</el-button>
           </el-form>
         </div>
         <el-divider></el-divider>
         <!-- 论文摘要栏 -->
-        <div class="abstract-box content-box">
-          <div class="label">论文摘要：</div>
+        <div class="label">论文摘要：</div>
+        <div class="content-box">
           <div class="abstract-input">
             <el-form :model="abstractForm" :rules="rules" ref="abstractForm" label-width="100px">
               <el-form-item label="摘要：" prop="desc">
@@ -66,11 +66,15 @@
         </div>
         <el-divider></el-divider>
         <!-- 论文参考文献栏 -->
-        <div class="ref-box content-box">
-          <div class="label">参考文献：</div>
+        <div class="label">参考文献：</div>
+        <div class="content-box">
           <el-form :model="refs" ref="refs" label-width="100px">
-            <el-form-item v-for="(domain, index) in refs.domains" :label="'参考文献' + index" :key="domain.key"
-              :prop="'domains.' + index + '.ref'" :rules="{
+            <el-form-item
+              v-for="(domain, index) in refs.domains"
+              :label="'参考文献' + (index + 1)"
+              :key="domain.key"
+              :prop="'domains.' + index + '.ref'"
+              :rules="{
                 required: true, message: '参考文献内容不能为空', trigger: 'blur'
               }">
               <div class="addable-form">
@@ -78,33 +82,39 @@
                 <el-button @click.prevent="removeRef(domain)">删除</el-button>
               </div>
             </el-form-item>
-            <el-form-item>
-              <el-button @click="addRef">新增参考文献</el-button>
-            </el-form-item>
+            <el-button class="add-button" @click="addRef">新增参考文献</el-button>
           </el-form>
-          <el-divider></el-divider>
-          <!-- 论文发布时间栏 -->
-          <div class="label">论文发布时间：</div>
-          <div class="content-box">
-            <el-form :model="dateForm" :rules="rules" ref="dateForm" label-width="100px">
-              <el-date-picker v-model="date" type="date" placeholder="选择日期" format="yyyy-MM-dd">
-              </el-date-picker>
-            </el-form>
-          </div>
-          <el-divider></el-divider>
-          <!-- 论文领域栏 -->
-          <div class="label">论文领域：</div>
-          <div class="content-box">
-            <el-autocomplete v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入论文领域"
-              @select="handleSelect"></el-autocomplete>
-          </div>
-          <el-divider></el-divider>
-          <!-- 提交论文信息 -->
-          <button @click="submitAllInfo()">提交论文信息</button>
-          <el-divider></el-divider>
-          <!-- 提交论文 -->
-          <button @click="uploadFile(pid)">上传论文</button>
         </div>
+        <el-divider></el-divider>
+        <!-- 论文发布时间栏 -->
+        <div class="label">论文发布时间：</div>
+        <div class="content-box">
+          <el-form :model="dateForm" :rules="rules" ref="dateForm" label-width="100px">
+            <el-date-picker
+              v-model="date"
+              type="date"
+              placeholder="选择日期"
+              format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form>
+        </div>
+        <el-divider></el-divider>
+        <!-- 论文领域栏 -->
+        <div class="label">论文领域：</div>
+        <div class="content-box">
+          <el-autocomplete
+            v-model="state"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="请输入论文领域"
+            @select="handleSelect"
+          ></el-autocomplete>
+        </div>
+        <el-divider></el-divider>
+        <!-- 提交论文信息 -->
+        <button @click="submitAllInfo()">提交论文信息</button>
+        <el-divider></el-divider>
+        <!-- 提交论文 -->
+        <button @click="uploadFile(1)">上传论文</button>
       </div>
     </div>
   </div>
@@ -291,55 +301,52 @@ export default {
     }
   },
   mounted() {
-    // this.areas = this.loadAll();
     this.loadAllAreas();
   }
 }
 </script>
 <style lang="css">
-.title {
-  align-items: center;
-}
-
-.label {
-  text-align: center;
-}
-
-.paper-upload-box {
-  background-color: rgb(118, 193, 255);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.input-box {
-  background-color: rgb(149, 212, 179);
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.content-box {
-  background-color: rgb(238, 255, 113);
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* 将元素左对齐 */
-  justify-content: center;
-}
-
-.addable-form {
-  display: flex;
-  align-items: center;
-}
-
-.addable-form .el-form-item {
-  margin-right: 10px;
-}
+  .title {
+    align-items: center;
+  }
+  .label {
+    text-align: center;
+  }
+  .paper-upload-box {
+    /* background-color: rgb(118, 193, 255); */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .input-box {
+    /* background-color: rgb(149, 212, 179); */
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .content-box {
+    /* background-color: rgb(238, 255, 113); */
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    /* justify-content: center; */
+  }
+  .addable-form {
+    display: flex;
+    align-items: center;
+    width: 100%; /* 设置宽度为100% */
+  }
+  .addable-form .el-form-item {
+    margin-right: 10px;
+    flex: 1; /* 设置弹性比例为1，使其填满剩余空间 */
+  }
+  .add-button {
+    left: 5px;
+  }
 </style>
