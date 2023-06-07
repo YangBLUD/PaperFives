@@ -50,8 +50,8 @@ export default {
       menuList: [
         {
           id: 1,
-          authName: "系統主頁",
-          icon: "el-icon-s-open",
+          authName: "系统主页",
+          icon: "el-icon-house",
           path: "main",
         },
         {
@@ -63,19 +63,19 @@ export default {
         },
         {
           id: 3,
-          authName: "用戶主页",
-          icon: "el-icon-house",
+          authName: "用户主页",
+          icon: "el-icon-user",
           path: "user",
         },
         {
           id: 4,
-          authName: "用戶信息",
+          authName: "用户信息",
           icon: "el-icon-document",
           path: "info",
         },
         {
           id: 6,
-          authName: "用戶消息",
+          authName: "用户消息",
           icon: "el-icon-chat-dot-square",
           path: "message",
         }
