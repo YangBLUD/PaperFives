@@ -37,6 +37,15 @@
                 </div>
             </div>
 
+            <!-- areas -->
+            <div class="section"><span>areas</span></div>
+            <div class="area-list horizontal-list">
+                <div v-for="(area, index) in paper.areas" class="area">
+                    <i class="fa-solid fa-circle"></i>
+                    <span>{{ area.name }}</span>
+                </div>
+            </div>
+
             <hr class="split" />
 
             <!-- time -->
@@ -81,10 +90,10 @@
                     <div class="action" title="Share" @click="onClickShare()">
                         <i class="fa-regular fa-share-from-square"></i>
                     </div>
-                    <div class="action" title="Add to bookmark" @click="onClickFavorite()">
+                    <div v-show="!this.isFavorite" class="action" title="Add to bookmark" @click="onClickFavorite()">
                         <i class="fa-regular fa-bookmark"></i>
                     </div>
-                    <div class="action" title="Remove from bookmark" @click="onClickUnfavorite()">
+                    <div v-show="this.isFavorite" class="action" title="Remove from bookmark" @click="onClickUnfavorite()">
                         <i class="fa-solid fa-bookmark"></i>
                     </div>
                     <div class="action" title="Downloads" @click="onClickDownload()">
@@ -147,7 +156,9 @@ export default {
                 },
                 update: '',
                 refs: []
-            }
+            },
+            isFavorite: false,
+            relatedPapers: []
         }
     },
     beforeCreate() {
@@ -191,7 +202,10 @@ export default {
                 this.$router.back(-1);
             }
             await this.requestPaper(pid);
+            await this.requestFavoriteStatus(pid);
             initMathJax({}, this.onMathJaxReady);
+
+            this.requestRelatedPapers();
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -235,25 +249,30 @@ export default {
         },
 
         async onClickCite() {
-            var cite = await this.requestCite(this.paper.pid);
-            if (cite == null) {
-                this.$message.error("Network error! Please try again later.");
-            } else {
+            var cite = await this.requestCite(this.paper.pid)
+            if (cite != null) {
                 this.copyTextToClipboard(cite);
                 this.$message.success("Cite copied to clipboard!");
             }
+
         },
 
         async onClickShare() {
+            var link = window.location.href;
+            this.copyTextToClipboard(link);
+            this.$message.success("Share link copied to clipboard!");
         },
 
         async onClickFavorite() {
+            await this.requestFavoritePaper(this.paper.pid);
         },
 
         async onClickUnfavorite() {
+            await this.requestUnfavoritePaper(this.paper.pid);
         },
 
         async onClickDownload() {
+            await this.requestDownloadPaper(this.paper.pid);
         },
 
 
@@ -282,8 +301,8 @@ export default {
             });
         },
 
-        async requestCite(pid) {
-            await this.$http.get('api/v1/papers/action/cite', {
+        async requestFavoriteStatus(pid) {
+            await this.$http.get('api/v1/papers/action/isfavorite', {
                 params: {
                     pid: pid
                 }
@@ -292,13 +311,130 @@ export default {
                 console.log(data);
                 if (data.meta.status != 0) {
                     this.$message.error(data.meta.msg);
-                    return null;
+                    this.isFavorite = false;
+                } else {
+                    this.isFavorite = data.data.value;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        async requestCite(pid) {
+            var cite = await this.$http.get('api/v1/papers/action/cite', {
+                params: {
+                    pid: pid
+                }
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    return null
                 }
                 return data.data.cite;
             }).catch(err => {
                 console.log(err);
                 return null;
             });
+
+            return cite;
+        },
+
+        async requestFavoritePaper(pid) {
+            if (this.isFavorite) {
+                return;
+            }
+
+            await this.$http.post('/api/v1/papers/action/favorite', {
+                pid: this.paper.pid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.isFavorite = true;
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
+        },
+        async requestUnfavoritePaper(pid) {
+            if (!this.isFavorite) {
+                return;
+            }
+
+            await this.$http.post('/api/v1/papers/action/unfavorite', {
+                pid: this.paper.pid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.isFavorite = false;
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
+        },
+
+        async requestDownloadPaper(pid) {
+            await this.$http.get('api/v1/papers/download/file', {
+                params: {
+                    pid: pid
+                }
+            }).then(res => {
+                console.log(res);
+
+                // var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+                // var fUrl = document.createElement('a');
+                // var filename = this.paper.attr.title + '.pdf';
+
+                // fUrl.href = fileUrl;
+                // fUrl.setAttribute('download', filename)
+
+                // document.body.appendChild(fURL);
+                // fURL.click();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        async requestRelatedPapers() {
+            var data = {
+                ps: 10,
+                p: 1,
+                advanced: true,
+                cond: []
+            };
+            for (var i = 0; i < this.paper.attr.keywords.length; i++) {
+                var cond = {
+                    mode: "or",
+                    field: "keywords",
+                    key: this.paper.attr.keywords[i]
+                };
+                data.cond.push(cond);
+            }
+            await this.$http.post('api/v1/papers/search/query', data).then(res => {
+                var data = res.data;
+                if (data.meta.status != 0) {
+                    return;
+                }
+                var papers = data.data.papers;
+                for (var i = 0; i < papers.length; i++) {
+                    if (papers[i].pid == this.paper.pid) {
+                        continue;
+                    }
+                    this.relatedPapers.push(papers[i]);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            console.log(this.relatedPapers);
         }
     }
 }

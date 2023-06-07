@@ -176,6 +176,23 @@
     transform: scale(0.5);
 }
 
+/* area */
+.paper-wrapper .area-list .area {
+    margin: 0 10px;
+    display: flex;
+    line-height: normal;
+}
+
+.paper-wrapper .area-list .area span {
+    align-self: center;
+    text-transform: capitalize;
+}
+
+.paper-wrapper .area-list .area i {
+    align-self: center;
+    transform: scale(0.5);
+}
+
 
 /* time */
 /* .paper-wrapper .time-wrapper {} */
