@@ -1,13 +1,15 @@
 <template>
     <!-- 页面框架 -->
-    <el-row class="border">
+    <div class="border">
         <!-- 左栏 -->
         <el-col :span="8" class="left-col">
             <!-- 个人名片 -->
             <el-card class="box-card">
                 <div class="user">
-                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" @click="uploadAvatar"
-                        class="avatar-box" />
+                    <div class="avatar-change">
+                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar" />
+                        <span class="camera-icon" @click="uploadAvatar"><i class="fas fa-camera"></i></span>
+                    </div>
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
                         <p class="access"><i class="fa-regular fa-pen-to-square" @click="editMotto"></i>&nbsp;{{ motto }}
@@ -24,12 +26,11 @@
             </el-dialog>
 
             <!-- 关注列表 -->
-
             <el-tabs v-model="activeName" style="height: auto; width: auto; margin-top: 20px;">
                 <el-tab-pane name="followee">
                     <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
                     <!-- 有关注 -->
-                    <el-row :gutter="20" class="follow-list">
+                    <el-row :gutter="20" class="follow-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="followeeList.length > 0">
                             <div v-for="(item, index) in      newList     " :key="index">
                                 <el-card shadow="hover" class="follow-item">
@@ -74,7 +75,7 @@
                 <!-- 粉丝列表 -->
                 <el-tab-pane name="follower">
                     <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
-                    <el-row :gutter="20" class="follow-list">
+                    <el-row :gutter="20" class="follow-list" style="margin-left: 0; margin-right: 0;">
                         <!-- 有粉丝 -->
                         <template v-if="followerList.length > 0">
                             <div v-for="(     item, index     ) in      followerList     " :key="index">
@@ -111,7 +112,7 @@
                 <el-tab-pane name="myPaper">
                     <span slot="label" style="font-size:20px; font-weight: 700;">我的</span>
                     <!-- 论文列表 -->
-                    <el-row :gutter="20" class="paper-list">
+                    <el-row :gutter="20" class="paper-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="paperList.length > 0">
                             <el-col v-for="(item, index) in paperList" :key="index">
                                 <el-card shadow="hover" class="paper-item">
@@ -200,7 +201,7 @@
 
                 <el-tab-pane name="favoritePaper">
                     <span slot="label" style="font-size:20px; font-weight: 700;">收藏</span>
-                    <el-row :gutter="20" class="paper-list">
+                    <el-row :gutter="20" class="paper-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="newListPaper.length > 0">
                             <el-col v-for="(item, index) in newListPaper" :key="index">
                                 <el-card shadow="hover" class="paper-item">
@@ -246,11 +247,11 @@
                                                     style="max-width: 770px;">{{
                                                         item.attr.title
                                                     }}</span>
-                                                <i v-if="item.isFavorite" class="fa-solid fa-star"
-                                                    style="font-size:35px; color: #FFBE00; margin-left: auto; padding-right: 8px;"
+                                                <i v-if="item.isFavorite" class="fa-solid fa-bookmark"
+                                                    style="font-size:35px; color: #FFBE00; margin-left: auto; padding-right: 15px;"
                                                     @click="removeFavorite(item.pid, index)"></i>
-                                                <i v-else class="fa-regular fa-star"
-                                                    style="font-size:35px; color: #FFBE00; margin-left: auto;padding-right: 8px;"
+                                                <i v-else class="fa-regular fa-bookmark"
+                                                    style="font-size:35px; color: #FFBE00; margin-left: auto;padding-right: 15px;"
                                                     @click="favoritePaper(item.pid, index)"></i>
                                                 <el-button icon="el-icon-view" size="mini" circle
                                                     @click="$set(showCardFav, index, true)"></el-button>
@@ -271,7 +272,7 @@
 
             <!-- 我的统计 -->
             <div class="graph">
-                <el-carousel type="card" height="330px" style="width: 1000px;">
+                <el-carousel type="card" :autoplay="false" height="330px" style="width: 1000px;">
                     <el-carousel-item style="width: 500px;">
                         <el-card style="height: 350px; width: 500px;">
                             <div class="echart" id="mychart1" :style="myChartStyle1"></div>
@@ -285,7 +286,7 @@
                 </el-carousel>
             </div>
         </el-col>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -730,7 +731,10 @@ export default {
 @import "../../src/assets/css/article.css";
 
 .border {
-    max-width: max-content;
+    width: 100%;
+    min-width: 1000px;
+    max-width: 3000px;
+    margin: 0 auto;
 }
 
 .follow-item:hover {
@@ -748,7 +752,6 @@ export default {
 
 .fa-pen-to-square:hover {
     cursor: pointer;
-    cursor: pointer;
     position: relative;
     transform: scale(1.2);
     /* 鼠标移动到头像上时，放大 20% */
@@ -756,6 +759,40 @@ export default {
     /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
+.avatar-change {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-change .avatar {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    opacity: 0.8;
+}
+
+.avatar-change:hover .avatar {
+    transform: scale(1.2);
+    opacity: 0.2;
+}
+
+.avatar-change .camera-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    opacity: 1;
+    display: none;
+}
+
+.avatar-change:hover .camera-icon {
+    cursor: pointer;
+    display: block;
+    opacity: 1;
+}
 
 .avatar-box {
     position: relative;
@@ -767,7 +804,7 @@ export default {
     /* 设置默认的透明度 */
 }
 
-.fa-star:hover {
+.fa-bookmark:hover {
     cursor: pointer;
 }
 
@@ -836,12 +873,14 @@ export default {
 }
 
 .follow-list {
-    margin-left: unset;
-    margin-right: unset;
     padding-left: 10px;
-    height: 550px;
+    height: 535px;
     width: auto;
     overflow-y: auto;
+}
+
+.follow-list::-webkit-scrollbar {
+    display: none;
 }
 
 .follow-item {
@@ -886,6 +925,7 @@ export default {
 }
 
 .graph {
+    margin: 0 auto;
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -897,6 +937,7 @@ export default {
 
 .paper-list {
     height: 370px;
+    width: auto;
     overflow-y: auto;
     text-align: left !important;
 
@@ -953,7 +994,7 @@ export default {
                     font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
-                    font-size: 35px;
+                    font-size: 25px;
                     font-weight: 800;
                     /* 设置初始状态字体为普通体 */
                     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
@@ -983,6 +1024,10 @@ export default {
             padding-left: 20px;
         }
     }
+}
+
+.paper-list::-webkit-scrollbar {
+    display: none;
 }
 
 ::v-deep .el-dialog__title {

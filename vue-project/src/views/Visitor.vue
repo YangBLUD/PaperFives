@@ -59,7 +59,7 @@
                             <span class="hot">&nbsp;&nbsp;RANK：{{ rank }}&nbsp;&nbsp;</span>
                             <i class="fa-brands fa-hotjar fa-beat" style="color: red; font-size: 50px;"></i>
                         </div>
-                        <span class="paper_name" @click="gotoPaper(item.pid)" style="max-width: 600px;">
+                        <span class="paper_name_hot" @click="gotoPaper(item.pid)" style="max-width: 600px;">
                             {{ item.attr.title }}
                         </span>
                         <div class="content">
@@ -104,8 +104,9 @@
                             <div class="wrapper">
                                 <div v-show="showCard[index]">
                                     <div class="paper-item-title">
-                                        <span class="paper_name" @click="gotoPaper(item.pid)" style="white-space: nowrap;">{{ item.attr.title
-                                        }}</span>
+                                        <span class="paper_name" @click="gotoPaper(item.pid)"
+                                            style="white-space: nowrap;">{{ item.attr.title
+                                            }}</span>
                                         <el-button class="shrink" icon="el-icon-arrow-left"
                                             @click="$set(showCard, index, false)" size="mini"></el-button>
                                     </div>
@@ -333,7 +334,7 @@ export default {
             await this.getPaperlist();
             await this.getStatisticsBar();
             await this.getStatisticsPie();
-            if(!(this.paperList.length > 0))
+            if (!(this.paperList.length > 0))
                 return;
             // 基本柱状图
             const option1 = {
@@ -501,6 +502,10 @@ export default {
     width: 1050px;
 }
 
+.fa-star:hover {
+    cursor: pointer;
+}
+
 .user {
     display: flex;
     align-items: center;
@@ -530,6 +535,7 @@ export default {
         margin-bottom: 10px;
         width: 500px;
         color: #0077c2;
+        line-height: 1.5;
     }
 
     .motto {
@@ -537,6 +543,7 @@ export default {
         font-family: 'OpenSans', sans-serif;
         margin-bottom: 10px;
         width: 500px;
+        line-height: 1.5;
     }
 }
 
@@ -587,11 +594,33 @@ export default {
     font-size: 35px;
 }
 
-.paper_name {
+.paper_name_hot {
     font-family: 'OpenSans-Bold', sans-serif;
     margin-left: 20px;
     color: black;
     font-size: 35px;
+    font-weight: 800;
+    /* 设置初始状态字体为普通体 */
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
+    line-height: 1.5;
+    overflow: hidden;
+    /* 超出部分隐藏 */
+    text-overflow: ellipsis;
+    /* 超出部分显示省略号 */
+}
+
+.paper_name_hot:hover {
+    cursor: pointer;
+    transform: scale(1.3);
+    color: #FFC125 !important;
+}
+
+.paper_name {
+    font-family: 'OpenSans-Bold', sans-serif;
+    margin-left: 20px;
+    color: black;
+    font-size: 25px;
     font-weight: 800;
     /* 设置初始状态字体为普通体 */
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
@@ -674,6 +703,10 @@ export default {
             }
         }
     }
+}
+
+.paper-list::-webkit-scrollbar {
+    display: none;
 }
 </style>
   
