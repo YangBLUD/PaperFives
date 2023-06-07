@@ -6,41 +6,30 @@
         <img src="../assets/logo.png" alt="" />
         <span>论文检索系统</span>
       </div>
-      <el-button type="info" @click="logout">退出登录</el-button>
+      <div v-if=isLogin>
+        <el-button type="info" @click="logout">退出登录</el-button>
+      </div>
+      <div v-else>
+        <el-button type="primary" @click="login">登录</el-button>
+      </div>
     </el-header>
 
     <el-container>
       <!-- 主页侧边栏 -->
       <el-aside :width="isCollapse ? '64px' : '160px'">
         <div class="toggle-button" @click="toggleCollapse">|||</div>
-        <el-menu
-          background-color="#333744"
-          text-color="#fff"
-          active-text-color="#409EFF"
-          unique-opened
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          :router="true"
-          :default-active="activePath"
-        >
+        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened
+          :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
-          <el-submenu
-            :index="item.id + ''"
-            v-for="item in menuList"
-            :key="item.id"
-          >
+          <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
             <!-- 一级菜单模板区域 -->
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item
-              :index="'/' + subItem.path"
-              v-for="subItem in item.children"
-              :key="subItem.id"
-              @click="saveState(activePath)"
-            >
+            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
+              @click="saveState(activePath)">
               <template slot="title">
                 <i :class="subItem.icon"></i>
                 <span>{{ subItem.authName }}</span>
@@ -68,59 +57,54 @@ export default {
       menuList: [
         {
           id: 1,
-          authName: "热门",
+          authName: "系统",
           icon: "el-icon-s-open",
           path: "",
           children: [
             {
-              id: 1,
-              authName: "热门领域",
+              id: 2,
+              authName: "系統主頁",
               icon: "el-icon-s-open",
-              path: "",
+              path: "main",
             },
             {
-              id: 2,
-              authName: "热门学者",
-              icon: "el-icon-s-custom",
-              path: "",
+              id: 3,
+              authName: "高级搜索",
+              icon: "el-icon-search",
+              path: "advsearch"
             },
-          ],
+          ]
         },
         {
-          id: 11,
-          authName: "我的",
+          id: 3,
+          authName: "用户",
           icon: "el-icon-user-solid",
           path: "",
           children: [
             {
-              id: 1,
-              authName: "主页",
+              id: 4,
+              authName: "用戶主页",
               icon: "el-icon-house",
               path: "user",
             },
             {
-              id: 2,
-              authName: "信息",
+              id: 5,
+              authName: "用戶信息",
               icon: "el-icon-document",
               path: "info",
             },
             {
-              id: 3,
-              authName: "消息",
+              id: 6,
+              authName: "用戶消息",
               icon: "el-icon-chat-dot-square",
               path: "message",
             },
           ],
         },
-        {
-          id: 2,
-          authName: "设置",
-          icon: "el-icon-setting",
-          path: "",
-        },
       ],
       isCollapse: false, //是否折叠
       activePath: "",
+      isLogin:window.sessionStorage.getItem('isLogin')
     };
   },
   created() {
@@ -129,8 +113,14 @@ export default {
   methods: {
     logout() {
       window.sessionStorage.clear();
-      this.$router.push("/login");
+      this.isLogin=false
     },
+    login(){
+      this.$router.push({
+        path:'/login'
+      })
+    },
+
     // 切换侧边折叠与展开
     toggleCollapse() {
       this.isCollapse = !this.isCollapse;
@@ -156,7 +146,7 @@ export default {
   color: #fff;
   font-size: 20px;
 
-  > div {
+  >div {
     display: flex;
     align-items: center;
 

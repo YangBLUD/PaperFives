@@ -56,6 +56,9 @@ export default {
   data() {
     return {}
   },
+  created(){
+    window.sessionStorage.setItem('isLogin',false)
+  }
 }
 
 </script>

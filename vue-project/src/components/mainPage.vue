@@ -74,22 +74,11 @@ export default {
     },
     methods: {
         async gosearch() {
-            console.log(this.select)
             this.$router.push({path:"/searchres",query:{
                 "field": this.select.value,
                 "key": this.searchValue,
                 type:1
             }})
-            // const { data: res } = await this.$http.post('/api/v1/papers/search/query', {
-            //     ps: 20, p: 1, advanced: false,
-            //     "cond": {
-            //         "field": this.select.value,
-            //         "key": this.searchValue
-            //     }
-            // })
-            // if (res.meta.status != 0) return this.$message.error("获取失败")
-            // this.search_list = res.data.papers
-            // console.log(this.search_list)
         },
         async getHotArticles() {
             const { data: res } = await this.$http.get('/api/v1/papers/hot/papers', { ps: 20, p: 1 })
