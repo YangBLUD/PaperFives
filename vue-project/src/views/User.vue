@@ -1,14 +1,14 @@
 <template>
     <!-- 页面框架 -->
-    <el-row class="border">
+    <div class="border">
         <!-- 左栏 -->
         <el-col :span="8" class="left-col">
             <!-- 个人名片 -->
             <el-card class="box-card">
                 <div class="user">
                     <div class="avatar-change">
-                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar"/>
-                        <span class="camera-icon"  @click="uploadAvatar"><i class="fas fa-camera"></i></span>
+                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar" />
+                        <span class="camera-icon" @click="uploadAvatar"><i class="fas fa-camera"></i></span>
                     </div>
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
@@ -30,7 +30,7 @@
                 <el-tab-pane name="followee">
                     <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
                     <!-- 有关注 -->
-                    <el-row :gutter="20" class="follow-list">
+                    <el-row :gutter="20" class="follow-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="followeeList.length > 0">
                             <div v-for="(item, index) in      newList     " :key="index">
                                 <el-card shadow="hover" class="follow-item">
@@ -75,7 +75,7 @@
                 <!-- 粉丝列表 -->
                 <el-tab-pane name="follower">
                     <span slot="label" style="font-size:20px; font-weight: 700;">粉丝</span>
-                    <el-row :gutter="20" class="follow-list">
+                    <el-row :gutter="20" class="follow-list" style="margin-left: 0; margin-right: 0;">
                         <!-- 有粉丝 -->
                         <template v-if="followerList.length > 0">
                             <div v-for="(     item, index     ) in      followerList     " :key="index">
@@ -112,7 +112,7 @@
                 <el-tab-pane name="myPaper">
                     <span slot="label" style="font-size:20px; font-weight: 700;">我的</span>
                     <!-- 论文列表 -->
-                    <el-row :gutter="20" class="paper-list">
+                    <el-row :gutter="20" class="paper-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="paperList.length > 0">
                             <el-col v-for="(item, index) in paperList" :key="index">
                                 <el-card shadow="hover" class="paper-item">
@@ -201,7 +201,7 @@
 
                 <el-tab-pane name="favoritePaper">
                     <span slot="label" style="font-size:20px; font-weight: 700;">收藏</span>
-                    <el-row :gutter="20" class="paper-list">
+                    <el-row :gutter="20" class="paper-list" style="margin-left: 0; margin-right: 0;">
                         <template v-if="newListPaper.length > 0">
                             <el-col v-for="(item, index) in newListPaper" :key="index">
                                 <el-card shadow="hover" class="paper-item">
@@ -286,7 +286,7 @@
                 </el-carousel>
             </div>
         </el-col>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -731,7 +731,10 @@ export default {
 @import "../../src/assets/css/article.css";
 
 .border {
-    max-width: max-content;
+    width: 100%;
+    min-width: 1000px;
+    max-width: 3000px;
+    margin: 0 auto;
 }
 
 .follow-item:hover {
@@ -756,22 +759,29 @@ export default {
     /* 鼠标移动到头像上时，使透明度设置为 1 */
 }
 
-.avatar-change .avatar{
+.avatar-change {
     position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-change .avatar {
     transition: all 0.3s ease-in-out;
     transform: scale(1);
     opacity: 0.8;
 }
 
-.avatar-change:hover .avatar{
+.avatar-change:hover .avatar {
     transform: scale(1.2);
     opacity: 0.2;
 }
 
 .avatar-change .camera-icon {
     position: absolute;
-    top: 14%;
-    left: 9.5%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     font-size: 50px;
     opacity: 1;
@@ -865,8 +875,12 @@ export default {
 .follow-list {
     padding-left: 10px;
     height: 535px;
-    width: 480px;
+    width: auto;
     overflow-y: auto;
+}
+
+.follow-list::-webkit-scrollbar {
+    display: none;
 }
 
 .follow-item {
@@ -911,6 +925,7 @@ export default {
 }
 
 .graph {
+    margin: 0 auto;
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -922,7 +937,7 @@ export default {
 
 .paper-list {
     height: 370px;
-    width: 949px;
+    width: auto;
     overflow-y: auto;
     text-align: left !important;
 
@@ -979,7 +994,7 @@ export default {
                     font-family: 'OpenSans-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
-                    font-size: 35px;
+                    font-size: 25px;
                     font-weight: 800;
                     /* 设置初始状态字体为普通体 */
                     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
@@ -1009,6 +1024,10 @@ export default {
             padding-left: 20px;
         }
     }
+}
+
+.paper-list::-webkit-scrollbar {
+    display: none;
 }
 
 ::v-deep .el-dialog__title {
