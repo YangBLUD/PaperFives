@@ -7,7 +7,7 @@
                         <span class="area-name" @click="gosearch(item.area.name)">{{ item.area.name }}</span>
                     </div>
                     <div>
-                        <span class="area-email">RANK:{{ item.rank }} </span>
+                        <span class="area-email">RANK:{{ item.rank | numFilter }} </span>
                     </div>
                 </div>
 
@@ -26,6 +26,13 @@ export default {
     },
     data() {
         return {}
+    },
+    filters: {
+        numFilter(value) {
+            // 截取当前数据到小数点后两位
+            let realVal = parseFloat(value).toFixed(2)
+            return realVal
+        }
     },
     methods: {
         async gosearch(name) {
@@ -55,8 +62,8 @@ export default {
         flex-wrap: wrap;
     }
 
-    .area-email{
-        font-family: 'Montserrat-Bold';
+    .area-email {
+        font-family: 'OpenSans-Bold', sans-serif;
     }
 
     .area-main {
@@ -97,4 +104,6 @@ export default {
             font-size: 12px;
         }
     }
-}</style>
+}
+</style>
+
