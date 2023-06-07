@@ -6,8 +6,9 @@
           <div style="margin-bottom: 10px">
             <span class="paper-title" @click="gotoPaper(article.paper.pid)">{{ article.paper.attr.title }}</span>
           </div>
-          <span v-for="(j, index) in article.paper.authors" :key="j" class="author-name">
-            <span @click="gotoSch(j.uid)">{{ j.name }}</span>
+          <span v-for="(j, index) in article.paper.authors" :key="j">
+            <span v-if="j.uid != 0" @click="gotoSch(j.uid)" class="author-name">{{ j.name }}</span>
+            <span v-else class="author-not-exist">{{ j.name }}</span>
             <span v-if="index < article.paper.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> / </span>
           </span>
           <span class="publish-year"> · {{ article.paper.attr.publish_date }}</span>
@@ -45,11 +46,11 @@ export default {
     },
     async gotoPaper(paper_id) {
       this.$router.push({
-                path: '/paper',
-                query: {
-                    pid: paper_id,
-                }
-            })
+        path: '/paper',
+        query: {
+          pid: paper_id,
+        }
+      })
     }
   },
   filters: {
