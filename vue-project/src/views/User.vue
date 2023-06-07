@@ -577,6 +577,9 @@ export default {
                 if (!(this.paperList.length > 0)) {
                     return;
                 }
+                else if(this.userProfile.role == 3){
+                    return;
+                }
             } catch (err) {
                 console.log(err);
                 return;
