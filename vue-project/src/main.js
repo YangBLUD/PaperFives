@@ -41,7 +41,7 @@ import MathJax, { initMathJax, renderByMathjax } from 'mathjax-vue'
 // initMathJax({}, onMathJaxReady);
 
 Vue.use(MathJax);
-
+Vue.use(store)
 
 
 new Vue({
