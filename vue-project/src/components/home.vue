@@ -16,26 +16,19 @@
 
     <el-container>
       <!-- 主页侧边栏 -->
-      <el-aside width="64px">
-        <div class="toggle-button" >|||</div>
+      <el-aside width="120px">
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened
-          :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active="activePath">
+           :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
+          <el-menu-item :index="'/' + item.path" v-for="item in menuList" :key="item.id" 
+            @click="saveState(activePath)" style="padding-left: 5px;">
             <!-- 一级菜单模板区域 -->
-            <template slot="title">
+            <template slot="title" style="display:flex ;">
               <i :class="item.icon"></i>
-              <span>{{ item.authName }}</span>
+              <span >{{ item.authName }}</span>
             </template>
-            <!-- 二级菜单 -->
-            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
-              @click="saveState(activePath)" >
-              <template slot="title" >
-                <i :class="subItem.icon"></i>
-                <span>{{ subItem.authName }}</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
+
+          </el-menu-item>
         </el-menu>
       </el-aside>
 
@@ -57,78 +50,62 @@ export default {
       menuList: [
         {
           id: 1,
-          authName: "系统",
-          icon: "el-icon-s-open",
-          path: "",
-          children: [
-            {
-              id: 2,
-              authName: "系統主頁",
-              icon: "el-icon-s-open",
-              path: "main",
-            },
-            {
-              id: 3,
-              authName: "高级搜索",
-              icon: "el-icon-search",
-              path: "advsearch"
-            },
-          ]
+          authName: "系统主页",
+          icon: "el-icon-house",
+          path: "main",
+        },
+        {
+          id: 2,
+          authName: "高级搜索",
+          icon: "el-icon-search",
+          path: "advsearch"
+
         },
         {
           id: 3,
-          authName: "用户",
-          icon: "el-icon-user-solid",
-          path: "",
-          children: [
-            {
-              id: 4,
-              authName: "用戶主页",
-              icon: "el-icon-house",
-              path: "user",
-            },
-            {
-              id: 5,
-              authName: "用戶信息",
-              icon: "el-icon-document",
-              path: "info",
-            },
-            {
-              id: 6,
-              authName: "用戶消息",
-              icon: "el-icon-chat-dot-square",
-              path: "message",
-            },
-          ],
+          authName: "用户主页",
+          icon: "el-icon-user",
+          path: "user",
         },
+        {
+          id: 4,
+          authName: "用户信息",
+          icon: "el-icon-document",
+          path: "info",
+        },
+        {
+          id: 6,
+          authName: "用户消息",
+          icon: "el-icon-chat-dot-square",
+          path: "message",
+        }
       ],
-      isCollapse: true, //是否折叠
       activePath: "",
-      isLogin:""
-    };
+      isLogin: ""
+    }
   },
   created() {
     this.activePath = window.sessionStorage.getItem("activePath");
-    if(window.sessionStorage.getItem('token')!=null){
-      this.isLogin=true
+    if (window.sessionStorage.getItem('token') != null) {
+      this.isLogin = true
     }
   },
   methods: {
     logout() {
+      this.isLogin = false
       window.sessionStorage.clear();
-      this.isLogin=false
     },
-    login(){
+    login() {
       this.$router.push({
-        path:'/login'
+        path: '/login'
       })
     },
     //保存链接激活
     saveState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .home-container {

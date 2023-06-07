@@ -304,8 +304,8 @@ export default {
                 console.log(data);
                 if (data.meta.status != 0) {
                     // alert(data.meta.msg);
-                    this.$message.error(data.meta.msg);
-                    this.$router.push({ path: '/login' });
+                    this.$message.error('请先登录!');
+                    this.$router.push({ path: '/main' });
                     return;
                 }
 
