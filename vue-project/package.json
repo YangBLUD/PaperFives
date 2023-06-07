@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "downloadjs": "^1.4.7",
     "echarts": "^5.4.2",
     "element-ui": "^2.15.13",
     "latex2vue": "^2.2.2",

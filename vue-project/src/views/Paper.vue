@@ -132,15 +132,21 @@
             <div class="section"><span>related papers</span></div>
             <div class="related-list">
                 <div v-if="relatedPapers.length == 0">
-                    hel
+                    <p class="prompt">Oops, this is quite a unique paper.</p>
                 </div>
-                <div v-for="(paper, index) in relatedPapers" class="related-item" @click="onClickRelatedPaper(paper.pid)">
-                    <div class="title"><h3>{{ paper.attr.title }}</h3></div>
-                    <div class="keywords">
-                        <div v-for="(keyword, index) in relatedPapers[index].attr.keywords" class="keyword">
-                            <p>{{ keyword }}</p>
-                        </div>
+                <div v-for="(related, index) in relatedPapers" class="related-item"
+                    @click="onClickRelatedPaper(related.pid)">
+                    <div class="title">
+                        <h3>{{ related.attr.title }}</h3>
                     </div>
+                    <!-- <div class="keywords">
+                            <b>Keywords: </b>
+                            <ul>
+                                <li v-for="(keyword, index) in related.attr.keywords" class="keyword">
+                                    <span v-if="index > 0">,&nbsp;</span>{{ keyword }}
+                                </li>
+                            </ul>
+                        </div> -->
                 </div>
             </div>
         </div>
@@ -149,6 +155,7 @@
 
 <script>
 import { initMathJax, renderByMathjax } from 'mathjax-vue';
+import download from 'downloadjs';
 
 export default {
     data() {
@@ -262,7 +269,7 @@ export default {
             if (uid == 0) {
                 return;
             }
-            this.$router.go({
+            this.$router.push({
                 path: '/visitor',
                 query: {
                     uid: uid
@@ -298,14 +305,15 @@ export default {
         },
 
         async onClickRelatedPaper(pid) {
+            console.log(pid);
             await this.$router.push({
                 path: '/paper',
                 query: {
                     pid: pid
                 }
             });
+            window.location.reload();
         },
-
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -342,7 +350,7 @@ export default {
                 var data = res.data;
                 console.log(data);
                 if (data.meta.status != 0) {
-                    this.$message.error(data.meta.msg);
+                    // this.$message.error(data.meta.msg);
                     this.isFavorite = false;
                 } else {
                     this.isFavorite = data.data.value;
@@ -387,6 +395,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = true;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -407,6 +416,7 @@ export default {
                     this.$message.error(data.meta.msg);
                 } else {
                     this.isFavorite = false;
+                    this.$message.success(data.meta.msg);
                 }
             }).catch(err => {
                 this.$message.error("Network error, try again later.");
@@ -418,19 +428,13 @@ export default {
             await this.$http.get('api/v1/papers/download/file', {
                 params: {
                     pid: pid
-                }
+                },
+                responseType: 'blob'
             }).then(res => {
-                console.log(res);
-
-                // var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                // var fUrl = document.createElement('a');
-                // var filename = this.paper.attr.title + '.pdf';
-
-                // fUrl.href = fileUrl;
-                // fUrl.setAttribute('download', filename)
-
-                // document.body.appendChild(fURL);
-                // fURL.click();
+                const filename = this.paper.attr.title + '.pdf';
+                const contentType = res.headers['content-type'];
+                download(res.data, filename, contentType);
+                // window.open(URL.createObjectURL(res.data), '_blank');
             }).catch(err => {
                 console.log(err);
             });
@@ -474,4 +478,5 @@ export default {
 
 <style>
 @import '../assets/css/paper.css';
-@import '../assets/css/animate.css';</style>
+@import '../assets/css/animate.css';
+</style>
