@@ -169,12 +169,13 @@
         <div class="content-box">
           <el-autocomplete
             v-model="state"
-            :fetch-suggestions="querySearchAsync"
             placeholder="请输入论文领域"
-            @select="handleSelect"
             @input="loadAreas"
           ></el-autocomplete>
         </div>
+        <div>{{ state }}</div>
+        
+        <div>{{ area_list }}</div>
         <el-divider></el-divider>
         <!-- 提交论文信息 -->
         <el-button type="primary" @click="submitAllInfo()"
@@ -235,6 +236,7 @@ export default {
       date: "",
       areas: [],
       state: '',
+      area_list:{},
       timeout: null
     }
   },
@@ -387,22 +389,13 @@ export default {
     //     })
     // }
     async loadAreas() {
-      console.log("load all areas");
+      console.log(this.state);
       try {
-        const response = await this.$http.post("/api/v1/papers/search/areas", {
+        const {data:res} = await this.$http.post("/api/v1/papers/search/areas", {
           key: this.state,
         });
-        const data = response.data;
-        if (data && data.areas && Array.isArray(data.areas)) {
-          this.areas = data.areas.map((area) => ({
-            value: area.name,
-            id: area.id,
-          }));
-          console.log("load all areas success!");
-          console.log(this.areas);
-        } else {
-          console.error("Invalid response format");
-        }
+        console.log(res)
+        area_list=res.areas.name
       } catch (error) {
         console.error("Failed to load areas:", error);
       }
