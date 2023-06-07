@@ -3,54 +3,45 @@
     <div class="paper-upload-box">
       <div class="input-box">
         <!-- 论文题目栏 -->
-        <div class="title-box">
-          <span class="label">论文题目：</span>
-          <span class="title-input">
+        <div class="title-box content-box">
+          <div class="label">论文题目：</div>
+          <div class="title-input">
             <el-form :model="titleForm" :rules="rules" ref="titleForm" label-width="100px">
               <el-form-item label="题目：" prop="title">
                 <el-input v-model="titleForm.title" placeholder="请输入论文题目"></el-input>
               </el-form-item>
             </el-form>
-          </span>
+          </div>
         </div>
         <el-divider></el-divider>
         <!-- 论文作者栏 -->
-        <div class="author-box">
-          <span class="label">论文作者：</span>
+        <div class="author-box content-box">
+          <div class="label">论文作者：</div>
           <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
             <el-form-item
-              prop="email"
-              label="作者1"
-              :rules="[
-                { required: true, message: '作者信息不能为空', trigger: 'blur' }
-              ]"
-            >
-              <el-input v-model="dynamicValidateForm.name" placeholder="请输入作者姓名"></el-input>
-              <el-input v-model="dynamicValidateForm.email" placeholder="请输入作者邮箱"></el-input>
-            </el-form-item>
-            <el-form-item
               v-for="(domain, index) in dynamicValidateForm.domains"
-              :label="'作者' + (index + 2)"
+              :label="'作者' + (index + 1)"
               :key="domain.key"
               :prop="'domains.' + index + '.email'"
               :rules="{
                 required: true, message: '作者信息不能为空', trigger: 'blur'
               }"
             >
-              <el-input v-model="domain.name" placeholder="请输入作者姓名"></el-input>
-              <el-input v-model="domain.email" placeholder="请输入作者邮箱"></el-input>
-              <el-button class="delet-button" @click.prevent="removeDomain(domain)">删除</el-button>
+              <div class="addable-form">
+                <el-input v-model="domain.name" placeholder="请输入作者姓名"></el-input>
+                <el-input v-model="domain.email" placeholder="请输入作者邮箱"></el-input>
+                <el-button class="delet-button" @click.prevent="removeDomain(domain)">删除</el-button>
+              </div>
             </el-form-item>
             <el-form-item>
               <el-button @click="addDomain">增添作者</el-button>
-              <el-button type="primary" @click="submitForm('dynamicValidateForm')">确定</el-button>
             </el-form-item>
           </el-form>
         </div>
         <el-divider></el-divider>
         <!-- 论文关键词栏 -->
-        <span  class="label">论文关键词：</span>
-        <div class="keyword-box">
+        <div class="keyword-box content-box">
+          <div  class="label">论文关键词：</div>
           <el-form :model="keywords" ref="keywords" label-width="100px">
             <el-form-item
               v-for="(domain, index) in keywords.domains"
@@ -61,8 +52,10 @@
                 required: true, message: '关键词内容不能为空', trigger: 'blur'
               }"
             >
-              <el-input v-model="domain.keyword" placeholder="请输入关键词"></el-input>
-              <el-button @click.prevent="removeKeyword(domain)">删除</el-button>
+              <div class="addable-form">
+                <el-input v-model="domain.keyword" placeholder="请输入关键词"></el-input>
+                <el-button @click.prevent="removeKeyword(domain)">删除</el-button>
+              </div>
             </el-form-item>
             <el-form-item>
               <el-button @click="addKeyword">新增关键词</el-button>
@@ -71,20 +64,20 @@
         </div>
         <el-divider></el-divider>
         <!-- 论文摘要栏 -->
-        <div class="abstract-box">
-          <span class="label">论文摘要：</span>
-          <span class="abstract-input">
+        <div class="abstract-box content-box">
+          <div class="label">论文摘要：</div>
+          <div class="abstract-input">
             <el-form :model="abstractForm" :rules="rules" ref="abstractForm" label-width="100px">
               <el-form-item label="摘要：" prop="desc">
                 <el-input type="textarea" v-model="abstractForm.desc" placeholder="请输入论文摘要"></el-input>
               </el-form-item>
             </el-form>
-          </span>
+          </div>
         </div>
         <el-divider></el-divider>
         <!-- 论文参考文献栏 -->
-        <div class="ref-box">
-          <span class="label">参考文献：</span>
+        <div class="ref-box content-box">
+          <div class="label">参考文献：</div>
           <el-form :model="refs" ref="refs" label-width="100px">
             <el-form-item
               v-for="(domain, index) in refs.domains"
@@ -95,8 +88,10 @@
                 required: true, message: '参考文献内容不能为空', trigger: 'blur'
               }"
             >
-              <el-input v-model="domain.ref" placeholder="请输入参考文献"></el-input>
-              <el-button @click.prevent="removeRef(domain)">删除</el-button>
+              <div class="addable-form">
+                <el-input v-model="domain.ref" placeholder="请输入参考文献"></el-input>
+                <el-button @click.prevent="removeRef(domain)">删除</el-button>
+              </div>
             </el-form-item>
             <el-form-item>
               <el-button @click="addRef">新增参考文献</el-button>
@@ -104,24 +99,28 @@
           </el-form>
           <el-divider></el-divider>
           <!-- 论文发布时间栏 -->
-          <span class="label">论文发布时间：</span>
-          <el-form :model="dateForm" :rules="rules" ref="dateForm" label-width="100px">
-            <el-date-picker
-              v-model="date"
-              type="date"
-              placeholder="选择日期"
-              format="yyyy-MM-dd">
-            </el-date-picker>
-          </el-form>
+          <div class="label">论文发布时间：</div>
+          <div class="content-box">
+            <el-form :model="dateForm" :rules="rules" ref="dateForm" label-width="100px">
+              <el-date-picker
+                v-model="date"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy-MM-dd">
+              </el-date-picker>
+            </el-form>
+          </div>
           <el-divider></el-divider>
           <!-- 论文领域栏 -->
-          <span class="label">论文领域：</span>
-          <el-autocomplete
-            v-model="state"
-            :fetch-suggestions="querySearchAsync"
-            placeholder="请输入论文领域"
-            @select="handleSelect"
-          ></el-autocomplete>
+          <div class="label">论文领域：</div>
+          <div class="content-box">
+            <el-autocomplete
+              v-model="state"
+              :fetch-suggestions="querySearchAsync"
+              placeholder="请输入论文领域"
+              @select="handleSelect"
+            ></el-autocomplete>
+          </div>
           <el-divider></el-divider>
           <!-- 提交论文信息 -->
           <button @click="submitAllInfo()">提交论文信息</button>
@@ -159,9 +158,7 @@ export default {
         domains: [{
           name: '',
           email: ''
-        }],
-        name: '',
-        email: ''
+        }]
       },
       refs: {
         domains: [{
@@ -180,18 +177,6 @@ export default {
     }
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          console.log('submit!')
-          console.log(this.dynamicValidateForm.domains)
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
     async submitAllInfo () {
       await this.$http.post('/api/v1/papers/upload/info', {
           pid: 0,
@@ -210,7 +195,7 @@ export default {
             text: domain.ref,
             link: ''
           })),
-          areas: this.areas
+          areas: this.areas.map(area => area.id)
       })
         .then(res => {
           console.log('submit all information success!')
@@ -314,24 +299,6 @@ export default {
     handleSelect(item) {
       console.log(item);
     },
-    loadAll() {
-      return [
-        { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-        { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-        { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
-      ];
-    },
-    // loadAllAreas() {
-    //   this.$http.get('/api/v1/papers/areas/get')
-    //     .then(res => {
-    //       console.log('load all areas success!')
-    //       console.log(res)
-    //       this.areas = res.data.data.areas
-    //       console.log(this.areas)
-    //     }).catch(err => {
-    //       console.log(err)
-    //     })
-    // }
     loadAllAreas() {
       this.$http.get('/api/v1/papers/areas/get')
         .then(res => {
@@ -377,5 +344,20 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  .content-box {
+    background-color: rgb(238, 255, 113);
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 将元素左对齐 */
+    justify-content: center;
+  }
+  .addable-form {
+    display: flex;
+    align-items: center;
+  }
+  .addable-form .el-form-item {
+    margin-right: 10px;
   }
 </style>
