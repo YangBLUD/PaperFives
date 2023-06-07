@@ -842,7 +842,7 @@ export default {
     }
 
     .name {
-        font-family: Montserrat-Black;
+        font-family: 'OpenSans-Bold', sans-serif;
         font-size: 35px;
         margin-bottom: 10px;
         width: auto;
@@ -902,7 +902,7 @@ export default {
     }
 
     .card_name {
-        font-family: Montserrat-Bold;
+        font-family: 'OpenSans-Bold', sans-serif;
         margin-left: 20px;
         color: black;
         font-size: 20px;
@@ -961,7 +961,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'OpenSans-Bold', sans-serif;
+                    font-family: 'ZillaSlab-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
@@ -991,7 +991,7 @@ export default {
                 align-items: center;
 
                 .paper_name {
-                    font-family: 'OpenSans-Bold', sans-serif;
+                    font-family: 'ZillaSlab-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;

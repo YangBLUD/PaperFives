@@ -27,7 +27,7 @@
                         <el-card shadow="hover" class="paper-item">
                             <div class="wrapper">
                                 <div class="paper-item-title">
-                                    <span class="paper_name" @click="gotoPaper(item.pid)">{{ item.attr.title }}</span>
+                                    <span class="paper_name" @click="gotoPaperReview(item.pid)">{{ item.attr.title }}</span>
                                 </div>
                                 <div class="content">
                                     <div class="authors">
@@ -100,6 +100,14 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 })
+        },
+        gotoPaperReview(id) {
+            this.$router.push({
+                path: '/paperreview',
+                query: {
+                    pid: id,
+                }
+            })
         },
     }
 }
