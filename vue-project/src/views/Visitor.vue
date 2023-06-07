@@ -501,6 +501,10 @@ export default {
     width: 1050px;
 }
 
+.fa-star:hover {
+    cursor: pointer;
+}
+
 .user {
     display: flex;
     align-items: center;

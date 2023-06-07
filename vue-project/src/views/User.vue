@@ -24,7 +24,6 @@
             </el-dialog>
 
             <!-- 关注列表 -->
-
             <el-tabs v-model="activeName" style="height: auto; width: auto; margin-top: 20px;">
                 <el-tab-pane name="followee">
                     <span slot="label" style="font-size:20px; font-weight: 700;">关注</span>
@@ -836,11 +835,9 @@ export default {
 }
 
 .follow-list {
-    margin-left: unset;
-    margin-right: unset;
     padding-left: 10px;
     height: 550px;
-    width: auto;
+    width: 480px;
     overflow-y: auto;
 }
 
@@ -897,6 +894,7 @@ export default {
 
 .paper-list {
     height: 370px;
+    width: 949px;
     overflow-y: auto;
     text-align: left !important;
 
