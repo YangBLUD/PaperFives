@@ -129,6 +129,7 @@ export default {
     beforeCreate() {
     },
     created() {
+        document.title = "Messages"
     },
     beforeMount() {
     },
