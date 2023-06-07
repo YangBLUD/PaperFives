@@ -1,8 +1,5 @@
 <template>
     <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-card class="search">
             <!-- 搜索与添加区域 -->
             <!-- @keyup.enter.native="goSearch" -->
