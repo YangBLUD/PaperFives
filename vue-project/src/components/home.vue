@@ -18,14 +18,14 @@
       <!-- 主页侧边栏 -->
       <el-aside width="120px">
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened
-           :collapse-transition="false" :router="true" :default-active="activePath">
+          :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
-          <el-menu-item :index="'/' + item.path" v-for="item in menuList" :key="item.id" 
-            @click="saveState(activePath)" style="padding-left: 5px;">
+          <el-menu-item :index="'/' + item.path" v-for="item in menuList" :key="item.id" @click="saveState(activePath)"
+            style="padding-left: 5px;">
             <!-- 一级菜单模板区域 -->
             <template slot="title" style="display:flex ;">
               <i :class="item.icon"></i>
-              <span >{{ item.authName }}</span>
+              <span>{{ item.authName }}</span>
             </template>
 
           </el-menu-item>
@@ -94,6 +94,7 @@ export default {
     logout() {
       this.isLogin = false
       window.sessionStorage.clear();
+      location.reload();
     },
     login() {
       this.$router.push({
