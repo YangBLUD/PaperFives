@@ -132,15 +132,21 @@
             <div class="section"><span>related papers</span></div>
             <div class="related-list">
                 <div v-if="relatedPapers.length == 0">
-                    hel
+                    <p class="prompt">Oops, this is quite a unique paper.</p>
                 </div>
-                <div v-for="(paper, index) in relatedPapers" class="related-item" @click="onClickRelatedPaper(paper.pid)">
-                    <div class="title"><h3>{{ paper.attr.title }}</h3></div>
-                    <div class="keywords">
-                        <div v-for="(keyword, index) in relatedPapers[index].attr.keywords" class="keyword">
-                            <p>{{ keyword }}</p>
-                        </div>
+                <div v-for="(related, index) in relatedPapers" class="related-item"
+                    @click="onClickRelatedPaper(related.pid)">
+                    <div class="title">
+                        <h3>{{ related.attr.title }}</h3>
                     </div>
+                    <!-- <div class="keywords">
+                            <b>Keywords: </b>
+                            <ul>
+                                <li v-for="(keyword, index) in related.attr.keywords" class="keyword">
+                                    <span v-if="index > 0">,&nbsp;</span>{{ keyword }}
+                                </li>
+                            </ul>
+                        </div> -->
                 </div>
             </div>
         </div>
@@ -298,14 +304,15 @@ export default {
         },
 
         async onClickRelatedPaper(pid) {
+            console.log(pid);
             await this.$router.push({
                 path: '/paper',
                 query: {
                     pid: pid
                 }
             });
+            window.location.reload();
         },
-
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -342,7 +349,7 @@ export default {
                 var data = res.data;
                 console.log(data);
                 if (data.meta.status != 0) {
-                    this.$message.error(data.meta.msg);
+                    // this.$message.error(data.meta.msg);
                     this.isFavorite = false;
                 } else {
                     this.isFavorite = data.data.value;
@@ -420,17 +427,15 @@ export default {
                     pid: pid
                 }
             }).then(res => {
-                console.log(res);
+                var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+                var fUrl = document.createElement('a');
+                var filename = this.paper.attr.title + '.pdf';
 
-                // var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                // var fUrl = document.createElement('a');
-                // var filename = this.paper.attr.title + '.pdf';
+                fUrl.href = fileUrl;
+                fUrl.setAttribute('download', filename)
 
-                // fUrl.href = fileUrl;
-                // fUrl.setAttribute('download', filename)
-
-                // document.body.appendChild(fURL);
-                // fURL.click();
+                document.body.appendChild(fURL);
+                fURL.click();
             }).catch(err => {
                 console.log(err);
             });
@@ -474,4 +479,5 @@ export default {
 
 <style>
 @import '../assets/css/paper.css';
-@import '../assets/css/animate.css';</style>
+@import '../assets/css/animate.css';
+</style>

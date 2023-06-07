@@ -303,8 +303,12 @@
 .paper-wrapper .related-list {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space;
     margin-top: 10px;
+    justify-content: center;
+}
+
+.paper-wrapper .related-list .prompt {
+    text-align: center;
 }
 
 .related-list .related-item {
@@ -333,12 +337,20 @@
 }
 
 .related-list .related-item .keywords {
-    display: flex;
-    flex-direction: column;
     text-transform: capitalize;
+    line-height: 1em;
+}
+
+.related-list .related-item .keywords b {
+    display: inline;
+}
+
+.related-list .related-item .keywords ul {
+    display: inline-block;
 }
 
 .related-list .related-item .keywords .keyword {
+    display: inline-block;
     font-size: 0.8em;
-    line-height: normal;
+    white-space: nowrap;
 }
