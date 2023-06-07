@@ -4,7 +4,7 @@
             <!-- title -->
             <div class="section"><span>title</span></div>
             <div class="title">
-                <h1 class="mathjax">{{ title }}</h1>
+                <h1 class="mathjax">{{ paper.attr.title }}</h1>
             </div>
 
             <hr class="split" />
@@ -12,25 +12,15 @@
             <!-- authors -->
             <div class="section"><span>authors</span></div>
             <div class="author-list horizontal-list">
-                <div class="author-item horizontal-list-item">
+                <div v-for="(author, index) in paper.authors" class="author-item horizontal-list-item">
                     <div class="avatar">
-                        <img src="http://81.70.161.76:5000/media/avatar/default.png" />
+                        <img :src="getAvatarUrl(author.avatar)" />
                     </div>
-                    <div class="name clickable">Tony long long Skywalker</div>
+                    <div class="name" :class="{ clickable: author.uid != 0 }" @click="onClickUsername(author.uid)">{{
+                        author.name }}</div>
                     <i class="fa-regular fa-envelope"></i>
                     <div class="tooltip">
-                        <span class="email">12312312185@qq.com</span>
-                        <div class="box"></div>
-                    </div>
-                </div>
-                <div v-for="i in 5" class="author-item horizontal-list-item">
-                    <div class="avatar">
-                        <img src="http://81.70.161.76:5000/media/avatar/default.png" />
-                    </div>
-                    <div class="name">Tony Skywalker</div>
-                    <i class="fa-regular fa-envelope"></i>
-                    <div class="tooltip">
-                        <span class="email">185@qq.com</span>
+                        <span class="email">{{ author.email }}</span>
                         <div class="box"></div>
                     </div>
                 </div>
@@ -41,9 +31,19 @@
             <!-- keywords -->
             <div class="section"><span>keywords</span></div>
             <div class="keywords-list horizontal-list">
-                <div class="keyword"><i class="fa-solid fa-circle"></i><span>computer vision</span></div>
-                <div class="keyword"><i class="fa-solid fa-circle"></i><span>unreal engine</span></div>
-                <div class="keyword"><i class="fa-solid fa-circle"></i><span>software engineering</span></div>
+                <div v-for="(keyword, index) in paper.attr.keywords" class="keyword">
+                    <i class="fa-solid fa-circle"></i>
+                    <span>{{ keyword }}</span>
+                </div>
+            </div>
+
+            <!-- areas -->
+            <div class="section"><span>areas</span></div>
+            <div class="area-list horizontal-list">
+                <div v-for="(area, index) in paper.areas" class="area">
+                    <i class="fa-solid fa-circle"></i>
+                    <span>{{ area.name }}</span>
+                </div>
             </div>
 
             <hr class="split" />
@@ -53,11 +53,11 @@
             <div class="time-wrapper horizontal-list">
                 <div class="time horizontal-list-item">
                     <span class="time-type">Publish Time: </span>
-                    <span>2023-01-01</span>
+                    <span>{{ paper.attr.publish_date }}</span>
                 </div>
                 <div class="time horizontal-list-item">
                     <span class="time-type">Last Update: </span>
-                    <span>2023-01-02</span>
+                    <span>{{ paper.update }}</span>
                 </div>
             </div>
 
@@ -68,32 +68,36 @@
                 <div class="stat-wrapper horizontal-list">
                     <div class="stat" title="Clicks">
                         <i class="fa-regular fa-eye"></i>
-                        <span>99+</span>
+                        <span>{{ paper.stat.clicks }}</span>
                     </div>
                     <div class="stat" title="Cites">
                         <i class="fa-solid fa-quote-left"></i>
-                        <span>99+</span>
+                        <span>{{ paper.stat.cites }}</span>
+                    </div>
+                    <div class="stat" title="Favorites">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <span>{{ paper.stat.favorites }}</span>
                     </div>
                     <div class="stat" title="Downloads">
                         <i class="fa-regular fa-circle-down"></i>
-                        <span>99+</span>
+                        <span>{{ paper.stat.downloads }}</span>
                     </div>
                 </div>
                 <div class="action-wrapper horizontal-list">
-                    <div class="action" title="Cite">
+                    <div class="action" title="Cite" @click="onClickCite()">
                         <i class="fa-solid fa-quote-right"></i>
                     </div>
-                    <div class="action" title="Share">
+                    <div class="action" title="Share" @click="onClickShare()">
                         <i class="fa-regular fa-share-from-square"></i>
                     </div>
-                    <div class="action" title="Add to bookmark">
+                    <div v-show="!this.isFavorite" class="action" title="Add to bookmark" @click="onClickFavorite()">
                         <i class="fa-regular fa-bookmark"></i>
                     </div>
-                    <div class="action" title="Remove from bookmark">
+                    <div v-show="this.isFavorite" class="action" title="Remove from bookmark" @click="onClickUnfavorite()">
                         <i class="fa-solid fa-bookmark"></i>
                     </div>
-                    <div class="action" title="Downloads">
-                        <i class="fa-solid fa-file-arrow-down"></i>
+                    <div class="action" title="Downloads" @click="onClickDownload()">
+                        <i class="fa-regular fa-file-pdf"></i>
                     </div>
                 </div>
 
@@ -104,32 +108,20 @@
             <!-- abstract -->
             <div class="section"><span>abstract</span></div>
             <div class="abstract-wrapper">
-                <p class="mathjax">{{ formula }}</p>
+                <p class="mathjax">{{ paper.attr.abstract }}</p>
             </div>
 
             <hr class="split">
             <!-- reference -->
             <div class="section"><span>reference</span></div>
             <div class="ref-list">
-                <div class="ref">
-                    <span class="bullet">[1]</span>
-                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
-                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
-                        (2008), 9.</span>
+                <div v-if="paper.refs.length == 0">
+                    <span class="bullet"></span>
+                    <span class="text">Wow, a truly original paper!</span>
                 </div>
-                <hr />
-                <div class="ref">
-                    <span class="bullet">[2]</span>
-                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
-                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
-                        (2008), 9.</span>
-                </div>
-                <hr />
-                <div class="ref">
-                    <span class="bullet">[3]</span>
-                    <span class="text">Lars Arge, Mark De Berg, Herman Haverkort, and Ke Yi. 2008. The priority R-tree: A
-                        practically efficient and worst-case optimal R-tree. ACM Transactions on Algorithms (TALG) 4, 1
-                        (2008), 9.</span>
+                <div v-for="(ref, index) in paper.refs" class="ref">
+                    <span class="bullet">[{{ index + 1 }}]</span>
+                    <span class="text">{{ ref.text }}</span>
                 </div>
             </div>
         </div>
@@ -142,16 +134,31 @@ import { initMathJax, renderByMathjax } from 'mathjax-vue';
 export default {
     data() {
         return {
-            title: String.raw`This $ x_a $  Is  The Title of a Paper This Is The Title of a Paper`,
-            formula: String.raw`We $ x_a $ study the basic question of characterizing which boundary homeomorphisms of the unit sphere can be
-                    extended to a Sobolev homeomorphism of the interior in 3D space. While the planar variants of this
-                    problem are well-understood, completely new and direct ways of constructing an extension are required in
-                    3D. We prove, among other things, that a Sobolev homeomorphism $\varphi \colon \mathbb R^2 \to \mathbb
-                    R^2$ in $W_{loc}^{1,p} (\mathbb R^2 , \mathbb R^2)$ for some $p\in [1,\infty )$ admits a homeomorphic
-                    extension $h \colon \mathbb R^3 \to \mathbb R^3$ in $W_{loc}^{1,q} (\mathbb R^3, \mathbb R^3) $ for
-                    $1\le q < \frac{3}{2}p$. Such an extension result is nearly sharp, as the bound $q=\frac{3}{2}p$ cannot
-                        be improved due to the H\"older embedding. The case $q=3$ gains an additional interest as it also
-                        provides an $L^1$-variant of the celebrated Beurling-Ahlfors extension result.`
+            paper: {
+                pid: 0,
+                attr: {
+                    title: '',
+                    keywords: [],
+                    abstract: '',
+                    publish_date: ''
+                },
+                authors: [],
+                areas: [],
+                date: {
+                    publish: '',
+                    update: ''
+                },
+                stat: {
+                    cites: 0,
+                    downloads: 0,
+                    favorites: 0,
+                    clicks: 0
+                },
+                update: '',
+                refs: []
+            },
+            isFavorite: false,
+            relatedPapers: []
         }
     },
     beforeCreate() {
@@ -161,7 +168,7 @@ export default {
     beforeMount() {
     },
     mounted() {
-        initMathJax({}, this.onMathJaxReady);
+        this.onLoad();
     },
     beforeUnmount() {
     },
@@ -174,6 +181,9 @@ export default {
     watch: {
     },
     methods: {
+        ////////////////////////////////////////////////////////////////////////
+        //  Initialization
+        ////////////////////////////////////////////////////////////////////////
         onMathJaxReady() {
             // const math = this.$refs.math
             const maths = document.getElementsByClassName('mathjax');
@@ -183,6 +193,248 @@ export default {
                     console.log(err)
                 });
             }
+        },
+
+        async onLoad() {
+            var pid = this.$route.query.pid;
+            if (pid == null || pid <= 0) {
+                this.$message.error("No such paper!");
+                this.$router.back(-1);
+            }
+            await this.requestPaper(pid);
+            await this.requestFavoriteStatus(pid);
+            initMathJax({}, this.onMathJaxReady);
+
+            this.requestRelatedPapers();
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Auxiliary functions
+        ////////////////////////////////////////////////////////////////////////
+        getAvatarUrl(url) {
+            return 'http://81.70.161.76:5000' + url;
+        },
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Auxiliary functions
+        ////////////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Auxiliary functions
+        ////////////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Auxiliary functions
+        ////////////////////////////////////////////////////////////////////////
+        copyTextToClipboard(text) {
+            navigator.clipboard.writeText(text);
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Click Event handlers
+        ////////////////////////////////////////////////////////////////////////
+        async onClickUsername(uid) {
+            if (uid == 0) {
+                return;
+            }
+            this.$router.push({
+                path: '/visitor',
+                query: {
+                    uid: uid
+                }
+            });
+        },
+
+        async onClickCite() {
+            var cite = await this.requestCite(this.paper.pid)
+            if (cite != null) {
+                this.copyTextToClipboard(cite);
+                this.$message.success("Cite copied to clipboard!");
+            }
+
+        },
+
+        async onClickShare() {
+            var link = window.location.href;
+            this.copyTextToClipboard(link);
+            this.$message.success("Share link copied to clipboard!");
+        },
+
+        async onClickFavorite() {
+            await this.requestFavoritePaper(this.paper.pid);
+        },
+
+        async onClickUnfavorite() {
+            await this.requestUnfavoritePaper(this.paper.pid);
+        },
+
+        async onClickDownload() {
+            await this.requestDownloadPaper(this.paper.pid);
+        },
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //  Requests
+        ////////////////////////////////////////////////////////////////////////
+        async requestPaper(pid) {
+            await this.$http.get('api/v1/papers/download/info', {
+                params: {
+                    pid: pid,
+                    click: 1
+                }
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    this.$router.back();
+                    return;
+                }
+
+                // get paper
+                this.paper = data.data;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        async requestFavoriteStatus(pid) {
+            await this.$http.get('api/v1/papers/action/isfavorite', {
+                params: {
+                    pid: pid
+                }
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    this.isFavorite = false;
+                } else {
+                    this.isFavorite = data.data.value;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        async requestCite(pid) {
+            var cite = await this.$http.get('api/v1/papers/action/cite', {
+                params: {
+                    pid: pid
+                }
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    return null
+                }
+                return data.data.cite;
+            }).catch(err => {
+                console.log(err);
+                return null;
+            });
+
+            return cite;
+        },
+
+        async requestFavoritePaper(pid) {
+            if (this.isFavorite) {
+                return;
+            }
+
+            await this.$http.post('/api/v1/papers/action/favorite', {
+                pid: this.paper.pid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.isFavorite = true;
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
+        },
+        async requestUnfavoritePaper(pid) {
+            if (!this.isFavorite) {
+                return;
+            }
+
+            await this.$http.post('/api/v1/papers/action/unfavorite', {
+                pid: this.paper.pid
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                } else {
+                    this.isFavorite = false;
+                }
+            }).catch(err => {
+                this.$message.error("Network error, try again later.");
+                console.log(err);
+            });
+        },
+
+        async requestDownloadPaper(pid) {
+            await this.$http.get('api/v1/papers/download/file', {
+                params: {
+                    pid: pid
+                }
+            }).then(res => {
+                console.log(res);
+
+                // var fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+                // var fUrl = document.createElement('a');
+                // var filename = this.paper.attr.title + '.pdf';
+
+                // fUrl.href = fileUrl;
+                // fUrl.setAttribute('download', filename)
+
+                // document.body.appendChild(fURL);
+                // fURL.click();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        async requestRelatedPapers() {
+            var data = {
+                ps: 10,
+                p: 1,
+                advanced: true,
+                cond: []
+            };
+            for (var i = 0; i < this.paper.attr.keywords.length; i++) {
+                var cond = {
+                    mode: "or",
+                    field: "keywords",
+                    key: this.paper.attr.keywords[i]
+                };
+                data.cond.push(cond);
+            }
+            await this.$http.post('api/v1/papers/search/query', data).then(res => {
+                var data = res.data;
+                if (data.meta.status != 0) {
+                    return;
+                }
+                var papers = data.data.papers;
+                for (var i = 0; i < papers.length; i++) {
+                    if (papers[i].pid == this.paper.pid) {
+                        continue;
+                    }
+                    this.relatedPapers.push(papers[i]);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            console.log(this.relatedPapers);
         }
     }
 }

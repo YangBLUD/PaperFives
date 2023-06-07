@@ -13,6 +13,8 @@
 </template>
 <script>
 import Articles from "@/components/hot/Articles.vue";
+
+
 export default {
     components: { Articles },
     data() {
