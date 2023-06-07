@@ -10,7 +10,8 @@ import Info from '../views/UserInfo.vue'
 import Visitor from '../views/Visitor.vue'
 import Paper from '../views/Paper.vue'
 import Message from '../views/MessageView.vue'
-import PaperReview from '../views/PaperReview.vue'
+import PaperReview from '../views/PaperReviewPro.vue'
+import PaperUpload from '../views/PaperUpload.vue'
 import Admin from '../views/Admin.vue'
 import searchRes from '../components/search/searchRes.vue'
 
@@ -31,6 +32,7 @@ const routes = [
       { path: '/paper', component: Paper },
       { path: '/message', component: Message },
       { path: '/paperreview', component: PaperReview},
+      { path: '/paperupload', component: PaperUpload},
       { path: '/admin', component: Admin},
       { path:'/searchres',component:searchRes}
     ]

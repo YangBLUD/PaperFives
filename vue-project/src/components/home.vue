@@ -6,7 +6,7 @@
         <img src="../assets/logo.png" alt="" />
         <span>论文检索系统</span>
       </div>
-      <div v-if=isLogin>
+      <div v-if="isLogin">
         <el-button type="info" @click="logout">退出登录</el-button>
       </div>
       <div v-else>
@@ -16,8 +16,8 @@
 
     <el-container>
       <!-- 主页侧边栏 -->
-      <el-aside :width="isCollapse ? '64px' : '160px'">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
+      <el-aside width="64px">
+        <div class="toggle-button" >|||</div>
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened
           :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
@@ -29,8 +29,8 @@
             </template>
             <!-- 二级菜单 -->
             <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
-              @click="saveState(activePath)">
-              <template slot="title">
+              @click="saveState(activePath)" >
+              <template slot="title" >
                 <i :class="subItem.icon"></i>
                 <span>{{ subItem.authName }}</span>
               </template>
@@ -102,13 +102,16 @@ export default {
           ],
         },
       ],
-      isCollapse: false, //是否折叠
+      isCollapse: true, //是否折叠
       activePath: "",
-      isLogin:window.sessionStorage.getItem('isLogin')
+      isLogin:""
     };
   },
   created() {
     this.activePath = window.sessionStorage.getItem("activePath");
+    if(window.sessionStorage.getItem('token')!=null){
+      this.isLogin=true
+    }
   },
   methods: {
     logout() {
@@ -119,11 +122,6 @@ export default {
       this.$router.push({
         path:'/login'
       })
-    },
-
-    // 切换侧边折叠与展开
-    toggleCollapse() {
-      this.isCollapse = !this.isCollapse;
     },
     //保存链接激活
     saveState(activePath) {
@@ -158,6 +156,7 @@ export default {
 
 .el-aside {
   background-color: #333744;
+  width: 20px;
 }
 
 .el-main {
@@ -170,8 +169,8 @@ export default {
 
 .toggle-button {
   background-color: #4a5064;
-  font-size: 10px;
-  line-height: 24px;
+  font-size: 8px;
+  line-height: 20px;
   color: #fff;
   text-align: center;
   letter-spacing: 0.2em;

@@ -44,10 +44,14 @@
             <el-input v-model="passwdOld" placeholder="请输入旧密码" show-password style="font-size: 20px;"
               clearable></el-input>
           </el-form-item>
-          <el-form-item label="新密码">
+          <el-form-item label="新密码" style="margin-bottom: 5px;">
             <el-input v-model="passwdNew" placeholder="请输入新密码" show-password style="font-size: 20px;"
               clearable></el-input>
           </el-form-item>
+          <div style="margin-left: 100px; color: gray; font-weight: 600; line-height: 2; margin-bottom: 10px;">
+            <div>不能包括空格</div>
+            <div>长度为8-16个字符</div>
+          </div>
           <el-form-item label="确认密码">
             <el-input v-model="passwdNewCheck" placeholder="请再次输入新密码" show-password style="font-size: 20px;"
               clearable></el-input>
@@ -210,6 +214,11 @@ export default {
       })
         .then(res => {
           // console.log(res.data);
+          var data = res.data;
+          if (data.meta.status != 0) {
+            this.$message.error("请先登录！");
+            this.$router.push({ path: '/main' });
+          }
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;
           this.form.institute = res.data.data.attr.institute;
