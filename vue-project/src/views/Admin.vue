@@ -34,7 +34,7 @@
                                     <span class="paper_name" @click="gotoPaperReview(item.pid)">{{ item.attr.title }}</span>
                                 </div>
                                 <div class="content">
-                                    <div class="authors">
+                                    <div>
                                         <span v-for="(author, index) in item.authors">
                                             <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
                                                 class="author-name">{{
