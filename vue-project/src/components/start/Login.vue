@@ -71,7 +71,8 @@ export default {
                 this.$message.success(res.meta.msg)
 
                 window.sessionStorage.setItem('token',res.token);
-                window.sessionStorage.setItem('uid',res.data.uid)
+                window.sessionStorage.setItem('uid',res.data.uid);
+                window.sessionStorage.setItem('isLogin',true);
                 // 页面跳转
                 this.$router.push("/home");
             });

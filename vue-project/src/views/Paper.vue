@@ -188,5 +188,7 @@ export default {
 }
 </script>
 
-<style>@import '../assets/css/paper.css';
-@import '../assets/css/animate.css';</style>
+<style>
+@import '../assets/css/paper.css';
+@import '../assets/css/animate.css';
+</style>
