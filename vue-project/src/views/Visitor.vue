@@ -37,8 +37,6 @@
                     <div>
                         <i v-if="this.isFollowed" class="fa-solid fa-star" style="font-size:70px; color: #FFBE00;"
                             @click="removeFollower()"></i>
-                        <!-- <i v-else class="el-icon-star-off" style="font-size:70px; color: #FFBE00;"
-                            @click="followUser()"></i> -->
                         <i v-else class="fa-regular fa-star fa-beat" style="font-size:70px; color: #FFBE00;"
                             @click="followUser()"></i>
                     </div>
