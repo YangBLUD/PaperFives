@@ -182,6 +182,7 @@ export default {
                 renderByMathjax(maths[i]).catch(err => {
                     console.log(err)
                     window.location.reload();
+                    // initMathJax({}, this.onMathJaxReady);
                 });
             }
         },
@@ -310,7 +311,11 @@ export default {
                 if (data.meta.status != 0) {
                     // alert(data.meta.msg);
                     this.$message.error('请先登录!');
-                    this.$router.push({ path: '/main' });
+                    if (this.$route.size > 0) {
+                        this.$router.back();
+                    } else {
+                        this.$router.push({ path: '/main' });
+                    }
                     return;
                 }
 
@@ -441,6 +446,8 @@ export default {
         //  First load
         ////////////////////////////////////////////////////////////////////////
         async onFirstLoad() {
+            this.isLoading = true;
+
             var uid = this.$route.query.uid;
             if (uid != null) {
                 await this.requestUpdateContact(uid);
@@ -453,6 +460,8 @@ export default {
             } else {
                 this.onResetContactItem();
             }
+
+            this.isLoading = false;
         },
 
         ////////////////////////////////////////////////////////////////////////
