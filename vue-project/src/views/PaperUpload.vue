@@ -104,7 +104,7 @@
                 <div class="but-wrapper">
                     <el-button type="info" @click="submitAllInfo()">提交论文信息</el-button>
                     <el-button type="warning" @click="uploadFile(pid)">上传论文文件</el-button>
-                    <el-button type="success" @click="submitAllInfo()">发布论文</el-button>
+                    <el-button type="success" @click="publishPaper()">发布论文</el-button>
                 </div>
             </div>
         </div>
@@ -189,6 +189,11 @@ export default {
                 .then(res => {
                     var data = res.data;
 
+                    if (data.meta.status != 0) {
+                        this.$message.error(data.meta.msg);
+                        return;
+                    }
+
                     console.log(data);
 
                     if (data.meta.status != 0) {
@@ -200,10 +205,10 @@ export default {
                     this.$message.success("Paper info uploaded!");
 
                     console.log('submit all information success!')
-                    console.log(this.formatDate(this.date))
-                    console.log(res)
-                    this.pid = res.data.data.pid
-                    console.log(this.pid)
+                    console.log(this.formatDate(this.date));
+                    console.log(res);
+                    this.pid = res.data.data.pid;
+                    console.log(this.pid);
                 }).catch(err => {
                     console.log(err)
                 })
@@ -331,6 +336,22 @@ export default {
             console.log(results)
             cb(results);
         },
+
+        async publishPaper() {
+            await this.$http.post('api/v1/papers/publish', {
+                pid: this.pid
+            }).then(res => {
+                var data = res.data;
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    return;
+                }
+                this.$message.success("Paper published! Please wait for review.");
+                this.$router.back();
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
     mounted() {
         // this.loadAreas();

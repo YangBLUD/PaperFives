@@ -99,9 +99,12 @@ export default {
             /* 设置默认的缩放比例 */
             opacity: 0.8;
             /* 设置默认的透明度 */
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
             img{
-                margin-top: 10px;
-                width: 70px;
+                width: 100%;
             }
         }
 

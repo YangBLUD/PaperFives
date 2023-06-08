@@ -111,6 +111,7 @@ export default {
     margin: 20px auto;
     padding: 20px 40px 80px;
     background-color: white;
+    overflow: visible;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
 }
 

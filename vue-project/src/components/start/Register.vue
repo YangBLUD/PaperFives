@@ -12,7 +12,7 @@
                 </el-form-item>
 
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="regForm.password"></el-input>
+                    <el-input v-model="regForm.password" show-password></el-input>
                 </el-form-item>
 
                 <el-form-item label="邮箱" prop="email">
