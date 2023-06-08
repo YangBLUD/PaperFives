@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="paper-upload-box">
-      <div class="input-box">
+    <div class="paper-upload-board">
+      <div class="paper-upload-wrapper">
         <!-- 论文题目栏 -->
         <div class="label">论文题目：</div>
         <div class="content-box">
@@ -21,7 +21,7 @@
             </el-form>
           </div>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 论文作者栏 -->
         <div class="label">论文作者：</div>
         <div class="content-box">
@@ -63,7 +63,8 @@
             >
           </el-form>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
+
         <!-- 论文关键词栏 -->
         <div class="label">论文关键词：</div>
         <div class="content-box">
@@ -94,7 +95,7 @@
             >
           </el-form>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 论文摘要栏 -->
         <div class="label">论文摘要：</div>
         <div class="content-box">
@@ -115,7 +116,7 @@
             </el-form>
           </div>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 论文参考文献栏 -->
         <div class="label">参考文献：</div>
         <div class="content-box">
@@ -144,7 +145,7 @@
             >
           </el-form>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 论文发布时间栏 -->
         <div class="label">论文发布时间：</div>
         <div class="content-box">
@@ -163,7 +164,7 @@
             </el-date-picker>
           </el-form>
         </div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 论文领域栏 -->
         <div class="label">论文领域：</div>
         <div class="content-box">
@@ -176,14 +177,14 @@
         <div>{{ state }}</div>
         
         <div>{{ area_list }}</div>
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 提交论文信息 -->
-        <el-button type="primary" @click="submitAllInfo()"
+        <el-button type="info" @click="submitAllInfo()"
           >提交论文信息</el-button
         >
-        <el-divider></el-divider>
+        <hr class="split" />
         <!-- 提交论文 -->
-        <el-button type="primary" @click="uploadFile(1)">上传论文</el-button>
+        <el-button type="info" @click="uploadFile(1)">上传论文文件</el-button>
       </div>
     </div>
   </div>
@@ -407,47 +408,61 @@ export default {
 };
 </script>
 <style lang="css">
-.title {
-  align-items: center;
-}
-.label {
-  text-align: center;
-}
-.paper-upload-box {
-  /* background-color: rgb(118, 193, 255); */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-}
-.input-box {
-  /* background-color: rgb(149, 212, 179); */
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.content-box {
-  /* background-color: rgb(238, 255, 113); */
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  /* align-items: flex-start; */
-  /* justify-content: center; */
-}
-.addable-form {
-  display: flex;
-  align-items: center;
-  width: 100%; /* 设置宽度为100% */
-}
-.addable-form .el-form-item {
-  margin-right: 10px;
-  flex: 1; /* 设置弹性比例为1，使其填满剩余空间 */
-}
-.add-button {
-  left: 5px;
+  .title {
+    align-items: center;
+  }
+  .label {
+    text-align: center;
+    font-family: 'ZillaSlab-Bold', sans-serif;
+    font-size: 1.2em;
+    line-height: 3em;
+  }
+  .paper-upload-board {
+    /* background-color: rgb(118, 193, 255); */
+    /* width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px; */
+      width: 100%;
+      min-width: 800px;
+  }
+  .paper-upload-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #dfdfdf;
+      box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.3);
+  }
+  .content-box {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    /* justify-content: center; */
+  }
+  .addable-form {
+    display: flex;
+    align-items: center;
+    width: 100%; 
+  }
+  .addable-form .el-form-item {
+    margin-right: 10px;
+    flex: 1;
+  }
+  .add-button {
+    left: 5px;
+  }
+  .split {
+    width: 100%;
+    margin: 10px auto;
+    height: 2px;
+    border: none;
+    background-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
 }
 </style>
