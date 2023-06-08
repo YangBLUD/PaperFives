@@ -101,12 +101,11 @@
                     <el-autocomplete v-model="state" placeholder="请输入论文领域" :fetch-suggestions="querySearch"
                         :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
                 </div>
-                <hr class="split" />
-                <!-- 提交论文信息 -->
-                <el-button type="info" @click="submitAllInfo()">提交论文信息</el-button>
-                <hr class="split" />
-                <!-- 提交论文 -->
-                <el-button type="info" @click="uploadFile(1)">上传论文文件</el-button>
+                <div class="but-wrapper">
+                    <el-button type="info" @click="submitAllInfo()">提交论文信息</el-button>
+                    <el-button type="warning" @click="uploadFile(pid)">上传论文文件</el-button>
+                    <el-button type="success" @click="submitAllInfo()">发布论文</el-button>
+                </div>
             </div>
         </div>
     </div>
@@ -115,7 +114,7 @@
 export default {
     data() {
         return {
-            pid: "",
+            pid: 0,
             titleForm: {
                 title: "",
             },
@@ -188,6 +187,18 @@ export default {
                 areas: this.areas.map(area => area.id)
             })
                 .then(res => {
+                    var data = res.data;
+
+                    console.log(data);
+
+                    if (data.meta.status != 0) {
+                        // this.$message.error(data.meta.msg);
+                        this.$message.error(data.data.descr);
+                        return;
+                    }
+
+                    this.$message.success("Paper info uploaded!");
+
                     console.log('submit all information success!')
                     console.log(this.formatDate(this.date))
                     console.log(res)
@@ -278,6 +289,8 @@ export default {
                 }
             )
             console.log(res)
+
+            this.$message.success("Paper uploaded!");
         },
         querySearchAsync(queryString, cb) {
             var areas = this.areas;
@@ -321,6 +334,15 @@ export default {
     },
     mounted() {
         // this.loadAreas();
+        if (window.sessionStorage.getItem('token') == null) {
+            this.$message.error("请先登录!");
+            // this.$router.push({ path: '/main' });
+            this.$router.back();
+        }
+        pid = this.$route.query.pid;
+        if (pid != null) {
+            this.pid = pid;
+        }
     },
 };
 </script>
@@ -356,7 +378,7 @@ export default {
     /* justify-content: center; */
     border-radius: 10px;
     padding: 10px;
-    background-color: #dfdfdf;
+    background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
     box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -390,4 +412,9 @@ export default {
     border: none;
     background-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
 }
+
+.but-wrapper {
+    margin: 10px 0;
+}
+
 </style>
