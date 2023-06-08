@@ -170,11 +170,11 @@
           <el-autocomplete
             v-model="state"
             placeholder="请输入论文领域"
-            @input="loadAreas"
+            :fetch-suggestions="querySearch"
+            :trigger-on-focus="false"
           ></el-autocomplete>
         </div>
         <div>{{ state }}</div>
-        
         <div>{{ area_list }}</div>
         <el-divider></el-divider>
         <!-- 提交论文信息 -->
@@ -236,7 +236,7 @@ export default {
       date: "",
       areas: [],
       state: '',
-      area_list:{},
+      area_list:[],
       timeout: null
     }
   },
@@ -373,32 +373,23 @@ export default {
     handleSelect(item) {
       console.log(item);
     },
-    // loadAreas() {
-    //   this.$http.get('/api/v1/papers/areas/get')
-    //     .then(res => {
-    //       console.log('load all areas success!')
-    //       console.log(res)
-    //       // 将请求到的areas数组进行转换
-    //       this.areas = res.data.data.areas.map(area => ({
-    //         value: area.name,
-    //         id: area.id
-    //       }));
-    //       console.log(this.areas)
-    //     }).catch(err => {
-    //       console.log(err)
-    //     })
-    // }
-    async loadAreas() {
-      console.log(this.state);
+
+    async querySearch(state,cb) {
+
       try {
         const {data:res} = await this.$http.post("/api/v1/papers/search/areas", {
           key: this.state,
         });
-        console.log(res)
-        area_list=res.areas.name
+        let data=res.data.areas
+        console.log(data)
+        for(item in data){
+          this.area_list.append(item.name)
+        }
+        console.log(this.area_list)
       } catch (error) {
         console.error("Failed to load areas:", error);
       }
+      cb(this.area_list)
     },
   },
   mounted() {
