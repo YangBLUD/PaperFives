@@ -31,6 +31,11 @@
 
                     </el-menu-item>
                 </el-menu>
+                <div class="copy">
+                    <div>Copyright</div>
+                    <div>&copy;</div>
+                    <div>Fives 2023</div>
+                </div>
             </el-aside>
 
             <!-- 主页主体 -->
@@ -48,6 +53,7 @@ require("../assets/js/fontawesome");
 export default {
     data() {
         return {
+            title: 'Home',
             menuList: [
                 {
                     id: 1,
@@ -90,6 +96,7 @@ export default {
         if (window.sessionStorage.getItem('token') != null) {
             this.isLogin = true
         }
+        document.title = "Home"
     },
     methods: {
         logout() {
@@ -190,7 +197,30 @@ export default {
 
 .el-aside {
     overflow: hidden;
+    position: relative;
 }
+
+.el-aside .copy {
+    width: 100%;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+}
+
+.el-aside .copy div {
+    width: 100%;
+    height: 30px;
+    // background-color: yellow;
+}
+
+.el-aside .copy div {
+    color: #efefef;
+    font-size: 1em;
+    line-height: 1em;
+    // background-color: greenyellow;
+    text-align: center;
+}
+
 
 .el-menu {
     height: 100%;

@@ -40,11 +40,10 @@ new Vue({
     router,
     store,
     render: h => h(App),
-    // Inject header for MathJax
     head: {
         title() {
             return {
-                inner: this.title
+                inner: 'Paper Fives'
             }
         }
     }

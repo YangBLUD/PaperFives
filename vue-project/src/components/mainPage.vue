@@ -35,6 +35,7 @@ export default {
     components: { Articles, Authors, Areas },
     data() {
         return {
+            title: "Home",
             activeNameOut: "topArticle",
             searchValue: '',
             options: [
