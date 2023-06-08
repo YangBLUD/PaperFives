@@ -45,6 +45,10 @@
                 <!-- Loading indicator -->
                 <div class="load" v-bind:class="{ hide: !isLoading }"><i class="fa-solid fa-spinner fa-spin-pulse"></i>
                 </div>
+                <!-- No contact indicator -->
+                <div class="no-contact" v-show="this.contacts.contactList.length == 0">
+                    <span>现在没有联系人哦，去找找吧...</span>
+                </div>
                 <!-- Messate Scroller -->
                 <div ref="scroller" class="message-scroller">
                     <div v-for="i in contacts.contactsCnt" class="message-content"
@@ -129,15 +133,16 @@ export default {
     beforeCreate() {
     },
     created() {
+        document.title = "Messages"
     },
     beforeMount() {
     },
     mounted() {
         // adjust size
-        
+
         window.addEventListener("resize", this.resizeEventHandler);
         this.resizeEventHandler();
- 
+
         this.onFirstLoad();
 
         initMathJax({}, this.onMathJaxReady);
@@ -304,8 +309,8 @@ export default {
                 console.log(data);
                 if (data.meta.status != 0) {
                     // alert(data.meta.msg);
-                    this.$message.error(data.meta.msg);
-                    this.$router.push({ path: '/login' });
+                    this.$message.error('请先登录!');
+                    this.$router.push({ path: '/main' });
                     return;
                 }
 

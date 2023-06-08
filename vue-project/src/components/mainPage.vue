@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div style="width: 100%">
         <el-card class="search">
             <!-- 搜索与添加区域 -->
             <!-- @keyup.enter.native="goSearch" -->
             <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select"
-                style="width: 600px; font-size: 15px; margin: 0px 18%">
+                style="width: 100%; font-size: 15px; margin: 0px auto">
                 <el-select v-model="select" slot="prepend" placeholder="检索依据" style="width: 130px">
                     <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item">
                     </el-option>
@@ -35,12 +35,13 @@ export default {
     components: { Articles, Authors, Areas },
     data() {
         return {
+            title: "Home",
             activeNameOut: "topArticle",
             searchValue: '',
             options: [
                 {
                     value: 'title',
-                    label: '篇名',
+                    label: '标题',
                 }, {
                     value: 'authors',
                     label: '作者'
@@ -57,7 +58,10 @@ export default {
                     label: '领域'
                 },
             ],
-            select: {},
+            select: {
+                value: 'title',
+                label: '标题',
+            },
             top_articles: {},
             top_areas: {},
             top_authors: [],
@@ -68,6 +72,7 @@ export default {
         this.getHotArticles();
         this.getHotAuthors();
         this.getHotAreas();
+        document.title = "Home"
     },
     methods: {
         async gosearch() {
@@ -101,18 +106,26 @@ export default {
 
 <style>
 .topRecommend {
-    min-width: 900px;
-    margin: 50px 12%;
+    min-width: 800px;
+    width: 95%;
+    margin: 20px auto;
     padding: 20px 40px 80px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
 }
 
 .search {
-    min-width: 900px;
-    margin: 20px 12%;
+    min-width: 800px;
+    width: 95%;
+    margin: 20px auto;
     padding: 20px 40px 10px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
 }
+
+/*
+.input-with-select {
+    height: 200px;
+}
+*/
 </style>
