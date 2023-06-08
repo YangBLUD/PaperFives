@@ -393,7 +393,11 @@ export default {
                 console.log(data);
                 if (data.meta.status != 0) {
                     this.$message.error(data.meta.msg);
-                    this.$router.back();
+                    if (this.$route.size > 0) {
+                        this.$router.back();
+                    } else {
+                        this.$router.push({ path: '/main' });
+                    }
                     return;
                 }
 
