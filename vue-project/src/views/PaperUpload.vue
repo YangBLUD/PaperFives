@@ -238,7 +238,8 @@ export default {
       areas: [],
       state: '',
       area_list:{},
-      timeout: null
+      timeout: null,
+      allAreas: []
     }
   },
   methods: {
@@ -268,6 +269,7 @@ export default {
           console.log(res)
           this.pid = res.data.data.pid
           console.log(this.pid)
+          alert('论文信息提交成功！')
         }).catch(err => {
           console.log(err)
         })
@@ -342,7 +344,6 @@ export default {
       const formData = new FormData();
       formData.append('file', file, file.name);
       formData.append('pid', pid)
-
       // 发送文件上传请求
       const res= await this.$http.post(
         '/api/v1/papers/upload/file', formData,
@@ -374,36 +375,36 @@ export default {
     handleSelect(item) {
       console.log(item);
     },
-    // loadAreas() {
-    //   this.$http.get('/api/v1/papers/areas/get')
-    //     .then(res => {
-    //       console.log('load all areas success!')
-    //       console.log(res)
-    //       // 将请求到的areas数组进行转换
-    //       this.areas = res.data.data.areas.map(area => ({
-    //         value: area.name,
-    //         id: area.id
-    //       }));
-    //       console.log(this.areas)
-    //     }).catch(err => {
-    //       console.log(err)
-    //     })
-    // }
-    async loadAreas() {
-      console.log(this.state);
-      try {
-        const {data:res} = await this.$http.post("/api/v1/papers/search/areas", {
-          key: this.state,
-        });
-        console.log(res)
-        area_list=res.areas.name
-      } catch (error) {
-        console.error("Failed to load areas:", error);
-      }
-    },
+    loadAreas() {
+      this.$http.get('/api/v1/papers/areas/get')
+        .then(res => {
+          console.log('load all areas success!')
+          console.log(res)
+          // 将请求到的areas数组进行转换
+          this.allAreas = res.data.data.areas.map(area => ({
+            value: area.name,
+            id: area.id
+          }));
+          console.log(this.allAreas)
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+    // async loadAreas() {
+    //   console.log(this.state);
+    //   try {
+    //     const {data:res} = await this.$http.post("/api/v1/papers/search/areas", {
+    //       key: this.state,
+    //     });
+    //     console.log(res)
+    //     area_list=res.areas.name
+    //   } catch (error) {
+    //     console.error("Failed to load areas:", error);
+    //   }
+    // },
   },
   mounted() {
-    // this.loadAreas();
+    this.loadAreas();
   },
 };
 </script>
@@ -418,13 +419,6 @@ export default {
     line-height: 3em;
   }
   .paper-upload-board {
-    /* background-color: rgb(118, 193, 255); */
-    /* width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px; */
       width: 100%;
       min-width: 800px;
   }
@@ -433,7 +427,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
       border-radius: 10px;
       padding: 10px;
       background-color: #dfdfdf;
@@ -443,8 +436,6 @@ export default {
     width: 80%;
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
-    /* justify-content: center; */
   }
   .addable-form {
     display: flex;
