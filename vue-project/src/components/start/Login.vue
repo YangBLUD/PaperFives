@@ -13,7 +13,8 @@
                 </el-form-item>
                 <!-- 密码 -->
                 <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" clearable></el-input>
+                    <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"
+                        clearable></el-input>
                 </el-form-item>
                 <!-- 按钮区域 -->
                 <el-form-item class="btns">
@@ -55,26 +56,29 @@ export default {
             }
         }
     },
+    created() {
+        document.title = "Login"
+    },
     methods: {
         // 登录
         login() {
-            this.$refs.loginRef.validate(async (valid)=>{
-                if(!valid) return ;
-                const {data:res} = await this.$http.post('/api/v1/users/login',this.loginForm);
-                if(res.meta.status!=0) 
+            this.$refs.loginRef.validate(async (valid) => {
+                if (!valid) return;
+                const { data: res } = await this.$http.post('/api/v1/users/login', this.loginForm);
+                if (res.meta.status != 0)
                     return this.$message.error(res.meta.msg)
-                
+
                 this.$message.success(res.meta.msg)
 
-                window.sessionStorage.setItem('token',res.token);
-                window.sessionStorage.setItem('uid',res.data.uid);
+                window.sessionStorage.setItem('token', res.token);
+                window.sessionStorage.setItem('uid', res.data.uid);
                 // 页面跳转
                 this.$router.push("/home");
             });
         },
         // 注册
         register() {
-            this.$router.push({path:"/register"});
+            this.$router.push({ path: "/register" });
         }
     }
 }

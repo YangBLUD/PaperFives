@@ -68,6 +68,7 @@ export default {
         this.getHotArticles();
         this.getHotAuthors();
         this.getHotAreas();
+        document.title = "Home"
     },
     methods: {
         async gosearch() {

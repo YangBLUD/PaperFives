@@ -78,6 +78,9 @@ export default {
         this.getUserProfile();
         this.getPapers();
     },
+    created() {
+        document.title = "Admin"
+    },
     methods: {
         uploadAvatar() {
             const input = document.createElement('input')

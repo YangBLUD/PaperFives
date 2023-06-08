@@ -69,6 +69,9 @@ export default {
             }
         }
     },
+    created() {
+        document.title = "Register"
+    },
     methods: {
         // 重置
         resetRegForm() {
@@ -103,7 +106,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .regist_box {
     width: 450px;
     height: 480px;

@@ -88,6 +88,9 @@ export default {
       this.getAuthorsData()
     })
   },
+  created() {
+    document.title = "PaperReview"
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -282,4 +285,5 @@ export default {
 .review {
   text-align: left;
   font-size: 16px;
-}</style>
+}
+</style>

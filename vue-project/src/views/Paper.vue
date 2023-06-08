@@ -191,6 +191,7 @@ export default {
     beforeCreate() {
     },
     created() {
+        document.title = "Paper"
     },
     beforeMount() {
     },

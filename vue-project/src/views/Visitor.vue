@@ -200,6 +200,9 @@ export default {
             activeName: 'first'
         };
     },
+    created() {
+        document.title = "Visitor"
+    },
     mounted() {
         this.$nextTick(() => {
             this.initEcharts();

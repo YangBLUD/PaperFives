@@ -151,6 +151,9 @@ export default {
       this.getUserProfile();
     })
   },
+  created() {
+        document.title = "Info"
+    },
   methods: {
     getSex() {
       if (this.form.sex == 0 || this.form.sex == '未知')

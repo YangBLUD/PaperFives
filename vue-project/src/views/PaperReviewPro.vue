@@ -202,6 +202,7 @@ export default {
     beforeCreate() {
     },
     created() {
+        document.title = "PaperReview"
     },
     beforeMount() {
     },

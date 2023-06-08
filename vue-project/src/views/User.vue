@@ -330,6 +330,9 @@ export default {
     mounted() {
         this.onLoad();
     },
+    created() {
+        document.title = "User"
+    },
     methods: {
         async onLoad() {
             await this.getUserProfile();
