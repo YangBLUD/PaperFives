@@ -98,11 +98,9 @@
                 <!-- 论文领域栏 -->
                 <div class="label">论文领域：</div>
                 <div class="content-box">
-                    <el-autocomplete v-model="state" placeholder="请输入论文领域" @input="loadAreas"></el-autocomplete>
+                    <el-autocomplete v-model="state" placeholder="请输入论文领域" :fetch-suggestions="querySearch"
+                        :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
                 </div>
-                <div>{{ state }}</div>
-
-                <div>{{ area_list }}</div>
                 <hr class="split" />
                 <!-- 提交论文信息 -->
                 <el-button type="info" @click="submitAllInfo()">提交论文信息</el-button>
@@ -161,7 +159,7 @@ export default {
             date: "",
             areas: [],
             state: '',
-            area_list: {},
+            area_list: [],
             timeout: null
         }
     },
@@ -178,109 +176,129 @@ export default {
                     abstract: this.abstractForm.desc,
                     publish_date: this.formatDate(this.date)
                 },
-                authors: this.dynamicValidateForm.domains.map((domain, index) => ({
-                    email: domain.email,
-                    name: domain.name,
-                    order: index
-                })),
-                refs: this.refs.domains.map(domain => ({
-                    text: domain.ref,
-                    link: ''
-                })),
-                areas: this.areas.map(area => area.id)
-            })
-                .then(res => {
-                    console.log('submit all information success!')
-                    console.log(this.formatDate(this.date))
-                    console.log(res)
-                    this.pid = res.data.data.pid
-                    console.log(this.pid)
-                }).catch(err => {
-                    console.log(err)
-                })
-                .then((res) => {
-                    console.log("submit all information success!");
-                    console.log(this.formatDate(this.date));
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            },
         },
         removeDomain(item) {
-            var index = this.dynamicValidateForm.domains.indexOf(item);
-            if (index !== -1) {
-                this.dynamicValidateForm.domains.splice(index, 1);
-            }
-        },
-        addDomain() {
-            this.dynamicValidateForm.domains.push({
-                name: "",
-                email: "",
-                key: Date.now(),
-            });
-        },
-        addRef() {
-            this.refs.domains.push({
-                ref: "",
-                key: Date.now(),
-            });
-        },
-        removeRef(item) {
-            var index = this.refs.domains.indexOf(item);
-            if (index !== -1) {
-                this.refs.domains.splice(index, 1);
-            }
-        },
-        addKeyword() {
-            this.keywords.domains.push({
-                keyword: "",
-                key: Date.now(),
-            });
-        },
-        removeKeyword(item) {
-            var index = this.keywords.domains.indexOf(item);
-            if (index !== -1) {
-                this.keywords.domains.splice(index, 1);
-            }
-        },
-        formatDate(date) {
-            const d = new Date(date);
-            const year = d.getFullYear();
-            const month = ("0" + (d.getMonth() + 1)).slice(-2);
-            const day = ("0" + d.getDate()).slice(-2);
-            return `${year}-${month}-${day}`;
-        },
-        uploadFile(pid) {
-            console.log("upload file!");
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "application/pdf"; // 只接受PDF文件
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    this.sendRequest(pid, file);
-                }
-            };
-            input.click();
-        },
-        async sendRequest(pid, file) {
-            console.log(pid)
-            const formData = new FormData();
-            formData.append('file', file, file.name);
-            formData.append('pid', pid)
-
-            // 发送文件上传请求
-            const res = await this.$http.post(
-                '/api/v1/papers/upload/file', formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                    var index = this.dynamicValidateForm.domains.indexOf(item);
+                    if (index !== -1) {
+                        this.dynamicValidateForm.domains.splice(index, 1);
                     }
-                }
-            )
-            console.log(res)
-        },
+                },
+                addDomain() {
+                    this.dynamicValidateForm.domains.push({
+                        name: "",
+                        email: "",
+                        key: Date.now(),
+                    });
+                },
+                addRef() {
+                    this.refs.domains.push({
+                        ref: "",
+                        key: Date.now(),
+                    });
+                },
+                removeRef(item) {
+                    var index = this.refs.domains.indexOf(item);
+                    if (index !== -1) {
+                        this.refs.domains.splice(index, 1);
+                    }
+                },
+                addKeyword() {
+                    this.keywords.domains.push({
+                        keyword: "",
+                        key: Date.now(),
+                    });
+                },
+                removeKeyword(item) {
+                    var index = this.keywords.domains.indexOf(item);
+                    if (index !== -1) {
+                        this.keywords.domains.splice(index, 1);
+                    }
+                },
+                formatDate(date) {
+                    const d = new Date(date);
+                    const year = d.getFullYear();
+                    const month = ("0" + (d.getMonth() + 1)).slice(-2);
+                    const day = ("0" + d.getDate()).slice(-2);
+                    return `${year}-${month}-${day}`;
+                },
+                uploadFile(pid) {
+                    console.log("upload file!");
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "application/pdf"; // 只接受PDF文件
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.sendRequest(pid, file);
+                        }
+                    };
+                    input.click();
+                },
+                async sendRequest(pid, file) {
+                    console.log(pid)
+                    const formData = new FormData();
+                    formData.append('file', file, file.name);
+                    formData.append('pid', pid)
+
+                    // 发送文件上传请求
+                    const res = await this.$http.post(
+                        '/api/v1/papers/upload/file', formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    )
+                    console.log(res)
+                },
+                querySearchAsync(queryString, cb) {
+                    var areas = this.areas;
+                    var results = queryString
+                        ? areas.filter(this.createStateFilter(queryString))
+                        : areas;
+                    clearTimeout(this.timeout);
+                    this.timeout = setTimeout(() => {
+                        cb(results);
+                    }, 3000 * Math.random());
+                },
+                createStateFilter(queryString) {
+                    return (state) => {
+                        return (
+                            state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+                        );
+                    };
+                },
+                handleSelect(item) {
+                    console.log(item);
+                },
+                // loadAreas() {
+                //   this.$http.get('/api/v1/papers/areas/get')
+                //     .then(res => {
+                //       console.log('load all areas success!')
+                //       console.log(res)
+                //       // 将请求到的areas数组进行转换
+                //       this.areas = res.data.data.areas.map(area => ({
+                //         value: area.name,
+                //         id: area.id
+                //       }));
+                //       console.log(this.areas)
+                //     }).catch(err => {
+                //       console.log(err)
+                //     })
+                // }
+        async loadAreas() {
+                    console.log(this.state);
+                    try {
+                        const { data: res } = await this.$http.post("/api/v1/papers/search/areas", {
+                            key: this.state,
+                        });
+                        console.log(res)
+                        area_list = res.areas.name
+                    } catch (error) {
+                        console.error("Failed to load areas:", error);
+                    }
+                },
         querySearchAsync(queryString, cb) {
             var areas = this.areas;
             var results = queryString
@@ -301,32 +319,24 @@ export default {
         handleSelect(item) {
             console.log(item);
         },
-        // loadAreas() {
-        //   this.$http.get('/api/v1/papers/areas/get')
-        //     .then(res => {
-        //       console.log('load all areas success!')
-        //       console.log(res)
-        //       // 将请求到的areas数组进行转换
-        //       this.areas = res.data.data.areas.map(area => ({
-        //         value: area.name,
-        //         id: area.id
-        //       }));
-        //       console.log(this.areas)
-        //     }).catch(err => {
-        //       console.log(err)
-        //     })
-        // }
-        async loadAreas() {
-            console.log(this.state);
+
+        async querySearch(queryString, cb) {
             try {
                 const { data: res } = await this.$http.post("/api/v1/papers/search/areas", {
-                    key: this.state,
+                    key: queryString,
                 });
-                console.log(res)
-                area_list = res.areas.name
+                this.area_list = res.data.areas
             } catch (error) {
                 console.error("Failed to load areas:", error);
             }
+            var results = this.area_list
+            results = results.map(item => {
+                return {
+                    value: item.name
+                };
+            });
+            console.log(results)
+            cb(results);
         },
     },
     mounted() {
@@ -335,9 +345,8 @@ export default {
             this.$message.error("请先登录!");
             // this.$router.push({ path: '/main' });
             this.$router.back();
-        }
-    },
-};
+        },
+    };
 </script>
 <style lang="css">
 .title {
