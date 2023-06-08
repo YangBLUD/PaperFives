@@ -446,6 +446,8 @@ export default {
         //  First load
         ////////////////////////////////////////////////////////////////////////
         async onFirstLoad() {
+            this.isLoading = true;
+
             var uid = this.$route.query.uid;
             if (uid != null) {
                 await this.requestUpdateContact(uid);
@@ -458,6 +460,8 @@ export default {
             } else {
                 this.onResetContactItem();
             }
+
+            this.isLoading = false;
         },
 
         ////////////////////////////////////////////////////////////////////////
