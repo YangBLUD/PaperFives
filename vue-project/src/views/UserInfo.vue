@@ -220,7 +220,8 @@ export default {
           var data = res.data;
           if (data.meta.status != 0) {
             this.$message.error("请先登录！");
-            this.$router.push({ path: '/main' });
+            // this.$router.push({ path: '/main' });
+            this.$router.back();
           }
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;

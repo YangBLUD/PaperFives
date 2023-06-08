@@ -90,7 +90,8 @@ export default {
             });
         },
         cancle() {
-            this.$router.push('/main')
+            // this.$router.push('/main')
+            this.$router.back();
         },
         //发送验证码
         async checkCode() {
