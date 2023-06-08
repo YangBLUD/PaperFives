@@ -6,15 +6,16 @@
           <div style="margin-bottom: 10px">
             <span class="paper-title" @click="gotoPaper(article.paper.pid)">{{ article.paper.attr.title }}</span>
           </div>
-          <span v-for="(j, index) in article.paper.authors" :key="j" class="author-name">
-            <span @click="gotoSch(j.uid)">{{ j.name }}</span>
+          <span v-for="(j, index) in article.paper.authors" :key="j">
+            <span v-if="j.uid != 0" @click="gotoSch(j.uid)" class="author-name">{{ j.name }}</span>
+            <span v-else class="author-not-exist">{{ j.name }}</span>
             <span v-if="index < article.paper.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> / </span>
           </span>
           <span class="publish-year"> · {{ article.paper.attr.publish_date }}</span>
         </div>
 
         <div style="text-align:left;margin-top:10px;">
-          <span class="abstract">{{ article.paper.attr.abstract | ellipsis }}</span>
+          <span class="abstract mathjax">{{ article.paper.attr.abstract | ellipsis }}</span>
         </div>
 
         <div class="citation-count">
@@ -31,26 +32,42 @@
 </template>
   
 <script>
+import { initMathJax, renderByMathjax } from 'mathjax-vue';
 export default {
-  name: "Articles",
-  props: ["articles"],
-  methods: {
-    gotoSch(author_id) {
-      this.$router.push({
-        path: '/visitor',
-        query: {
-          uid: author_id,
-        }
-      })
+    name: "Articles",
+    props: ["articles"],
+    mounted() {
+        initMathJax({}, this.onMathJaxReady);
     },
-    gotoPaper(paper_id) {
-      this.$router.push({
+    methods: {
+        gotoSch(author_id) {
+            this.$router.push({
+                path: '/visitor',
+                query: {
+                    uid: author_id,
+                }
+            })
+        },
+        gotoPaper(paper_id) {
+            this.$router.push({
                 path: '/paper',
                 query: {
                     pid: paper_id,
                 }
             })
-    }
+        },
+        onMathJaxReady() {
+            setTimeout(function() {
+            const maths = document.getElementsByClassName('mathjax');
+            for (var i = 0; i < maths.length; i++) {
+                console.log(maths[i]);
+                renderByMathjax(maths[i]).catch(err => {
+                    console.log(err)
+                    window.location.reload();
+                });
+            }}, 200);
+        }
+
   },
   filters: {
     ellipsis: function (value) {
@@ -60,6 +77,15 @@ export default {
       }
       return value;
     },
+    filters: {
+      ellipsis: function (value) {
+        if (!value) return "";
+        if (value.length > 300) {
+          return value.slice(0, 300) + "...";
+        }
+        return value;
+      },
+    }
   }
 }
 </script>

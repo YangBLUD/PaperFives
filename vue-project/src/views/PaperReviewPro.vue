@@ -128,25 +128,27 @@
 
             <hr class="split">
 
-            <!-- related -->
-            <div class="section"><span>related papers</span></div>
-            <div class="related-list">
-                <div v-if="relatedPapers.length == 0">
-                    <p class="prompt">Oops, this is quite a unique paper.</p>
-                </div>
-                <div v-for="(related, index) in relatedPapers" class="related-item"
-                    @click="onClickRelatedPaper(related.pid)">
-                    <div class="title">
-                        <h3>{{ related.attr.title }}</h3>
+            <!-- review -->
+            <div class="section"><span>review</span></div>
+
+            <div class="review-wrapper">
+                <div class="comment-wrapper">
+                    <!-- <div class="comment-title">Comment</div> -->
+                    <div class="comment-text">
+                        <textarea ref="input" placeholder="Give a brief comment on this paper..."></textarea>
                     </div>
-                    <!-- <div class="keywords">
-                            <b>Keywords: </b>
-                            <ul>
-                                <li v-for="(keyword, index) in related.attr.keywords" class="keyword">
-                                    <span v-if="index > 0">,&nbsp;</span>{{ keyword }}
-                                </li>
-                            </ul>
-                        </div> -->
+                </div>
+                <div class="button-wrapper">
+                    <div class="status-wrapper">
+                        <div class="status icon-wrapper" :class="{ pass: pass.isPassed }" @click="onSelectPass()"><i
+                                class="fa-solid fa-check" :class="{ 'fa-bounce': pass.onPassed }"></i></div>
+                        <div class="status icon-wrapper" :class="{ reject: reject.isRejected }" @click="onSelectReject()"><i
+                                class="fa-solid fa-xmark" :class="{ 'fa-bounce': reject.onRejected }"></i></div>
+                    </div>
+                    <div class="submit-wrapper">
+                        <div class="submit icon-wrapper" @click="onClickSubmit()"><i class="fa-solid fa-circle-arrow-right"
+                                :class="{ 'fa-bounce': onSubmit }"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -185,7 +187,16 @@ export default {
             },
             isFavorite: false,
             relatedPapers: [],
-            key: 0
+            key: 0,
+            pass: {
+                isPassed: false,
+                onPassed: false
+            },
+            reject: {
+                isRejected: false,
+                onRejected: false
+            },
+            onSubmit: false
         }
     },
     beforeCreate() {
@@ -244,22 +255,15 @@ export default {
             return 'http://81.70.161.76:5000' + url;
         },
 
-
-        ////////////////////////////////////////////////////////////////////////
-        //  Auxiliary functions
-        ////////////////////////////////////////////////////////////////////////
-
-
-        ////////////////////////////////////////////////////////////////////////
-        //  Auxiliary functions
-        ////////////////////////////////////////////////////////////////////////
-
-
         ////////////////////////////////////////////////////////////////////////
         //  Auxiliary functions
         ////////////////////////////////////////////////////////////////////////
         copyTextToClipboard(text) {
             navigator.clipboard.writeText(text);
+        },
+
+        goBack() {
+            this.$router.back();
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -315,6 +319,64 @@ export default {
             window.location.reload();
         },
 
+        async onSelectPass() {
+            this.unSelectReject();
+            if (this.pass.isPassed) {
+                return;
+            }
+            this.pass.isPassed = true;
+            this.pass.onPassed = true;
+            setTimeout(function (obj) {
+                obj.pass.onPassed = false;
+            }, 1000, this);
+        },
+        unSelectPass() {
+            this.pass.isPassed = false;
+            this.pass.onPassed = false;
+        },
+
+        async onSelectReject() {
+            this.unSelectPass();
+            if (this.reject.isRejected) {
+                return;
+            }
+            this.reject.isRejected = true;
+            this.reject.onRejected = true;
+            setTimeout(function (obj) {
+                obj.reject.onRejected = false;
+            }, 1000, this);
+        },
+        unSelectReject() {
+            this.reject.isRejected = false;
+            this.reject.onRejected = false;
+        },
+
+        async onClickSubmit() {
+            if (this.onSubmit) {
+                return;
+            }
+
+            this.onSubmit = true;
+            setTimeout(function (obj) {
+                obj.onSubmit = false;
+            }, 1000, this);
+
+            if (!this.pass.isPassed && !this.reject.isRejected) {
+                this.$message.info("请选择是否通过哦");
+                return;
+            }
+
+            const input = this.$refs.input;
+            const text = input.value.trim();
+            if (text == '') {
+                this.$message.info("请记得留下你的评语哦");
+                return;
+            }
+
+            await this.requestReviewPaper(this.paper.pid, this.pass.isPassed, text);
+
+            input.value = '';
+        },
 
         ////////////////////////////////////////////////////////////////////////
         //  Requests
@@ -471,6 +533,25 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+
+        async requestReviewPaper(pid, status, comment) {
+            await this.$http.post('api/v1/papers/review/review', {
+                pid: pid,
+                status: status,
+                comment: comment
+            }).then(res => {
+                var data = res.data;
+                console.log(data);
+                if (data.meta.status != 0) {
+                    this.$message.error(data.meta.msg);
+                    return;
+                }
+                this.$message.success("论文审核完成");
+                setTimeout(this.goBack, 2000);
+            }).catch(err => {
+                console.log(err);
+            });
         }
     }
 }
@@ -479,4 +560,5 @@ export default {
 <style>
 @import '../assets/css/paper.css';
 @import '../assets/css/animate.css';
+@import '../assets/css/review.css';
 </style>

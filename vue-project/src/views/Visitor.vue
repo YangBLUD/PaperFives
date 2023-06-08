@@ -63,9 +63,11 @@
                             {{ item.attr.title }}
                         </span>
                         <div class="content">
-                            <div class="authors">
-                                <span v-for="(author, index) in item.authors" class="author-name">
-                                    <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                            <div>
+                                <span v-for="(author, index) in item.authors">
+                                    <span v-if="author.uid != 0" @click="gotoProfile(author.uid)" class="author-name">{{
+                                        author.name }}</span>
+                                    <span v-else class="author-not-exist">{{ author.name }}</span>
                                     <span v-if="index < item.authors.length - 1" style="color: #A0A0A0; font-size: 14px"> /
                                     </span>
                                 </span>
@@ -111,9 +113,12 @@
                                             @click="$set(showCard, index, false)" size="mini"></el-button>
                                     </div>
                                     <div class="content">
-                                        <div class="authors">
-                                            <span v-for="(author, index) in item.authors" class="author-name">
-                                                <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                        <div>
+                                            <span v-for="(author, index) in item.authors">
+                                                <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
+                                                    class="author-name">{{
+                                                        author.name }}</span>
+                                                <span v-else class="author-not-exist">{{ author.name }}</span>
                                                 <span v-if="index < item.authors.length - 1"
                                                     style="color: #A0A0A0; font-size: 14px"> / </span>
                                             </span>

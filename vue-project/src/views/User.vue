@@ -98,7 +98,7 @@
                         <template v-else>
                             <el-col :span="24">
                                 <br><br>
-                                <el-empty description="无粉丝" :image-size="250"></el-empty>
+                                <el-empty description="无粉丝用户" :image-size="250"></el-empty>
                             </el-col>
                         </template>
                     </el-row>
@@ -125,7 +125,7 @@
                                                     @click="$set(showCard, index, false)" size="mini"></el-button>
                                             </div>
                                             <div class="content">
-                                                <div class="authors">
+                                                <div>
                                                     <span v-for="(author, index) in item.authors" class="author-name">
                                                         <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
                                                         <span v-if="index < item.authors.length - 1"
@@ -160,27 +160,27 @@
                                                 <i v-if="item.lead" class="fa-solid fa-medal"
                                                     style="color: #FFB90F; font-size: 30px;"></i>
                                                 <el-button v-if="item.status === 0" type="success" size="normal"
-                                                    class="status" icon="el-icon-edit">
+                                                    class="status" icon="el-icon-edit" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 1" type="success" size="normal"
-                                                    class="status" icon="el-icon-edit">
+                                                    class="status" icon="el-icon-edit" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 2" type="warning" size="normal"
-                                                    class="status" icon="el-icon-s-check">
+                                                    class="status" icon="el-icon-s-check" @click="gotoUpload(item.pid)">
                                                     审核中
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 3" type="warning" size="normal"
-                                                    class="status" icon="el-icon-s-check">
+                                                    class="status" icon="el-icon-s-check" @click="gotoUpload(item.pid)">
                                                     草稿
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 4" type="danger" size="normal"
-                                                    class="status" icon="el-icon-error">
+                                                    class="status" icon="el-icon-error" @click="gotoUpload(item.pid)">
                                                     已驳回
                                                 </el-button>
                                                 <el-button v-else-if="item.status === 5" type="primary" size="normal"
-                                                    class="status" icon="el-icon-success">
+                                                    class="status" icon="el-icon-success" @click="gotoUpload(item.pid)">
                                                     已发表
                                                 </el-button>
                                                 <el-button icon="el-icon-view" size="mini" circle
@@ -214,9 +214,12 @@
                                                     @click="$set(showCardFav, index, false)" size="mini"></el-button>
                                             </div>
                                             <div class="content">
-                                                <div class="authors">
-                                                    <span v-for="(author, index) in item.authors" class="author-name">
-                                                        <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                                <div>
+                                                    <span v-for="(author, index) in item.authors">
+                                                        <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
+                                                            class="author-name">{{
+                                                                author.name }}</span>
+                                                        <span v-else class="author-not-exist">{{ author.name }}</span>
                                                         <span v-if="index < item.authors.length - 1"
                                                             style="color: #A0A0A0; font-size: 14px"> / </span>
                                                     </span>
@@ -263,7 +266,7 @@
                         </template>
                         <template v-else>
                             <el-col :span="24">
-                                <el-empty description="无论文数据" :image-size="250"></el-empty>
+                                <el-empty description="无收藏论文" :image-size="250"></el-empty>
                             </el-col>
                         </template>
                     </el-row>
@@ -370,13 +373,15 @@ export default {
                 }
             })
                 .then(res => {
-                    // console.log(res);
+                    console.log(res);
                     var data = res.data;
                     if (data.meta.status != 0) {
-                        this.$message.error(data.meta.msg);
-                        this.$router.push({ path: '/login' });
+                        this.$message.error("请先登录!");
+                        this.$router.push({ path: '/main' });
                     }
-
+                    if (data.data.role == 3) {
+                        this.$router.push({ path: '/admin' });
+                    }
                     this.userProfile = res.data.data;
                     this.motto = this.userProfile.attr.motto;
                 }).catch(err => {
@@ -465,6 +470,14 @@ export default {
         async gotoPaper(id) {
             this.$router.push({
                 path: '/paper',
+                query: {
+                    pid: id,
+                }
+            })
+        },
+        async gotoUpload(id) {
+            this.$router.push({
+                path: '/paperupload',
                 query: {
                     pid: id,
                 }
@@ -570,6 +583,9 @@ export default {
             await this.getStatisticsPie();
             try {
                 if (!(this.paperList.length > 0)) {
+                    return;
+                }
+                else if(this.userProfile.role == 3){
                     return;
                 }
             } catch (err) {
@@ -938,11 +954,9 @@ export default {
 }
 
 .graph {
-    margin: 0 auto;
     margin-top: 20px;
     display: flex;
-    justify-content: space-between;
-
+    justify-content: center;
     .el-card {
         width: 48%;
     }

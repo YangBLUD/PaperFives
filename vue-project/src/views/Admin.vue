@@ -5,7 +5,10 @@
             <!-- 个人名片 -->
             <el-card class="box-card">
                 <div class="user">
-                    <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar-box" />
+                    <div class="avatar-change">
+                        <img :src="'http://81.70.161.76:5000' + this.userProfile.avatar" class="avatar" />
+                        <span class="camera-icon" @click="uploadAvatar"><i class="fas fa-camera"></i></span>
+                    </div>
                     <div>
                         <p class="name">{{ this.userProfile.username }}</p>
                     </div>
@@ -13,11 +16,12 @@
             </el-card>
             <el-card style="height: 570px; margin-top: 40px;">
                 <br><br>
-                <div style="font-size: 50px; color: red; font-family: Montserrat-Black;">Papers to pend</div>
+                <div style="font-size: 45px; color: red; font-family: Montserrat-Black;">Papers to review</div>
                 <br><br><br>
                 <div style="font-size: 130px; color: red; font-family: Montserrat-Black;">{{ this.total }}</div>
                 <br><br>
-                <i class="fa-solid fa-pen-to-square fa-shake" style="font-size: 100px; color: red;"></i>
+                <i class="fa-solid fa-pen-to-square fa-shake" style="font-size: 100px; color: red;"
+                    @click="randomReview()"></i>
             </el-card>
         </el-col>
         <el-col :span="16" class="right-col">
@@ -30,9 +34,12 @@
                                     <span class="paper_name" @click="gotoPaperReview(item.pid)">{{ item.attr.title }}</span>
                                 </div>
                                 <div class="content">
-                                    <div class="authors">
-                                        <span v-for="(author, index) in item.authors" class="author-name">
-                                            <span @click="gotoProfile(author.uid)">{{ author.name }}</span>
+                                    <div>
+                                        <span v-for="(author, index) in item.authors">
+                                            <span v-if="author.uid != 0" @click="gotoProfile(author.uid)"
+                                                class="author-name">{{
+                                                    author.name }}</span>
+                                            <span v-else class="author-not-exist">{{ author.name }}</span>
                                             <span v-if="index < item.authors.length - 1"
                                                 style="color: #A0A0A0; font-size: 14px"> / </span>
                                         </span>
@@ -72,6 +79,27 @@ export default {
         this.getPapers();
     },
     methods: {
+        uploadAvatar() {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'image/*'
+            input.addEventListener('change', (event) => {
+                const file = event.target.files[0]
+                if (!file) return
+                const formData = new FormData()
+                formData.append('file', file, file.name)
+                // 发送 POST 请求上传头像
+                this.$http.post('api/v1/users/profile/avatar', formData)
+                    .then(res => {
+                        this.userProfile.avatar = res.data.data.avatar;
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                        // 上传失败
+                    })
+            })
+            input.click();
+        },
         async getUserProfile() {
             await this.$http.get('api/v1/users/profile/user', {
                 params: {
@@ -81,6 +109,11 @@ export default {
             })
                 .then(res => {
                     // console.log(res);
+                    var data = res.data;
+                    if (data.data.role != 3) {
+                        this.$message.error("没有该权限!");
+                        this.$router.push({ path: '/main' });
+                    }
                     this.userProfile = res.data.data;
                 }).catch(err => {
                     console.log(err);
@@ -109,6 +142,28 @@ export default {
                 }
             })
         },
+        randomReview() {
+            // 获取 paperlist 数组的长度
+            const len = this.paperList.length;
+            // 生成一个随机下标
+            const randomIndex = Math.floor(Math.random() * len);
+            // 获取一个随机元素
+            const randomPaper = this.paperList[randomIndex];
+            this.$router.push({
+                path: '/paperreview',
+                query: {
+                    pid: randomPaper.pid,
+                }
+            })
+        },
+        gotoProfile(id) {
+            this.$router.push({
+                path: '/visitor',
+                query: {
+                    uid: id,
+                }
+            })
+        },
     }
 }
 </script>
@@ -117,8 +172,47 @@ export default {
 @import "../../src/assets/css/article.css";
 
 .border {
-    // max-width: max-content;
+    width: 100%;
+    min-width: 1000px;
+    max-width: 3000px;
+    margin: 0 auto;
 }
+
+.avatar-change {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-change .avatar {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    opacity: 0.8;
+}
+
+.avatar-change:hover .avatar {
+    transform: scale(1.2);
+    opacity: 0.2;
+}
+
+.avatar-change .camera-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    opacity: 1;
+    display: none;
+}
+
+.avatar-change:hover .camera-icon {
+    cursor: pointer;
+    display: block;
+    opacity: 1;
+}
+
 
 .follow-item:hover {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
@@ -188,7 +282,7 @@ export default {
     }
 
     .name {
-        font-family: Montserrat-Black;
+        font-family: 'OpenSans-Bold', sans-serif;
         font-size: 35px;
         margin-bottom: 10px;
         width: auto;
@@ -204,62 +298,6 @@ export default {
         flex-direction: column;
         justify-content: center;
         margin: auto;
-    }
-}
-
-.paper-action .el-button {
-    margin-left: 800px;
-}
-
-
-.page-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.follow-list {
-    margin-top: 20px;
-    padding-left: 10px;
-    height: 550px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.follow-item {
-    display: flex;
-    display: inline-block;
-    align-items: center;
-    // padding: 20px;
-    width: 100%;
-    margin-bottom: 10px;
-
-    .follow-info {
-        display: flex;
-        align-items: center;
-        width: auto;
-
-        .follow-tag {
-            margin-left: auto;
-        }
-    }
-
-    .card_name {
-        font-family: Montserrat-Bold;
-        margin-left: 20px;
-        color: black;
-        font-size: 20px;
-        font-weight: 600;
-        /* 设置初始状态字体为普通体 */
-        transition: color 0.3s ease-in-out,
-            transform 0.2s ease-in-out;
-        /* 将多个属性的过渡效果放在同一个 'transition' 属性中 */
-    }
-
-    .card_name:hover {
-        cursor: pointer;
-        transform: scale(1.1);
-        color: #0077ff !important;
     }
 }
 
@@ -302,7 +340,7 @@ export default {
                 }
 
                 .paper_name_init {
-                    font-family: 'OpenSans-Bold', sans-serif;
+                    font-family: 'ZillaSlab-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 25px;
@@ -332,7 +370,7 @@ export default {
                 align-items: center;
 
                 .paper_name {
-                    font-family: 'OpenSans-Bold', sans-serif;
+                    font-family: 'ZillaSlab-Bold', sans-serif;
                     margin-left: 20px;
                     color: black;
                     font-size: 30px;

@@ -1,8 +1,5 @@
 <template>
   <div class="advSearch">
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
-        </el-breadcrumb>
     <div id="option-div" v-bind:class="{changeH:!isShow}">
         <el-row >
           <el-col class="retrieval">
@@ -74,17 +71,17 @@
 
 export default {
   name: "AdvSearch",
-  data(){
-    return{
+  data() {
+    return {
       resultList: [],
-    
-      isShow:true,
+
+      isShow: true,
       isShowRes: false,
       searchValue: [
         {
           category: 'title',
           content: "",
-          type:"and",
+          type: "and",
         },
         {
           category: 'authors',
@@ -106,7 +103,7 @@ export default {
         }, {
           value: 'keywords',
           label: '关键字'
-        },{
+        }, {
           value: 'areas',
           label: '领域'
         }
@@ -125,7 +122,7 @@ export default {
       ],
     }
   },
-  methods:{
+  methods: {
     deleteCategory: function (index) {
       this.searchValue.splice(index, 1)
     },
@@ -148,13 +145,15 @@ export default {
     },
     advanceSearch() {
       console.log(this.searchValue)
-      localStorage.setItem("searchValue",JSON.stringify(this.searchValue))
-      this.$router.push({path:"/searchres",query:{
+      localStorage.setItem("searchValue", JSON.stringify(this.searchValue))
+      this.$router.push({
+        path: "/searchres", query: {
           "time_from": this.timeRange[0],
           "time_to": this.timeRange[1],
-          type:2
-      }})
-    
+          type: 2
+        }
+      })
+
 
     },
     getCollectStatus() {
@@ -171,7 +170,7 @@ export default {
   height: 100%;
 }
 
-.advSearch #option-div{
+.advSearch #option-div {
   transition: 1s fade;
   min-height: 80px;
   width: 75%;
@@ -182,11 +181,12 @@ export default {
   margin-top: 10px;
   overflow: hidden;
 }
-.changeH{
+
+.changeH {
   height: 80px !important;
 }
 
-.changeButton{
+.changeButton {
   height: 20px;
   width: 50px;
   padding: 0 !important;
@@ -226,4 +226,7 @@ export default {
   margin-left: 696px;
 }
 
+::v-deep .el-date-editor .el-range-separator {
+  width: 30px;
+}
 </style>
