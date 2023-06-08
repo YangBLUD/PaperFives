@@ -20,10 +20,10 @@
           <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
             <el-form-item v-for="(domain, index) in dynamicValidateForm.domains" :label="'作者' + (index + 1)"
               :key="domain.key" :prop="'domains.' + index + '.email'" :rules="{
-                  required: true,
-                  message: '作者信息不能为空',
-                  trigger: 'blur',
-                }">
+                required: true,
+                message: '作者信息不能为空',
+                trigger: 'blur',
+              }">
               <div class="addable-form">
                 <el-input v-model="domain.name" placeholder="请输入作者姓名"></el-input>
                 <el-input v-model="domain.email" placeholder="请输入作者邮箱"></el-input>
@@ -41,10 +41,10 @@
           <el-form :model="keywords" ref="keywords" label-width="100px">
             <el-form-item v-for="(domain, index) in keywords.domains" :label="'关键词' + (index + 1)" :key="domain.key"
               :prop="'domains.' + index + '.keyword'" :rules="{
-                  required: true,
-                  message: '关键词内容不能为空',
-                  trigger: 'blur',
-                }">
+                required: true,
+                message: '关键词内容不能为空',
+                trigger: 'blur',
+              }">
               <div class="addable-form">
                 <el-input v-model="domain.keyword" placeholder="请输入关键词"></el-input>
                 <el-button @click.prevent="removeKeyword(domain)">删除</el-button>
@@ -72,10 +72,10 @@
           <el-form :model="refs" ref="refs" label-width="100px">
             <el-form-item v-for="(domain, index) in refs.domains" :label="'参考文献' + (index + 1)" :key="domain.key"
               :prop="'domains.' + index + '.ref'" :rules="{
-                  required: true,
-                  message: '参考文献内容不能为空',
-                  trigger: 'blur',
-                }">
+                required: true,
+                message: '参考文献内容不能为空',
+                trigger: 'blur',
+              }">
               <div class="addable-form">
                 <el-input v-model="domain.ref" placeholder="请输入参考文献"></el-input>
                 <el-button @click.prevent="removeRef(domain)">删除</el-button>
@@ -97,15 +97,9 @@
         <!-- 论文领域栏 -->
         <div class="label">论文领域：</div>
         <div class="content-box">
-          <el-autocomplete
-            v-model="state"
-            placeholder="请输入论文领域"
-            :fetch-suggestions="querySearch"
-            :trigger-on-focus="false"
-          ></el-autocomplete>
+          <el-autocomplete v-model="state" placeholder="请输入论文领域" :fetch-suggestions="querySearch"
+            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </div>
-        <div>{{ state }}</div>
-        <div>{{ area_list }}</div>
         <hr class="split" />
         <!-- 提交论文信息 -->
         <el-button type="info" @click="submitAllInfo()">提交论文信息</el-button>
@@ -164,7 +158,7 @@ export default {
       date: "",
       areas: [],
       state: '',
-      area_list:[],
+      area_list: [],
       timeout: null
     }
   },
@@ -305,22 +299,23 @@ export default {
       console.log(item);
     },
 
-    async querySearch(state,cb) {
-
+    async querySearch(queryString, cb) {
       try {
         const { data: res } = await this.$http.post("/api/v1/papers/search/areas", {
-          key: this.state,
+          key: queryString,
         });
-        let data=res.data.areas
-        console.log(data)
-        for(item in data){
-          this.area_list.append(item.name)
-        }
-        console.log(this.area_list)
+        this.area_list = res.data.areas
       } catch (error) {
         console.error("Failed to load areas:", error);
       }
-      cb(this.area_list)
+      var results = this.area_list
+      results = results.map(item => {
+        return {
+          value: item.name   
+        };
+      });
+      console.log(results)
+      cb(results);
     },
   },
   mounted() {
