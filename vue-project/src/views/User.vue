@@ -377,7 +377,8 @@ export default {
                     var data = res.data;
                     if (data.meta.status != 0) {
                         this.$message.error("请先登录!");
-                        this.$router.push({ path: '/main' });
+                        // this.$router.push({ path: '/main' });
+                        this.$router.back();
                     }
                     if (data.data.role == 3) {
                         this.$router.push({ path: '/admin' });
@@ -585,7 +586,7 @@ export default {
                 if (!(this.paperList.length > 0)) {
                     return;
                 }
-                else if(this.userProfile.role == 3){
+                else if (this.userProfile.role == 3) {
                     return;
                 }
             } catch (err) {
@@ -719,19 +720,24 @@ export default {
                     }
                 ]
             };
-            const myChart1 = echarts.init(document.getElementById("mychart1"));
-            myChart1.setOption(option1);
-            //随着屏幕大小调节图表
-            window.addEventListener("resize", () => {
-                myChart1.resize();
-            });
 
-            const myChart2 = echarts.init(document.getElementById("mychart2"));
-            myChart2.setOption(option2);
-            //随着屏幕大小调节图表
-            window.addEventListener("resize", () => {
-                myChart2.resize();
-            });
+            try {
+                const myChart1 = echarts.init(document.getElementById("mychart1"));
+                myChart1.setOption(option1);
+                //随着屏幕大小调节图表
+                window.addEventListener("resize", () => {
+                    myChart1.resize();
+                });
+
+                const myChart2 = echarts.init(document.getElementById("mychart2"));
+                myChart2.setOption(option2);
+                //随着屏幕大小调节图表
+                window.addEventListener("resize", () => {
+                    myChart2.resize();
+                });
+            } catch (err) {
+                console.log(err);
+            };
         },
         handleMouseMove(event) {
             this.mouseX = event.clientX
@@ -792,6 +798,7 @@ export default {
     position: relative;
     width: 150px;
     height: 150px;
+    min-width: 150px;
     border-radius: 50%;
     overflow: hidden;
 }
@@ -957,6 +964,7 @@ export default {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+
     .el-card {
         width: 48%;
     }

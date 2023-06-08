@@ -275,6 +275,20 @@
     opacity: 0;
 }
 
+/* no-contact indicator */
+.message-wrapper .no-contact {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: 0.5s;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+}
+
+.message-wrapper .no-contact span {
+    font-size: 2em;
+}
+
 /* real message :( */
 .message-wrapper .message-scroller {
     height: 100%;

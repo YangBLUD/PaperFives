@@ -382,7 +382,7 @@ export default {
         //  Requests
         ////////////////////////////////////////////////////////////////////////
         async requestPaper(pid) {
-            await this.$http.get('api/v1/papers/download/info', {
+            await this.$http.get('api/v1/papers/review/info', {
                 params: {
                     pid: pid,
                     click: 1

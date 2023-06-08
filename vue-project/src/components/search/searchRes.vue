@@ -95,18 +95,22 @@ export default {
 @import "../../../src/assets/css/article.css";
 
 .topRecommend {
-    min-width: 900px;
-    margin: 50px 12%;
+    min-width: 800px;
+    width: 95%;
+    margin: 20px auto;
     padding: 20px 40px 80px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
 }
 
+
 .search {
-    min-width: 900px;
-    margin: 20px 12%;
+    min-width: 800px;
+    width: 95%;
+    margin: 20px auto;
     padding: 20px 40px 10px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04)
 }
+
 </style>

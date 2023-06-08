@@ -212,6 +212,7 @@ export default {
         //  Initialization
         ////////////////////////////////////////////////////////////////////////
         onMathJaxReady() {
+            console.log("on MathJax Ready");
             setTimeout(function () {
                 const maths = document.getElementsByClassName('mathjax');
                 for (var i = 0; i < maths.length; i++) {
@@ -232,7 +233,9 @@ export default {
             }
             await this.requestPaper(pid);
             await this.requestFavoriteStatus(pid);
-            initMathJax({}, this.onMathJaxReady);
+            
+            await initMathJax({}, this.onMathJaxReady);
+            this.onMathJaxReady();
 
             this.requestRelatedPapers();
         },
