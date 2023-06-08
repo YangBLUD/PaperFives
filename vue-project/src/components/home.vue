@@ -3,7 +3,7 @@
         <!-- 主页头部 -->
         <el-header>
             <div class="logo-wrapper">
-                <img src="../assets/banner.svg" alt="" @click="toMain()"/>
+                <img src="../assets/banner.svg" alt="" @click="toMain()" />
                 <!-- <span>论文检索系统</span> -->
             </div>
             <div v-if="isLogin">
@@ -108,9 +108,11 @@ export default {
             })
         },
         toMain() {
-            this.$router.push({
-                path: '/main'
-            })
+            if (this.$route.path != '/main') {
+                this.$router.push({
+                    path: '/main'
+                })
+            }
         },
         //保存链接激活
         saveState(activePath) {
@@ -150,10 +152,6 @@ export default {
 
 .el-main {
     background-color: #eaedf1;
-}
-
-.el-header {
-    // max-height: 60px;
 }
 
 .logo-wrapper {
