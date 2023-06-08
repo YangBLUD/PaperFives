@@ -380,8 +380,11 @@ export default {
                     var data = res.data;
                     if (data.meta.status != 0) {
                         this.$message.error("请先登录!");
-                        // this.$router.push({ path: '/main' });
-                        this.$router.back();
+                        if (this.$route.size > 0) {
+                            this.$router.back();
+                        } else {
+                            this.$router.push({ path: '/main' });
+                        }
                     }
                     if (data.data.role == 3) {
                         this.$router.push({ path: '/admin' });

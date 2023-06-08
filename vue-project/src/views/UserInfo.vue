@@ -152,8 +152,8 @@ export default {
     })
   },
   created() {
-        document.title = "Info"
-    },
+    document.title = "Info"
+  },
   methods: {
     getSex() {
       if (this.form.sex == 0 || this.form.sex == '未知')
@@ -220,8 +220,11 @@ export default {
           var data = res.data;
           if (data.meta.status != 0) {
             this.$message.error("请先登录！");
-            // this.$router.push({ path: '/main' });
-            this.$router.back();
+            if (this.$route.size > 0) {
+              this.$router.back();
+            } else {
+              this.$router.push({ path: '/main' });
+            }
           }
           this.userProfile = res.data.data;
           this.form.name = res.data.data.username;
