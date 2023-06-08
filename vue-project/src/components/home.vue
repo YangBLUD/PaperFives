@@ -70,18 +70,12 @@ export default {
                 },
                 {
                     id: 3,
-                    authName: "发表论文",
-                    icon: "el-icon-edit",
-                    path: "paperupload",
-                },
-                {
-                    id: 4,
                     authName: "用户主页",
                     icon: "el-icon-user",
                     path: "user",
                 },
                 {
-                    id: 5,
+                    id: 4,
                     authName: "用户信息",
                     icon: "el-icon-document",
                     path: "info",
