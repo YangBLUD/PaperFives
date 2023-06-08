@@ -20,7 +20,6 @@
                 <el-form-item class="btns">
                     <el-button type="primary" @click="login">登 录</el-button>
                     <el-button type="warning" @click="register">注 册</el-button>
-                    <el-button type="info" @click="cancel">取 消</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -80,15 +79,7 @@ export default {
         // 注册
         register() {
             this.$router.push({ path: "/register" });
-        },
-        cancel() {
-            // this.$router.push('/main')
-            if (this.$route.size > 0) {
-                this.$router.back();
-            } else {
-                this.$router.push({ path: '/main' });
-            }
-        },
+        }
     }
 }
 </script>

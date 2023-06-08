@@ -182,7 +182,6 @@ export default {
                 renderByMathjax(maths[i]).catch(err => {
                     console.log(err)
                     window.location.reload();
-                    // initMathJax({}, this.onMathJaxReady);
                 });
             }
         },
@@ -311,11 +310,7 @@ export default {
                 if (data.meta.status != 0) {
                     // alert(data.meta.msg);
                     this.$message.error('请先登录!');
-                    if (this.$route.size > 0) {
-                        this.$router.back();
-                    } else {
-                        this.$router.push({ path: '/main' });
-                    }
+                    this.$router.push({ path: '/main' });
                     return;
                 }
 
