@@ -330,6 +330,11 @@ export default {
   },
   mounted() {
     // this.loadAreas();
+    if (window.sessionStorage.getItem('token') == null) {
+      this.$message.error("请先登录!");
+      // this.$router.push({ path: '/main' });
+      this.$router.back();
+    }
   },
 };
 </script>
