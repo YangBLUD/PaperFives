@@ -561,6 +561,7 @@ export default {
                 }
             })
                 .then(res => {
+                    console.log(res)
                     this.xData = res.data.data.stats.years;
                     this.yData_1 = res.data.data.stats.lead_cnt;
                     this.yData_2 = res.data.data.stats.co_cnt;
