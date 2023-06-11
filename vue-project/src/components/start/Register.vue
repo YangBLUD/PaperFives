@@ -12,7 +12,7 @@
                 </el-form-item>
 
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="regForm.password"></el-input>
+                    <el-input v-model="regForm.password" show-password></el-input>
                 </el-form-item>
 
                 <el-form-item label="邮箱" prop="email">
@@ -26,8 +26,8 @@
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="primary" @click="regUser">注 册</el-button>
-                    <el-button type="warning" @click="cancle">取 消</el-button>
-                    <el-button type="info" @click="resetRegForm">重 置</el-button>
+                    <el-button type="warning" @click="resetRegForm">重 置</el-button>
+                    <el-button type="info" @click="cancel">取 消</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -89,9 +89,13 @@ export default {
                 this.$router.push("/login");
             });
         },
-        cancle() {
+        cancel() {
             // this.$router.push('/main')
-            this.$router.back();
+            if (this.$route.size > 0) {
+                this.$router.back();
+            } else {
+                this.$router.push({ path: '/main' });
+            }
         },
         //发送验证码
         async checkCode() {

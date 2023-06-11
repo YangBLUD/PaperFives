@@ -13,9 +13,9 @@
             <div class="section"><span>authors</span></div>
             <div class="author-list horizontal-list">
                 <div v-for="(author, index) in paper.authors" class="author-item horizontal-list-item">
-                    <div class="avatar">
+                    <!-- <div class="avatar">
                         <img :src="getAvatarUrl(author.avatar)" />
-                    </div>
+                    </div> -->
                     <div class="name" :class="{ clickable: author.uid != 0 }" @click="onClickUsername(author.uid)">{{
                         author.name }}</div>
                     <i class="fa-regular fa-envelope"></i>
@@ -245,8 +245,6 @@ export default {
             await this.requestPaper(pid);
             await this.requestFavoriteStatus(pid);
             initMathJax({}, this.onMathJaxReady);
-
-            this.requestRelatedPapers();
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -383,17 +381,18 @@ export default {
         //  Requests
         ////////////////////////////////////////////////////////////////////////
         async requestPaper(pid) {
-            await this.$http.get('api/v1/papers/review/info', {
-                params: {
-                    pid: pid,
-                    click: 1
-                }
+            await this.$http.post('api/v1/papers/review/get', {
+                pid: pid
             }).then(res => {
                 var data = res.data;
                 console.log(data);
                 if (data.meta.status != 0) {
                     this.$message.error(data.meta.msg);
-                    this.$router.back();
+                    if (this.$route.size > 0) {
+                        this.$router.back();
+                    } else {
+                        this.$router.push({ path: '/main' });
+                    }
                     return;
                 }
 
